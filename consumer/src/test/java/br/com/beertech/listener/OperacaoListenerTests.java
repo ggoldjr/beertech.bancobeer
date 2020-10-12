@@ -1,7 +1,5 @@
 package br.com.beertech.listener;
 
-import static org.mockito.ArgumentMatchers.eq;
-
 import com.br.beertech.dto.TransacaoDto;
 import com.br.beertech.listeners.OperacaoListener;
 import com.br.beertech.messages.OperacaoMessage;
@@ -13,8 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.client.RestTemplate;
+
+import static org.mockito.ArgumentMatchers.eq;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OperacaoListenerTests {
