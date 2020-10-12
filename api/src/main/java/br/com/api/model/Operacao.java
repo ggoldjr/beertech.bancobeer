@@ -5,6 +5,9 @@ import br.com.api.dto.OperacaoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Operacao implements Serializable {
 
     public static Operacao criar(OperacaoDto operacaoDto, Conta conta) {
@@ -39,8 +43,14 @@ public class Operacao implements Serializable {
     private LocalDateTime dataOperacao;
 
     @ManyToOne
-    @JoinColumn(name = "conta_hash" )
+    @JoinColumn(name = "conta_id" )
     private Conta conta;
+
+    @CreatedDate
+    private LocalDateTime criado_em;
+
+    @LastModifiedDate
+    private LocalDateTime atualizado_em;
 
     public Operacao() {
     }
