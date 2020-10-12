@@ -1,7 +1,6 @@
 package com.br.beertech.dto;
 
 public class TransacaoDto {
-
     private String operacao;
     private Double valor;
 
