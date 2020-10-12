@@ -42,6 +42,17 @@ public class RabbitConfig {
 
 
   @Bean
+  public TopicExchange transferenciaTopicExchange(){
+    return new TopicExchange("transferencia.exchange",true,false);
+  }
+
+  @Bean
+  public TopicExchange transferenciaDlqTopicExchange(){
+    return new TopicExchange("transferencia.exchange-dlq",true,false);
+  }
+
+
+  @Bean
   public Declarables declarablesBean(){
     List<Declarable> declarables = new ArrayList<>();
 
@@ -51,6 +62,12 @@ public class RabbitConfig {
 
     declarables.add(operacaoQueue);
     declarables.add(operacaoBinding);
+
+    Queue transferenciaQueue = QueueBuilder.durable("transferencia").build();
+    Binding transferenciaBinding = BindingBuilder.bind(transferenciaQueue).to(transferenciaTopicExchange()).with(".");
+
+    declarables.add(transferenciaQueue);
+    declarables.add(transferenciaBinding);
 
     return new Declarables(declarables);
   }

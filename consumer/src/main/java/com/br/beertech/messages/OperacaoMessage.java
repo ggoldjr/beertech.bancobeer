@@ -2,16 +2,16 @@ package com.br.beertech.messages;
 
 public class OperacaoMessage {
 
-  private String conta;
+  private String contaHash;
   private String operacao;
   private Double valor;
 
-  public String getConta() {
-    return conta;
+  public String getContaHash() {
+    return contaHash;
   }
 
-  public void setConta(String conta) {
-    this.conta = conta;
+  public void setContaHash(String contaHash) {
+    this.contaHash = contaHash;
   }
 
   public String getOperacao() {
@@ -33,7 +33,7 @@ public class OperacaoMessage {
   @Override
   public String toString() {
     return "OperacaoMessage{" +
-        "conta='" + conta + '\'' +
+        "contaHash='" + contaHash + '\'' +
         ", operacao='" + operacao + '\'' +
         ", valor=" + valor +
         '}';

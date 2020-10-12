@@ -1,20 +1,20 @@
 package com.br.beertech.dto;
 
 public class TransacaoDto {
-    private String operacao;
+    private String tipo;
     private Double valor;
 
-    public TransacaoDto(String operacao, Double valor) {
-        this.operacao = operacao;
+    public TransacaoDto(String tipo, Double valor) {
+        this.tipo = tipo;
         this.valor = valor;
     }
 
-    public String getOperacao() {
-        return operacao;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setOperacao(String operacao) {
-        operacao = operacao;
+    public void setTipo(String tipo) {
+        tipo = tipo;
     }
 
     public Double getValor() {
