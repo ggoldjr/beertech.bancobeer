@@ -1,9 +1,7 @@
 package br.com.api.dto;
 
 import lombok.Data;
-import org.hibernate.annotations.Check;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 

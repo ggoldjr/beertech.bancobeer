@@ -3,8 +3,8 @@ package br.com.api.conta;
 import br.com.api.dto.OperacaoDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
-import br.com.api.service.ContaService;
 import br.com.api.seed.ContaSetup;
+import br.com.api.service.ContaService;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,12 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GetSaldoTest {

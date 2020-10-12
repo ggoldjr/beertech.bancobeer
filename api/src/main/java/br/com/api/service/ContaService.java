@@ -4,8 +4,8 @@ import br.com.api.dto.OperacaoDto;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
-import org.springframework.beans.factory.annotation.Autowired;
 import br.com.api.repository.ContaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,14 +1,14 @@
 package br.com.api.controller;
 
 import br.com.api.dto.OperacaoDto;
+import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
+import br.com.api.service.ContaService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import br.com.api.model.Conta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import br.com.api.service.ContaService;
 
 import javax.validation.Valid;
 import java.util.List;
