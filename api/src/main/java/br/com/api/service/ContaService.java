@@ -31,6 +31,7 @@ public class ContaService {
     public Conta findByHash(String contaHash) {
         return contaRepository.findByHash(contaHash).orElseThrow(() -> new NotFoundException("Conta com hash " + contaHash));
     }
+
     public Double getSaldo(String contaHash) {
         return findByHash(contaHash).getSaldo();
     }

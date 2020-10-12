@@ -17,8 +17,4 @@ public class ErroValidacao extends StandardError {
     public void addError(FieldErrorMessage fieldErrorMessage) {
         errors.add(fieldErrorMessage);
     }
-
-    public void addError(String name, String message) {
-        errors.add(new FieldErrorMessage(name, message));
-    }
 }
