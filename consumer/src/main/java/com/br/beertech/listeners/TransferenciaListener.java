@@ -1,8 +1,6 @@
 package com.br.beertech.listeners;
 
-import com.br.beertech.dto.TransacaoDto;
 import com.br.beertech.dto.TransferenciaDto;
-import com.br.beertech.messages.OperacaoMessage;
 import com.br.beertech.messages.TransferenciaMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
