@@ -35,7 +35,7 @@ public class CriarContaTest {
             String url = String.format("http://localhost:%s/contas", port);
             HttpEntity<String> httpEntity = testUtil.getHttpEntity();
             responseEntity = testUtil.restTemplate.postForEntity(url, httpEntity, String.class);
-            if (responseEntity.getStatusCodeValue() == 200) {
+            if (responseEntity.getStatusCodeValue() == 201) {
                 contaCriada = testUtil.parseSuccessfulResponse(responseEntity, Conta.class);
             } else {
                 responseError = testUtil.parseResponseError(responseEntity);

@@ -6,6 +6,7 @@ import br.com.api.model.Conta;
 import br.com.api.model.Transferencia;
 import br.com.api.seed.ContaSetup;
 import br.com.api.service.ContaService;
+import br.com.api.service.TransferenciaService;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +36,9 @@ public class CriarTransferenciaTest {
     @Autowired
     ContaService contaService;
 
+    @Autowired
+    TransferenciaService transferenciaService;
+
     @Nested
     abstract class CriarTransferenciaSetup {
         ResponseEntity<String> responseEntity;
@@ -53,8 +57,13 @@ public class CriarTransferenciaTest {
             String url = String.format("http://localhost:%s/transferencias", port);
             HttpEntity<String> httpEntity = testUtil.getHttpEntity(getTransferenciaDto());
             responseEntity = testUtil.restTemplate.postForEntity(url, httpEntity, String.class);
-            if (responseEntity.getStatusCodeValue() == 200) {
-                trasferenciaCriada = testUtil.parseSuccessfulResponse(responseEntity, Transferencia.class);
+            if (responseEntity.getStatusCodeValue() == 201) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                trasferenciaCriada = transferenciaService.getTransferenciaComContaOrigemHash(contaOrigem.getHash()).get(0);
                 contaOrigemAtualizada = contaService.findByHash(contaOrigem.getHash());
                 contaDestinoAtualizada = contaService.findByHash(contaDestino.getHash());
             } else {

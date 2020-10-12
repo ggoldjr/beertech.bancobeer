@@ -8,6 +8,7 @@ import br.com.api.repository.TransferenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -39,5 +40,9 @@ public class TransferenciaService {
             contaService.atualizarConta(contaDestino);
             return transferencia;
         });
+    }
+
+    public List<Transferencia> getTransferenciaComContaOrigemHash(String contaOrigemHash) {
+        return transferenciaRepository.findAllByContaOrigemHash(contaOrigemHash);
     }
 }

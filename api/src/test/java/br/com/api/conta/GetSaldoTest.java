@@ -17,6 +17,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -70,8 +72,12 @@ public class GetSaldoTest {
             operacaoDto1.setTipo(Operacao.Tipo.DEPOSITO.name());
             operacaoDto1.setValor(50d);
 
-            contaService.criarOperacao(operacaoDto, contaSetup.getContas().get(0).getHash());
-            contaService.criarOperacao(operacaoDto1, contaSetup.getContas().get(0).getHash());
+            try {
+                contaService.criarOperacao(operacaoDto, contaSetup.getContas().get(0).getHash()).get();
+                contaService.criarOperacao(operacaoDto1, contaSetup.getContas().get(0).getHash()).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -27,8 +27,8 @@ public class ContaController {
 
     @PostMapping
     public ResponseEntity criarConta() {
-        contaService.criarConta();
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Conta conta = contaService.criarConta();
+        return ResponseEntity.status(HttpStatus.CREATED).body(conta);
     }
 
     @GetMapping(produces={MediaType.APPLICATION_JSON_VALUE})

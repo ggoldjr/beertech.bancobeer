@@ -7,6 +7,8 @@ import br.com.api.repository.OperacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OperacaoService {
 
@@ -25,5 +27,9 @@ public class OperacaoService {
             conta.deposito(operacao.getValor());
         }
         return operacaoRepository.save(operacao);
+    }
+
+    public List<Operacao> getOperacaoDaConta(String contaHash) {
+        return operacaoRepository.findAllByContaHash(contaHash);
     }
 }
