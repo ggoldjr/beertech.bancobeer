@@ -8,6 +8,8 @@ import br.com.api.repository.TransferenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class TransferenciaService {
 
@@ -20,20 +22,22 @@ public class TransferenciaService {
         this.contaService = contaService;
     }
 
-    public Transferencia criar(TransferenciaDto transferenciaDto) {
-        Conta contaOrigem = contaService.findByHash(transferenciaDto.getHashContaOrigem());
-        Double valor = transferenciaDto.getValor();
-        if (!contaOrigem.saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
-        Conta contaDestino = contaService.findByHash(transferenciaDto.getHashContaDestino());
-        Transferencia transferenciaParaSalvar = Transferencia.builder()
-                .contaOrigem(contaOrigem)
-                .contaDestinoHash(contaDestino.getHash())
-                .valor(valor)
-                .build();
-        Transferencia transferencia = transferenciaRepository.save(transferenciaParaSalvar);
-        contaDestino.deposito(contaOrigem.saque(valor));
-        contaService.atualizarConta(contaOrigem);
-        contaService.atualizarConta(contaDestino);
-        return transferencia;
+    public CompletableFuture<Transferencia> criar(TransferenciaDto transferenciaDto) {
+        return CompletableFuture.supplyAsync(() -> {
+            Conta contaOrigem = contaService.findByHash(transferenciaDto.getHashContaOrigem());
+            Double valor = transferenciaDto.getValor();
+            if (!contaOrigem.saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
+            Conta contaDestino = contaService.findByHash(transferenciaDto.getHashContaDestino());
+            Transferencia transferenciaParaSalvar = Transferencia.builder()
+                    .contaOrigem(contaOrigem)
+                    .contaDestinoHash(contaDestino.getHash())
+                    .valor(valor)
+                    .build();
+            Transferencia transferencia = transferenciaRepository.save(transferenciaParaSalvar);
+            contaDestino.deposito(contaOrigem.saque(valor));
+            contaService.atualizarConta(contaOrigem);
+            contaService.atualizarConta(contaDestino);
+            return transferencia;
+        });
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ContaService {
@@ -34,12 +35,14 @@ public class ContaService {
         return findByHash(contaHash).getSaldo();
     }
 
-    public Operacao criarOperacao(OperacaoDto operacaoDto, String hashConta) {
-        Conta conta = findByHash(hashConta);
-        Operacao operacao = operacaoService.criar(conta, operacaoDto);
-        conta.setSaldo(operacao.getConta().getSaldo());
-        contaRepository.save(conta);
-        return operacao;
+    public CompletableFuture<Operacao> criarOperacao(OperacaoDto operacaoDto, String hashConta) {
+        return CompletableFuture.supplyAsync(() -> {
+            Conta conta = findByHash(hashConta);
+            Operacao operacao = operacaoService.criar(conta, operacaoDto);
+            conta.setSaldo(operacao.getConta().getSaldo());
+            contaRepository.save(conta);
+            return operacao;
+        });
     }
 
     public Conta criarConta() {

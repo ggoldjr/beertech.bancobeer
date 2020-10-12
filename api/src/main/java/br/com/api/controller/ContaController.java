@@ -2,12 +2,13 @@ package br.com.api.controller;
 
 import br.com.api.dto.OperacaoDto;
 import br.com.api.model.Conta;
-import br.com.api.model.Operacao;
 import br.com.api.service.ContaService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,8 +26,9 @@ public class ContaController {
     }
 
     @PostMapping
-    public Conta criarConta() {
-        return contaService.criarConta();
+    public ResponseEntity criarConta() {
+        contaService.criarConta();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping(produces={MediaType.APPLICATION_JSON_VALUE})
@@ -39,11 +41,12 @@ public class ContaController {
             consumes={MediaType.APPLICATION_JSON_VALUE},
             produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Insere operação a conta.", produces="application/json")
-    public Operacao criarOperacao(@ApiParam(name="contaHash", required=true, value="Hash de conta", example="1")
+    public ResponseEntity criarOperacao(@ApiParam(name="contaHash", required=true, value="Hash de conta", example="1")
                               @PathVariable String contaHash,
-                              @ApiParam(name="request", required=true, value="Objeto com as reservas a serem criadas/atualizadas")
+                                        @ApiParam(name="request", required=true, value="Objeto com as reservas a serem criadas/atualizadas")
                               @Valid @RequestBody OperacaoDto request){
-        return contaService.criarOperacao(request, contaHash);
+        contaService.criarOperacao(request, contaHash);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping(path = "/{contaHash}/saldos", consumes={MediaType.APPLICATION_JSON_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Retorna.", produces="application/json")
