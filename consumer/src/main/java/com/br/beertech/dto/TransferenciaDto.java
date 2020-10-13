@@ -1,6 +1,16 @@
 package com.br.beertech.dto;
 
+import com.br.beertech.messages.TransferenciaMessage;
+
 public class TransferenciaDto {
+
+    public static TransferenciaDto criar(TransferenciaMessage transferenciaMessage) {
+        TransferenciaDto transferenciaDto = new TransferenciaDto();
+        transferenciaDto.setHashContaOrigem(transferenciaMessage.getHashContaOrigem());
+        transferenciaDto.setHashContaDestino(transferenciaMessage.getHashContaDestino());
+        transferenciaDto.setValor(transferenciaMessage.getValor());
+        return transferenciaDto;
+    }
 
     private String hashContaOrigem;
 

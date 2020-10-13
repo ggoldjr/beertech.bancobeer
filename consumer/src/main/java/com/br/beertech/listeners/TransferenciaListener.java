@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class TransferenciaListener {
 
     private static final Logger logger = LoggerFactory.getLogger(TransferenciaListener.class);
+    private static final String URL = String.format("http://localhost:8080/transferencias");
     private final RestTemplate restTemplate;
 
     @Autowired
@@ -24,13 +25,9 @@ public class TransferenciaListener {
     @RabbitListener(queues = "transferencia",containerFactory = "simpleContainerFactory")
     public void receive(@Payload TransferenciaMessage transferenciaMessage){
         logger.info("enviando trasferencia de {} para {}", transferenciaMessage.getHashContaOrigem(), transferenciaMessage.getHashContaDestino());
-        String url = String.format("http://localhost:8080/transferencias");
         try{
-            TransferenciaDto transferenciaDto = new TransferenciaDto();
-            transferenciaDto.setHashContaOrigem(transferenciaMessage.getHashContaOrigem());
-            transferenciaDto.setHashContaDestino(transferenciaMessage.getHashContaDestino());
-            transferenciaDto.setValor(transferenciaMessage.getValor());
-            restTemplate.postForObject(url, transferenciaDto, Void.class);
+            TransferenciaDto transferenciaDto = TransferenciaDto.criar(transferenciaMessage);
+            restTemplate.postForObject(URL, transferenciaDto, Void.class);
         }catch (Exception e){
             logger.error("Error on try request:", e);
         }
