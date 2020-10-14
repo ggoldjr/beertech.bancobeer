@@ -1,15 +1,6 @@
 package com.br.beertech.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Declarable;
-import org.springframework.amqp.core.Declarables;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -22,6 +13,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableRabbit
@@ -48,6 +42,17 @@ public class RabbitConfig {
 
 
   @Bean
+  public TopicExchange transferenciaTopicExchange(){
+    return new TopicExchange("transferencia.exchange",true,false);
+  }
+
+  @Bean
+  public TopicExchange transferenciaDlqTopicExchange(){
+    return new TopicExchange("transferencia.exchange-dlq",true,false);
+  }
+
+
+  @Bean
   public Declarables declarablesBean(){
     List<Declarable> declarables = new ArrayList<>();
 
@@ -57,6 +62,12 @@ public class RabbitConfig {
 
     declarables.add(operacaoQueue);
     declarables.add(operacaoBinding);
+
+    Queue transferenciaQueue = QueueBuilder.durable("transferencia").build();
+    Binding transferenciaBinding = BindingBuilder.bind(transferenciaQueue).to(transferenciaTopicExchange()).with(".");
+
+    declarables.add(transferenciaQueue);
+    declarables.add(transferenciaBinding);
 
     return new Declarables(declarables);
   }

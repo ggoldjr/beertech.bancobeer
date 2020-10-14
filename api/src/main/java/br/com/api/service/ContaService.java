@@ -1,66 +1,60 @@
 package br.com.api.service;
 
-import br.com.api.dto.TransacaoDto;
+import br.com.api.dto.OperacaoDto;
+import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
-import br.com.api.model.Transacao;
-import br.com.api.repository.TransacaoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.api.model.Operacao;
 import br.com.api.repository.ContaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class ContaService {
 
     private final ContaRepository contaRepository;
-    private final TransacaoRepository transacaoRepository;
+    private final OperacaoService operacaoService;
 
     @Autowired
-    public ContaService(ContaRepository contaRepository, TransacaoRepository transacaoRepository) {
+    public ContaService(ContaRepository contaRepository, OperacaoService operacaoService) {
         this.contaRepository = contaRepository;
-        this.transacaoRepository = transacaoRepository;
+        this.operacaoService = operacaoService;
     }
 
     public List<Conta> listAll() {
         return contaRepository.findAll();
     }
 
-    public Conta findById(Long idConta) {
-        return contaRepository.findById(idConta).orElseThrow();
+    public Conta findByHash(String contaHash) {
+        return contaRepository.findByHash(contaHash).orElseThrow(() -> new NotFoundException("Conta com hash " + contaHash));
     }
 
-    public Double getSaldo(Long idConta) {
-        Conta conta = contaRepository.findById(idConta).orElseThrow(() -> new RuntimeException("Not Found"));
-
-        return conta.getSaldo();
+    public Double getSaldo(String contaHash) {
+        return findByHash(contaHash).getSaldo();
     }
 
-    public Conta save(TransacaoDto request, Long idConta) {
+    public CompletableFuture<Operacao> criarOperacao(OperacaoDto operacaoDto, String hashConta) {
+        return CompletableFuture.supplyAsync(() -> {
+            Conta conta = findByHash(hashConta);
+            Operacao operacao = operacaoService.criar(conta, operacaoDto);
+            conta.setSaldo(operacao.getConta().getSaldo());
+            contaRepository.save(conta);
+            return operacao;
+        });
+    }
 
-        Conta conta = contaRepository.findById(idConta).orElseThrow(() -> new RuntimeException("Not Found"));
-
-        Double valor= request.getValor();
-
-        Transacao.Operacao operacao = Transacao.Operacao.valueOf(request.getOperacao().toUpperCase());
-
-        if(operacao == Transacao.Operacao.SAQUE) {
-            if (conta.getSaldo() < valor) throw new RuntimeException("Saldo insuficiente");
-            conta.saque(valor);
-        }
-
-        if (operacao == Transacao.Operacao.DEPOSITO) conta.deposito(valor);
-
-        Transacao transacao= Transacao
-                .builder()
-                .conta(conta)
-                .operacao(operacao)
-                .valor(request.getValor())
-                .dataOperacao(LocalDateTime.now())
+    public Conta criarConta() {
+        Conta conta = Conta.builder()
+                .hash(UUID.randomUUID().toString())
+                .saldo(0d)
                 .build();
+        return contaRepository.save(conta);
+    }
 
-        conta.getTransacao().add(transacao);
-        transacaoRepository.save(transacao);
+    public Conta atualizarConta(Conta conta) {
         return contaRepository.save(conta);
     }
 }
