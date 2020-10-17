@@ -5,7 +5,6 @@ import br.com.api.dto.TransferenciaDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.service.ContaService;
-import br.com.api.service.TransferenciaService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +21,11 @@ import java.util.List;
 public class ContaController {
 
     private final ContaService contaService;
-    private final TransferenciaService transferenciaService;
 
     @Autowired
-    public ContaController(ContaService contaService, TransferenciaService transferenciaService) {
+    public ContaController(ContaService contaService) {
         this.contaService = contaService;
-        this.transferenciaService = transferenciaService;
+
     }
 
     @PostMapping
@@ -42,17 +40,20 @@ public class ContaController {
         return contaService.listAll();
     }
 
-    @PostMapping(path = "/{contaHash}/operacao",
+    /*@PostMapping(path = "/{contaHash}/operacao",
             consumes={MediaType.APPLICATION_JSON_VALUE},
             produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Insere operação a conta.", produces="application/json")
-    public ResponseEntity criarOperacao(@ApiParam(name="contaHash", required=true, value="Hash de conta", example="1")
+    public ResponseEntity criarOperacao(
+                              @ApiParam(name="contaHash", required=true, value="Hash de conta", example="1")
                               @PathVariable String contaHash,
                                         @ApiParam(name="request", required=true, value="Objeto com as reservas a serem criadas/atualizadas")
                               @Valid @RequestBody OperacaoDto request){
         contaService.criarOperacao(request, contaHash);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    */
+
 
     @PostMapping(path = "/{contaHash}/operacoes/saques",
             consumes={MediaType.APPLICATION_JSON_VALUE},

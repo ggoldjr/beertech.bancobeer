@@ -6,10 +6,8 @@ import br.com.api.exception.NotFoundException;
 import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
-import br.com.api.model.Transferencia;
 import br.com.api.repository.ContaRepository;
 import br.com.api.repository.OperacaoRepository;
-import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

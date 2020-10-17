@@ -37,13 +37,9 @@ public class Conta implements Serializable {
     @Column(unique = true)
     private String hash;
 
-    @OneToMany(mappedBy = "conta", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Operacao> operacoes;
-
-    @OneToMany(mappedBy = "contaOrigem", cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private List<Transferencia> transferencias;
 
     @CreatedDate
     private LocalDateTime criado_em;
