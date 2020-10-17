@@ -1,10 +1,15 @@
 package br.com.api.service;
 
 import br.com.api.dto.OperacaoDto;
+import br.com.api.dto.TransferenciaDto;
 import br.com.api.exception.NotFoundException;
+import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
+import br.com.api.model.Transferencia;
 import br.com.api.repository.ContaRepository;
+import br.com.api.repository.OperacaoRepository;
+import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +22,14 @@ public class ContaService {
 
     private final ContaRepository contaRepository;
     private final OperacaoService operacaoService;
+    private final OperacaoRepository operacaoRepository;
+
 
     @Autowired
-    public ContaService(ContaRepository contaRepository, OperacaoService operacaoService) {
+    public ContaService(ContaRepository contaRepository, OperacaoService operacaoService, OperacaoRepository operacaoRepository) {
         this.contaRepository = contaRepository;
         this.operacaoService = operacaoService;
+        this.operacaoRepository = operacaoRepository;
     }
 
     public List<Conta> listAll() {
@@ -46,6 +54,34 @@ public class ContaService {
         });
     }
 
+    public CompletableFuture<Operacao> criarOperacao(TransferenciaDto transferenciaDto) {
+        return CompletableFuture.supplyAsync(() -> {
+
+            Conta contaOrigem = findByHash(transferenciaDto.getHashContaOrigem());
+            Conta contaDestino = findByHash(transferenciaDto.getHashContaDestino());
+
+            Double valor = transferenciaDto.getValor();
+            if (!contaOrigem.saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
+
+            Operacao operacao = Operacao.builder()
+                    .conta(contaOrigem)
+                    .hashContaDestino(contaDestino.getHash())
+                    .valor(valor)
+                    .tipo(Operacao.Tipo.TRANSFERENCIA)
+                    .build();
+
+            operacao = operacaoRepository.save(operacao);
+
+            contaDestino.deposito(contaOrigem.saque(valor));
+            atualizarConta(contaOrigem);
+            atualizarConta(contaDestino);
+
+            return operacao;
+
+        });
+    }
+
+
     public Conta criarConta() {
         Conta conta = Conta.builder()
                 .hash(UUID.randomUUID().toString())
@@ -57,4 +93,6 @@ public class ContaService {
     public Conta atualizarConta(Conta conta) {
         return contaRepository.save(conta);
     }
+
+
 }

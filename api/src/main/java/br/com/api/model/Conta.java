@@ -51,6 +51,10 @@ public class Conta implements Serializable {
     @LastModifiedDate
     private LocalDateTime atualizado_em;
 
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     public Conta() {}
 
     public Double getSaldo() {

@@ -29,7 +29,7 @@ public class Operacao implements Serializable {
                 .build();
     }
 
-    public enum Tipo { DEPOSITO, SAQUE }
+    public enum Tipo { DEPOSITO, SAQUE, TRANSFERENCIA }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,6 +45,8 @@ public class Operacao implements Serializable {
     @ManyToOne
     @JoinColumn(name = "conta_id" )
     private Conta conta;
+
+    private String hashContaDestino;
 
     @CreatedDate
     private LocalDateTime criado_em;
