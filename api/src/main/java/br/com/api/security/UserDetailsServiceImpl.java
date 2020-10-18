@@ -1,17 +1,17 @@
 package br.com.api.security;
 
-import br.com.api.exception.SenhaInvalidaException;
 import br.com.api.model.Usuario;
 import br.com.api.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -29,24 +29,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Usuario usuario = usuarioService.findByEmail(username);
 
         UserDetailsImpl userDetails = UserDetailsImpl.builder()
+                .id(usuario.getId())
                 .email(usuario.getEmail())
                 .name(usuario.getNome())
-                .authorities(new ArrayList<GrantedAuthority>())
+                .authorities(List.of(new SimpleGrantedAuthority(usuario.getPerfil().name().toUpperCase())))
                 .password(usuario.getSenha())
                 .build();
 
         return userDetails;
     }
 
-    public UserDetails autenticar( Usuario usuario ) throws SenhaInvalidaException{
-        UserDetails user = loadUserByUsername(usuario.getEmail());
-        boolean senhasBatem = false;//encoder.matches( usuario.getSenha(), user.getPassword() );
-
-        if(senhasBatem){
-            return user;
-        }
-
-        throw new SenhaInvalidaException();
+    public Usuario byEmail(String email) {
+        return usuarioService.findByEmail(email);
     }
 
 }

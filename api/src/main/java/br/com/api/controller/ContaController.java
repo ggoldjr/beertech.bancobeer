@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class ContaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(conta);
     }
 
+    @RolesAllowed({"ADMIN"})
     @GetMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Lista as contas disponíveis.", produces="application/json")
     public List<Conta> listAll(){

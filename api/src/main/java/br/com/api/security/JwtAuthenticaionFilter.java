@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,38 +19,34 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-public class JwtAuthenticaionFilter extends OncePerRequestFilter {
+public class JwtAuthenticaionFilter extends BasicAuthenticationFilter {
 
 
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public JwtAuthenticaionFilter( JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
-
+    public JwtAuthenticaionFilter(AuthenticationManager authenticationManager,
+                                  JwtService jwtService,
+                                  UserDetailsServiceImpl userDetailsService,
+                                  AuthenticationEntryPoint authenticationEntryPoint) {
+        super(authenticationManager, authenticationEntryPoint);
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
 
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
-            if (request.getRequestURI().contains("/login") &&
-                    request.getMethod().equalsIgnoreCase("GET")) {
-
+            if (request.getRequestURI().contains("/login") && request.getMethod().equalsIgnoreCase("GET")) {
                 String authorization = request.getHeader("Authorization");
-
                 if (authorization != null && authorization.startsWith("Basic")) {
-                    super.doFilter(request,response,filterChain);
+                    super.doFilterInternal(request, response, filterChain);
                 } else {
                     filterChain.doFilter(request, response);
                 }
             }
-
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -57,6 +54,7 @@ public class JwtAuthenticaionFilter extends OncePerRequestFilter {
 
     }
 
+    @Override
     protected void onSuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response,
                                               Authentication authResult) throws IOException {
@@ -64,7 +62,7 @@ public class JwtAuthenticaionFilter extends OncePerRequestFilter {
         String token = jwtService.generateToken(userDetails);
         response.setStatus(200);
         response.addHeader("Authorization", String.format("Bearer %s", token));
-        UserDetails user = userDetailsService.loadUserByUsername(userDetails.getEmail());
+        Usuario user = userDetailsService.byEmail(userDetails.getEmail());
         response.getWriter().append(new ObjectMapper().writeValueAsString(user));
 
     }

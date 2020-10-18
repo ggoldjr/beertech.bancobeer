@@ -29,38 +29,20 @@ public class JwtService {
     private String base64EncodedSecretKey;
 
     public String generateToken(UserDetailsImpl user) {
-
-        long expTime = Long.valueOf(tokenExpiration);
-
-        //Take the current date and time and add the expiration date
+        long expTime = Long.parseLong(tokenExpiration);
         LocalDateTime expirationDateTime = LocalDateTime.now().plusMinutes(expTime);
-
-        System.out.println("expirationDateTime= "+ expirationDateTime);
-
-        //Converts to the standard expected by the jwt object
         Instant instante = expirationDateTime.atZone(ZoneId.systemDefault()).toInstant();
         Date expirationDate = Date.from(instante);
-
-        System.out.println("expirationDate= "+ expirationDate);
-
-        //build token
-        String jwt= Jwts
-                .builder()
+        return Jwts.builder()
                 .setSubject(encode(user))
                 .setExpiration(expirationDate)
-                .signWith( SignatureAlgorithm.HS512, base64EncodedSecretKey)
+                .signWith(SignatureAlgorithm.HS512, base64EncodedSecretKey)
                 .compact();
-
-        System.out.println("jwt= "+ jwt);
-
-        return jwt;
-
     }
-
 
     private Claims getClaims(String token) {
         try {
-            return Jwts.parser().setSigningKey(base64EncodedSecretKey.getBytes()).parseClaimsJws(token).getBody();
+            return Jwts.parser().setSigningKey(base64EncodedSecretKey).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             return null;
         }
@@ -69,15 +51,8 @@ public class JwtService {
     public Boolean tokenValido(String token) {
         try {
             Date dataExpiracao = getClaims(token).getExpiration();
-            System.out.println("dataExpiracao " + dataExpiracao);
-
             LocalDateTime data = dataExpiracao.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-            System.out.println("dataExpiracao " + dataExpiracao);
-            System.out.println("datatual " + LocalDateTime.now());
             return !LocalDateTime.now().isAfter(data);
-
-
         } catch (Exception e) {
             return false;
         }
