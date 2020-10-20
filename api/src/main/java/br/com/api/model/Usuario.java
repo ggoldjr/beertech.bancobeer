@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
-@Document(collation = "usuarios")
+@Document(collection = "usuario")
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,16 +25,16 @@ public class Usuario {
     private String _id;
 
     @NotBlank
-    String  nome;
+    private String  nome;
 
     @NotBlank(message = "Senha não pode ser nula")
-    String  senha;
+    private String  senha;
 
     @NotBlank(message = "CNPJ não pode ser nulo")
-    String  cnpj;
+    private String  cnpj;
 
     @NotBlank(message = "E-mail não pode ser nulo")
-    String  email;
+    private String  email;
     private Perfil perfil;
     private Conta conta;
     private LocalDateTime criado_em;

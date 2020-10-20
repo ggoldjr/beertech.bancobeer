@@ -12,10 +12,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-@Document(collation = "contas")
+@Document(collection = "contas")
 @Data
 @Builder
 @AllArgsConstructor
@@ -30,7 +31,6 @@ public class Conta implements Serializable {
 
     @NotBlank
     private String hash;
-    private List<Operacao> operacoes;
     private LocalDateTime criado_em;
     private LocalDateTime atualizado_em;
     private Usuario usuario;
