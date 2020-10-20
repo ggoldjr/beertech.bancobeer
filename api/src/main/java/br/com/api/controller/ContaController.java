@@ -30,6 +30,7 @@ public class ContaController {
     }
 
     @PostMapping
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity criarConta() {
         Conta conta = contaService.criarConta();
         return ResponseEntity.status(HttpStatus.CREATED).body(conta);
@@ -57,6 +58,7 @@ public class ContaController {
     */
 
 
+    @RolesAllowed({"ADMIN"})
     @PostMapping(path = "/{contaHash}/operacoes/saques",
             consumes={MediaType.APPLICATION_JSON_VALUE},
             produces={MediaType.APPLICATION_JSON_VALUE})
@@ -70,6 +72,7 @@ public class ContaController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @RolesAllowed({"ADMIN"})
     @PostMapping(path = "/{contaHash}/operacoes/depositos",
             consumes={MediaType.APPLICATION_JSON_VALUE},
             produces={MediaType.APPLICATION_JSON_VALUE})
@@ -84,6 +87,7 @@ public class ContaController {
     }
 
 
+    @RolesAllowed({"ADMIN"})
     @GetMapping(path = "/{contaHash}/saldos", consumes={MediaType.APPLICATION_JSON_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Retorna.", produces="application/json")
     public Double getSaldo(@ApiParam(name="contaHash", required=true, value="Hash de conta", example="1")
@@ -92,6 +96,7 @@ public class ContaController {
     }
 
 
+    @RolesAllowed({"ADMIN"})
     @PostMapping(path = "/operacoes/tranferencias",consumes={MediaType.APPLICATION_JSON_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Cria uma transferência.", produces="application/json")
     public ResponseEntity criar(@Valid @RequestBody TransferenciaDto transferenciaDto) {
