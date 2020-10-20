@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/contas")
@@ -66,10 +67,10 @@ public class ContaController {
     public ResponseEntity saque(@ApiParam(name="contaHash", required=true, value="Hash de conta", example="1")
                                         @PathVariable String contaHash,
                                         @ApiParam(name="request", required=true, value="Objeto com as reservas a serem criadas/atualizadas")
-                                        @Valid @RequestBody OperacaoDto request){
+                                        @Valid @RequestBody OperacaoDto request) throws ExecutionException, InterruptedException {
         request.setTipo(Operacao.Tipo.SAQUE.name());
-        contaService.criarOperacao(request, contaHash);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Operacao operacao = contaService.criarOperacao(request, contaHash).get();
+        return ResponseEntity.status(HttpStatus.CREATED).body(operacao);
     }
 
     @RolesAllowed({"ADMIN"})
@@ -99,9 +100,9 @@ public class ContaController {
     @RolesAllowed({"ADMIN"})
     @PostMapping(path = "/operacoes/tranferencias",consumes={MediaType.APPLICATION_JSON_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Cria uma transferência.", produces="application/json")
-    public ResponseEntity criar(@Valid @RequestBody TransferenciaDto transferenciaDto) {
-        contaService.criarOperacao(transferenciaDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity criar(@Valid @RequestBody TransferenciaDto transferenciaDto) throws ExecutionException, InterruptedException {
+        Operacao operacao = contaService.criarOperacao(transferenciaDto).get();
+        return ResponseEntity.status(HttpStatus.CREATED).body(operacao);
     }
 
 }
