@@ -48,7 +48,7 @@ public class CriarContaTest {
 
         @Test
         void deveRetornarContaComId() {
-            assertThat(contaCriada.getId()).isNotNull();
+            assertThat(contaCriada.get_id()).isNotNull();
         }
 
         @Test

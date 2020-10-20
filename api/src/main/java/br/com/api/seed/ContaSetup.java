@@ -28,7 +28,6 @@ public class ContaSetup {
     }
 
     public void setup() {
-
         operacaoRepository.deleteAll();
         contaRepository.deleteAll();
         contas = Stream.iterate(1, i -> i + 1)
@@ -39,6 +38,7 @@ public class ContaSetup {
 
     public Conta criar() {
         Conta conta = Conta.builder()
+                ._id(UUID.randomUUID().toString())
                 .saldo(1000d)
                 .hash(UUID.randomUUID().toString())
                 .build();

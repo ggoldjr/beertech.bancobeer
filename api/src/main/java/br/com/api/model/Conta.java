@@ -1,15 +1,12 @@
 package br.com.api.model;
 
 import br.com.api.exception.SaldoInsuficienteException;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,37 +15,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Entity
+@Document(collation = "contas")
 @Data
 @Builder
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 public class Conta implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String _id;
 
     @NotNull
     @Min(value = 0)
     private Double saldo;
 
     @NotBlank
-    @Column(unique = true)
     private String hash;
-
-    @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Operacao> operacoes;
-
-    @CreatedDate
     private LocalDateTime criado_em;
-
-    @LastModifiedDate
     private LocalDateTime atualizado_em;
-
-    @OneToOne
-    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     public Conta() {}

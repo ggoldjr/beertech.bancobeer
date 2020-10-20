@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Usuario usuario = usuarioService.findByEmail(username);
 
         UserDetailsImpl userDetails = UserDetailsImpl.builder()
-                .id(usuario.getId())
+                .id(usuario.get_id())
                 .email(usuario.getEmail())
                 .name(usuario.getNome())
                 .authorities(List.of(new SimpleGrantedAuthority(usuario.getPerfil().name().toUpperCase())))

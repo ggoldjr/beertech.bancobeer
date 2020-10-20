@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 public class UserDetailsImpl implements UserDetails {
 
-    private Long id;
+    private String id;
     private String name;
     private String email;
     private String password;

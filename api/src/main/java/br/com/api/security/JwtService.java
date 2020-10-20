@@ -76,7 +76,7 @@ public class JwtService {
             String subject = getClaims(encoded).getSubject();
             String[] split = subject.split(":");
             return UserDetailsImpl.builder()
-                    .id(Long.parseLong(split[0]))
+                    .id(split[0])
                     .name(split[1])
                     .email(split[2])
                     .authorities(decodePermission(split[3]))

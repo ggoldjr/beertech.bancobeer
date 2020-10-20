@@ -5,19 +5,16 @@ import br.com.api.dto.OperacaoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
+@Document("operacoes")
 @Data
 @AllArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class)
 public class Operacao implements Serializable {
 
     public static Operacao criar(OperacaoDto operacaoDto, Conta conta) {
@@ -30,30 +27,13 @@ public class Operacao implements Serializable {
     }
 
     public enum Tipo { DEPOSITO, SAQUE, TRANSFERENCIA }
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+    private String _id;
     private double valor;
-
-    @Enumerated(EnumType.STRING)
     private Tipo tipo;
-
     private LocalDateTime dataOperacao;
-
-    @ManyToOne
-    @JoinColumn(name = "conta_id" )
     private Conta conta;
-
     private String hashContaDestino;
-
-    @CreatedDate
     private LocalDateTime criado_em;
-
-    @LastModifiedDate
     private LocalDateTime atualizado_em;
-
-    public Operacao() {
-    }
 }

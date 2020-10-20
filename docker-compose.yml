@@ -1,15 +1,10 @@
 version: '3'
 services:
   db:
-    image: mysql:5.7
-    restart: always
-    volumes:
-       - database:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: banco-beer-database
-    ports:
-      - "6033:3306"
+   image: mongo:3.6.12
+   ports:
+     - "27017:27017"
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq

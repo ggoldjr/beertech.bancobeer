@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.UUID;
+
 @SpringBootApplication
-@EnableJpaAuditing
 public class ApiApplication implements CommandLineRunner {
 
 
@@ -34,19 +34,15 @@ public class ApiApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 		//contaSetup.setup();
-
 		usuarioRepository.deleteAll();
-
 		Usuario usuario = Usuario.builder()
+				._id(UUID.randomUUID().toString())
 				.senha(new BCryptPasswordEncoder().encode("senha"))
 				.email("duplomalte@gmail.com")
 				.cnpj("1234")
 				.nome("Duplo Malte")
 				.perfil(Usuario.Perfil.ADMIN)
 				.build();
-
 		usarioService.save(usuario);
-
 	}
-
 }

@@ -34,7 +34,7 @@ public class UsuarioController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 UsuarioDto.builder()
-                .id(usuario.getId())
+                .id(usuario.get_id())
                 .nome(usuario.getNome())
                 .cnpj(usuario.getCnpj())
                 .email(usuario.getEmail())
@@ -51,7 +51,7 @@ public class UsuarioController {
         Usuario usuario = usuarioService.findByEmail(email);
 
         return UsuarioDto.builder()
-                .id(usuario.getId())
+                .id(usuario.get_id())
                 .nome(usuario.getNome())
                 .cnpj(usuario.getCnpj())
                 .email(usuario.getEmail())
@@ -68,12 +68,11 @@ public class UsuarioController {
         Usuario usuario = usuarioService.update(usuarioRequest);
 
         return UsuarioDto.builder()
-                .id(usuario.getId())
+                .id(usuario.get_id())
                 .nome(usuario.getNome())
                 .cnpj(usuario.getCnpj())
                 .email(usuario.getEmail())
-                .perfil(usuario.getPerfil()).build()
-                ;
+                .perfil(usuario.getPerfil()).build();
 
     }
 

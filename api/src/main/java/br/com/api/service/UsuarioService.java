@@ -33,7 +33,7 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
     }
 
-    public Usuario findById(Long id){
+    public Usuario findById(String id){
         return usuarioRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
     }
 
@@ -44,7 +44,7 @@ public class UsuarioService {
 
     public Usuario update(Usuario usuarioRequest) {
 
-        findById(usuarioRequest.getId());
+        findById(usuarioRequest.get_id());
         return save(usuarioRequest);
 
     }
