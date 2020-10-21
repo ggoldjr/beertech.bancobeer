@@ -1,4 +1,4 @@
-package br.com.api.conta;
+package br.com.api.e2e.conta;
 
 import br.com.api.dto.OperacaoDto;
 import br.com.api.exception.FieldErrorMessage;

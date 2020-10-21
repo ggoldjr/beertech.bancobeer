@@ -1,4 +1,4 @@
-package br.com.api.trasferencia;
+package br.com.api.e2e.trasferencia;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
