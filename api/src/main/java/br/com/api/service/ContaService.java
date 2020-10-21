@@ -38,6 +38,10 @@ public class ContaService {
         return contaRepository.findByHash(contaHash).orElseThrow(() -> new NotFoundException("Conta com hash " + contaHash));
     }
 
+    public Conta findById(Long id) {
+        return contaRepository.findById(id).orElseThrow(() -> new NotFoundException("Conta com id " + id));
+    }
+
     public Double getSaldo(String contaHash) {
         return findByHash(contaHash).getSaldo();
     }
@@ -92,5 +96,9 @@ public class ContaService {
         return contaRepository.save(conta);
     }
 
+
+    public List<OperacaoDto> listaOperacoesByHash(String contaHash){
+        return operacaoService.getExtrato(contaHash);
+    }
 
 }
