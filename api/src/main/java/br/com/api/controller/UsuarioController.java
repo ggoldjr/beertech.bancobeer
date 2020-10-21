@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -81,7 +82,14 @@ public class UsuarioController {
     @ApiOperation(value="Lista todos usuários.", produces="application/json")
     public List<UsuarioDto> listaUsuarios(){
 
-        return new ArrayList<UsuarioDto>();
+        return usuarioService.listAll().stream()
+                .map(usuario -> UsuarioDto.builder()
+                        .id(usuario.getId())
+                        .nome(usuario.getNome())
+                        .cnpj(usuario.getCnpj())
+                        .email(usuario.getEmail())
+                        .perfil(usuario.getPerfil()).build())
+                .collect(Collectors.toList());
 
     }
 

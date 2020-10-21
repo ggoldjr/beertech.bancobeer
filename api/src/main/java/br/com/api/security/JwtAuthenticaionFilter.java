@@ -7,13 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -60,10 +56,14 @@ public class JwtAuthenticaionFilter extends BasicAuthenticationFilter {
                                               Authentication authResult) throws IOException {
         UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
         String token = jwtService.generateToken(userDetails);
+
         response.setStatus(200);
-        response.addHeader("Authorization", String.format("Bearer %s", token));
-        Usuario user = userDetailsService.byEmail(userDetails.getEmail());
-        response.getWriter().append(new ObjectMapper().writeValueAsString(user));
+        response.getWriter().append(token);
+
+        //response.addHeader("Authorization", String.format("Bearer %s", token));
+        //Usuario user = userDetailsService.byEmail(userDetails.getEmail());
+
+        //response.getWriter().append(new ObjectMapper().writeValueAsString(user));
 
     }
 }
