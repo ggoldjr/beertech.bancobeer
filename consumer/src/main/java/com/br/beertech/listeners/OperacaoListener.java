@@ -26,7 +26,7 @@ public class OperacaoListener {
     logger.info("enviando requisição para conta: {}", operacaoMessage.getContaHash());
     TransacaoDto transacaoDto = new TransacaoDto(operacaoMessage.getOperacao(),operacaoMessage.getValor());
     try{
-      String url = String.format("http://localhost:8080/contas/%s/operacao", operacaoMessage.getContaHash());
+      String url = String.format(System.getenv("API_URL") + "contas/%s/operacao", operacaoMessage.getContaHash());
       restTemplate.postForObject(url, transacaoDto ,Void.class);
     }catch (Exception e){
       logger.error("Error on try request", e);
