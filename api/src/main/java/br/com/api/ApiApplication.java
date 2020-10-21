@@ -38,7 +38,7 @@ public class ApiApplication implements CommandLineRunner {
 		usuarioRepository.deleteAll();
 
 		Usuario usuario = Usuario.builder()
-				.senha(new BCryptPasswordEncoder().encode("senha"))
+				.senha("senha")
 				.email("duplomalte@gmail.com")
 				.cnpj("1234")
 				.nome("Duplo Malte")

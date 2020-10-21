@@ -21,6 +21,8 @@ public class UsuarioService {
 
     public Usuario save(Usuario usuario){
         try {
+            usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
+
             return usuarioRepository.save(usuario);
         }
         catch (Throwable e){
