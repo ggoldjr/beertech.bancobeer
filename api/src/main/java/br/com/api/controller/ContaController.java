@@ -112,6 +112,19 @@ public class ContaController {
     }
 
 
+    @PostMapping(path = "/{contaHash}/operacoes",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ApiOperation(value = "Realiza saque na conta.", produces = "application/json")
+    public ResponseEntity operacao(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
+                                @PathVariable String contaHash,
+                                @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
+                                @Valid @RequestBody OperacaoDto request) {
+        contaService.criarOperacao(request, contaHash);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
     @PostMapping(path = "/{contaHash}/operacoes/saques",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
