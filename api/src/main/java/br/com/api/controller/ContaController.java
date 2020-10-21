@@ -1,10 +1,6 @@
 package br.com.api.controller;
 
-import br.com.api.dto.ContaDto;
-import br.com.api.dto.OperacaoDto;
-import br.com.api.dto.SaldoDto;
-import br.com.api.dto.TransferenciaDto;
-import br.com.api.exception.NotFoundException;
+import br.com.api.dto.*;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.service.ContaService;
@@ -34,18 +30,31 @@ public class ContaController {
     }
 
     @PostMapping
-    public ResponseEntity criarConta() {
+    @ApiOperation(value = "Criar conta para o usuário.",
+                  consumes = MediaType.APPLICATION_JSON_VALUE,
+                  produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity criarConta(@Valid @RequestBody ContaDtoIn request
+    ) {
+
         Conta conta = contaService.criarConta();
-        return ResponseEntity.status(HttpStatus.CREATED).body(conta);
+
+        ContaDtoOut contaDtoOut = ContaDtoOut.builder()
+                .hash(conta.getHash())
+                .id(conta.getId())
+                .usuario("")
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(contaDtoOut);
     }
 
     @RolesAllowed({"ADMIN"})
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Lista as contas disponíveis.", produces = "application/json")
-    public List<ContaDto> listAll() {
+    @ApiOperation(value = "Lista as contas disponíveis.", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ContaDtoOut> listAll() {
 
         return contaService.listAll().stream().map(conta ->
-                ContaDto.builder()
+                ContaDtoOut.builder()
                         .hash(conta.getHash())
                         .id(conta.getId())
                         .usuario("").build())
@@ -58,18 +67,18 @@ public class ContaController {
     @GetMapping(path = "/{contaHash}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por hash ou id.", produces = "application/json")
-    public ContaDto getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
+    public ContaDtoOut getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                    @PathVariable String contaHash
 
     ) {
         Conta conta = contaService.findByHash(contaHash);
 
-        ContaDto contaDto = ContaDto.builder()
+        ContaDtoOut contaDtoOut = ContaDtoOut.builder()
                 .hash(conta.getHash())
                 .id(conta.getId())
                 .usuario("").build();
 
-        return contaDto;
+        return contaDtoOut;
 
     }
 
@@ -77,18 +86,18 @@ public class ContaController {
     @GetMapping(path = "/id/{contaId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por id.", produces = "application/json")
-    public ContaDto getContaById(@ApiParam(name = "contaId", required = true, value = "Id da conta", example = "1")
-                              @PathVariable Long contaId
+    public ContaDtoOut getContaById(@ApiParam(name = "contaId", required = true, value = "Id da conta", example = "1")
+                                    @PathVariable Long contaId
 
     ) {
         Conta conta = contaService.findById(contaId);
 
-        ContaDto contaDto = ContaDto.builder()
+        ContaDtoOut contaDtoOut = ContaDtoOut.builder()
                 .hash(conta.getHash())
                 .id(conta.getId())
                 .usuario("").build();
 
-        return contaDto;
+        return contaDtoOut;
     }
 
     @RolesAllowed({"ADMIN"})

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ContaDto {
+public class ContaDtoOut {
 
     Long id;
     String hash;
