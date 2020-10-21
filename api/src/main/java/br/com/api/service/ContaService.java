@@ -1,5 +1,6 @@
 package br.com.api.service;
 
+import br.com.api.dto.ExtratoDto;
 import br.com.api.dto.OperacaoDto;
 import br.com.api.dto.TransferenciaDto;
 import br.com.api.exception.NotFoundException;
@@ -97,7 +98,7 @@ public class ContaService {
     }
 
 
-    public List<OperacaoDto> listaOperacoesByHash(String contaHash){
+    public List<ExtratoDto> listaOperacoesByHash(String contaHash){
         return operacaoService.getExtrato(contaHash);
     }
 

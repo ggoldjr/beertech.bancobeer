@@ -104,7 +104,7 @@ public class ContaController {
     @GetMapping(path = "/extratos/{contaHash}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Obter extrato da conta pelo hash.", produces = "application/json")
-    public List<OperacaoDto> getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
+    public List<ExtratoDto> getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                              @PathVariable String contaHash
 
     ) {

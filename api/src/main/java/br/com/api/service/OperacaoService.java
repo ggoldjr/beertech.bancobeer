@@ -1,5 +1,6 @@
 package br.com.api.service;
 
+import br.com.api.dto.ExtratoDto;
 import br.com.api.dto.OperacaoDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
@@ -48,18 +49,18 @@ public class OperacaoService {
 
     }
 
-    public List<OperacaoDto> getExtrato(String contaHash) {
+    public List<ExtratoDto> getExtrato(String contaHash) {
 
-        List<OperacaoDto> listaOperacao =
+        List<ExtratoDto> listaOperacao =
                 getOperacoesConta(contaHash)
                 .stream()
-                        .map(e -> new OperacaoDto(e.getTipo().name(),e.getValor()) )
+                        .map(e -> new ExtratoDto(e.getTipo().name(),e.getValor(),e.getCriado_em()) )
                         .collect(Collectors.toList());
 
-        List<OperacaoDto> listaTransferencia =
+        List<ExtratoDto> listaTransferencia =
                 getTransferenciasInConta(contaHash)
                         .stream()
-                        .map(e -> new OperacaoDto("TRANSFERENCIA RECEBIDA",e.getValor()) )
+                        .map(e -> new ExtratoDto("TRANSFERENCIA RECEBIDA",e.getValor(),e.getCriado_em()) )
                         .collect(Collectors.toList());
         listaOperacao.addAll(listaTransferencia);
 
