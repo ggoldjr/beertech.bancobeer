@@ -16,15 +16,24 @@ public class TestUtil {
 
     public ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     public final TestRestTemplate restTemplate;
+    private String authorization;
 
-    @Autowired
     public TestUtil(TestRestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+
+    public void login(int port) {
+        ResponseEntity<String> responseEntity = restTemplate.withBasicAuth("duplomalte@gmail.com", "senha")
+                .getForEntity(String.format("http://localhost:%s/login", port), String.class);
+        authorization = String.format("Bearer %s", responseEntity.getBody());
+    }
+
+
     private HttpHeaders getHttpHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
+        headers.add("Authorization", authorization);
         return headers;
     }
 

@@ -92,8 +92,4 @@ public class UsuarioController {
                 .collect(Collectors.toList());
 
     }
-
-
-
-
 }

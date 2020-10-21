@@ -53,18 +53,15 @@ public class CriarOperacaoTest {
         Conta conta;
 
         @BeforeEach
-        void setup() throws JsonProcessingException {
+        void setup() throws JsonProcessingException, InterruptedException {
+            testUtil.login(port);
             contaSetup.setup();
             contaHash = contaSetup.getContas().get(0).getHash();
-            String url = String.format("http://localhost:%s/contas/%s/operacao", port, contaHash);
+            String url = String.format("http://localhost:%s/contas/%s/operacoes/%s", port, contaHash, getOperacao());
             HttpEntity<String> httpEntity = testUtil.getHttpEntity(getOperacaoDto());
             responseEntity = testUtil.restTemplate.postForEntity(url, httpEntity, String.class);
+            Thread.sleep(3000);
             if (responseEntity.getStatusCodeValue() == 201) {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 List<Operacao> operacoes = operacaoService.getOperacaoDaConta(contaHash);
                 assertThat(operacoes.size()).isEqualTo(1);
                 operacaoCriada = operacoes.get(0);
@@ -74,6 +71,7 @@ public class CriarOperacaoTest {
             }
         }
         abstract OperacaoDto getOperacaoDto();
+        abstract String getOperacao();
     }
 
 
@@ -105,6 +103,11 @@ public class CriarOperacaoTest {
             operacaoDto.setValor(100D);
             return operacaoDto;
         }
+
+        @Override
+        String getOperacao() {
+            return "saques";
+        }
     }
 
     @Nested
@@ -125,6 +128,11 @@ public class CriarOperacaoTest {
             assertThat(responseError.getStatus()).isEqualTo(400);
         }
 
+        @Override
+        String getOperacao() {
+            return "saques";
+        }
+
     }
 
     @Nested
@@ -133,7 +141,7 @@ public class CriarOperacaoTest {
         @Override
         OperacaoDto getOperacaoDto() {
             OperacaoDto operacaoDto = new OperacaoDto();
-            operacaoDto.setValor(100d);
+            operacaoDto.setValor(-10d);
             return operacaoDto;
         }
 
@@ -145,8 +153,13 @@ public class CriarOperacaoTest {
 
         @Test
         void deveRetornarErroDeValidacaoCorrespondente() {
-            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("tipo",
-                    "Operação inválida"));
+            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("valor",
+                    "Valor deve ser maior que zero"));
+        }
+
+        @Override
+        String getOperacao() {
+            return "saques";
         }
 
     }
@@ -179,6 +192,11 @@ public class CriarOperacaoTest {
             operacaoDto.setValor(1000D);
             return operacaoDto;
         }
+
+        @Override
+        String getOperacao() {
+            return "depositos";
+        }
     }
 
     @Nested
@@ -202,6 +220,11 @@ public class CriarOperacaoTest {
         void deveRetornarErroDeValidacaoCorrespondente() {
             assertThat(responseError.getErrors()).contains(new FieldErrorMessage("valor",
                     "Valor deve ser maior que zero"));
+        }
+
+        @Override
+        String getOperacao() {
+            return "depositos";
         }
     }
 
@@ -227,6 +250,11 @@ public class CriarOperacaoTest {
         void deveRetornarErroDeValidacaoCorrespondente() {
             assertThat(responseError.getErrors()).contains(new FieldErrorMessage("valor",
                     "Valor deve ser maior que zero"));
+        }
+
+        @Override
+        String getOperacao() {
+            return "depositos";
         }
     }
 }

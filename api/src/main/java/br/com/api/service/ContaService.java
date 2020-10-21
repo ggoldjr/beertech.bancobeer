@@ -1,5 +1,6 @@
 package br.com.api.service;
 
+import br.com.api.dto.ContaDtoIn;
 import br.com.api.dto.ExtratoDto;
 import br.com.api.dto.OperacaoDto;
 import br.com.api.dto.TransferenciaDto;
@@ -85,7 +86,7 @@ public class ContaService {
     }
 
 
-    public Conta criarConta() {
+    public Conta criarConta(ContaDtoIn contaDtoIn) {
         Conta conta = Conta.builder()
                 .hash(UUID.randomUUID().toString())
                 .saldo(0d)

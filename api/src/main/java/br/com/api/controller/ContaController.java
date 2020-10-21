@@ -31,20 +31,14 @@ public class ContaController {
 
     @PostMapping
     @ApiOperation(value = "Criar conta para o usuário.",
-                  consumes = MediaType.APPLICATION_JSON_VALUE,
-                  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity criarConta(@Valid @RequestBody ContaDtoIn request
-    ) {
-
-        Conta conta = contaService.criarConta();
-
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity criarConta(@Valid @RequestBody ContaDtoIn request) {
+        Conta conta = contaService.criarConta(request);
         ContaDtoOut contaDtoOut = ContaDtoOut.builder()
                 .hash(conta.getHash())
                 .id(conta.getId())
-                .usuario("")
                 .build();
-
-
         return ResponseEntity.status(HttpStatus.CREATED).body(contaDtoOut);
     }
 
@@ -68,7 +62,7 @@ public class ContaController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por hash ou id.", produces = "application/json")
     public ContaDtoOut getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                   @PathVariable String contaHash
+                                      @PathVariable String contaHash
 
     ) {
         Conta conta = contaService.findByHash(contaHash);
@@ -105,7 +99,7 @@ public class ContaController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Obter extrato da conta pelo hash.", produces = "application/json")
     public List<ExtratoDto> getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                             @PathVariable String contaHash
+                                            @PathVariable String contaHash
 
     ) {
         return contaService.listaOperacoesByHash(contaHash);
@@ -117,9 +111,9 @@ public class ContaController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Realiza saque na conta.", produces = "application/json")
     public ResponseEntity operacao(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                @PathVariable String contaHash,
-                                @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
-                                @Valid @RequestBody OperacaoDto request) {
+                                   @PathVariable String contaHash,
+                                   @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
+                                   @Valid @RequestBody OperacaoDto request) {
         contaService.criarOperacao(request, contaHash);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -155,7 +149,7 @@ public class ContaController {
     @GetMapping(path = "/{contaHash}/saldos")
     @ApiOperation(value = "Retorna saldo da conta.")
     public SaldoDto getSaldo(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                           @PathVariable String contaHash) {
+                             @PathVariable String contaHash) {
         Conta conta = contaService.findByHash(contaHash);
 
         SaldoDto saldoDto = SaldoDto.builder()
