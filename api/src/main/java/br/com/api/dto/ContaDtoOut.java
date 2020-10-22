@@ -1,15 +1,21 @@
 package br.com.api.dto;
 
-import br.com.api.model.Usuario;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ContaDtoOut {
 
     Long id;
     String hash;
     String usuario;
+    Double saldo;
+
+
 
 }

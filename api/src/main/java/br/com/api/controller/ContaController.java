@@ -34,26 +34,20 @@ public class ContaController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity criarConta(@Valid @RequestBody ContaDtoIn request) {
-        Conta conta = contaService.criarConta(request);
-        ContaDtoOut contaDtoOut = ContaDtoOut.builder()
-                .hash(conta.getHash())
-                .id(conta.getId())
-                .build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(contaDtoOut);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(contaService.create(request));
     }
 
     @RolesAllowed({"ADMIN"})
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista as contas disponíveis.", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ContaDtoOut> listAll() {
+    public ResponseEntity listAll() {
 
-        return contaService.listAll().stream().map(conta ->
-                ContaDtoOut.builder()
-                        .hash(conta.getHash())
-                        .id(conta.getId())
-                        .usuario("").build())
-                .collect(Collectors.toList());
-
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(contaService.list());
 
     }
 
@@ -61,18 +55,14 @@ public class ContaController {
     @GetMapping(path = "/{contaHash}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por hash ou id.", produces = "application/json")
-    public ContaDtoOut getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
+    public ResponseEntity getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                       @PathVariable String contaHash
 
     ) {
-        Conta conta = contaService.findByHash(contaHash);
 
-        ContaDtoOut contaDtoOut = ContaDtoOut.builder()
-                .hash(conta.getHash())
-                .id(conta.getId())
-                .usuario("").build();
-
-        return contaDtoOut;
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(contaService.listByHash(contaHash));
 
     }
 
@@ -80,29 +70,26 @@ public class ContaController {
     @GetMapping(path = "/id/{contaId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por id.", produces = "application/json")
-    public ContaDtoOut getContaById(@ApiParam(name = "contaId", required = true, value = "Id da conta", example = "1")
+    public ResponseEntity getContaById(@ApiParam(name = "contaId", required = true, value = "Id da conta", example = "1")
                                     @PathVariable Long contaId
 
     ) {
-        Conta conta = contaService.findById(contaId);
-
-        ContaDtoOut contaDtoOut = ContaDtoOut.builder()
-                .hash(conta.getHash())
-                .id(conta.getId())
-                .usuario("").build();
-
-        return contaDtoOut;
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(contaService.listById(contaId));
     }
 
     @RolesAllowed({"ADMIN"})
     @GetMapping(path = "/extratos/{contaHash}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Obter extrato da conta pelo hash.", produces = "application/json")
-    public List<ExtratoDto> getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
+    public ResponseEntity getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                             @PathVariable String contaHash
 
     ) {
-        return contaService.listaOperacoesByHash(contaHash);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(contaService.listaOperacoesByHash(contaHash));
     }
 
 
@@ -148,16 +135,14 @@ public class ContaController {
 
     @GetMapping(path = "/{contaHash}/saldos")
     @ApiOperation(value = "Retorna saldo da conta.")
-    public SaldoDto getSaldo(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
+    public ResponseEntity getSaldo(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                              @PathVariable String contaHash) {
-        Conta conta = contaService.findByHash(contaHash);
 
-        SaldoDto saldoDto = SaldoDto.builder()
-                .hash(conta.getHash())
-                .saldo(contaService.getSaldo(contaHash))
-                .build();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(contaService.listSaldo(contaHash));
 
-        return saldoDto;
+
 
     }
 

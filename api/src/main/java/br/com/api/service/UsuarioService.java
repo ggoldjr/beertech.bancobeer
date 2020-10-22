@@ -1,5 +1,7 @@
 package br.com.api.service;
 
+import br.com.api.dto.UsuarioDto;
+import br.com.api.dto.UsuarioDtoIn;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
@@ -8,15 +10,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final ContaService contaService;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ContaService contaService) {
         this.usuarioRepository = usuarioRepository;
+        this.contaService = contaService;
     }
 
     public Usuario save(Usuario usuario){
@@ -44,10 +49,53 @@ public class UsuarioService {
     }
 
 
-    public Usuario update(Usuario usuarioRequest) {
+    public UsuarioDto update(Usuario usuarioRequest) {
 
         findById(usuarioRequest.getId());
-        return save(usuarioRequest);
+        return usuarioToUsuarioDto(save(usuarioRequest));
+
+    }
+
+    public UsuarioDto create(UsuarioDtoIn req){
+
+        return usuarioToUsuarioDto(save(usuarioDtoInToUsuario(req)));
+
+
+    }
+
+    public List<UsuarioDto> list(){
+        return listAll().stream()
+                .map( usuario -> usuarioToUsuarioDto(usuario))
+                .collect(Collectors.toList());
+    }
+
+    public UsuarioDto listByEmail(String email){
+
+        return usuarioToUsuarioDto(findByEmail(email));
+
+    }
+
+    public UsuarioDto usuarioToUsuarioDto(Usuario usuario){
+
+        return UsuarioDto.builder()
+                .cnpj(usuario.getCnpj())
+                .email(usuario.getEmail())
+                .nome(usuario.getNome())
+                .perfil(usuario.getPerfil())
+                .contas(contaService.listContasUsuario(usuario))
+                .build();
+
+    }
+
+    public Usuario usuarioDtoInToUsuario (UsuarioDtoIn req){
+
+        return Usuario.builder()
+                .perfil(req.getPerfil())
+                .cnpj(req.getCnpj())
+                .email(req.getEmail())
+                .nome(req.getNome())
+                .senha(req.getSenha())
+                .build();
 
     }
 }

@@ -15,6 +15,7 @@ public interface OperacaoRepository extends JpaRepository<Operacao, Long> {
 
     List<Operacao> findAllByhashContaDestino(String contaHash);
 
+    void deleteByContaId(Long id);
 
 
 }

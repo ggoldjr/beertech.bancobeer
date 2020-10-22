@@ -1,18 +1,16 @@
 package br.com.api.dto;
 
-import br.com.api.model.Conta;
 import br.com.api.model.Usuario;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
-
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class UsuarioDto {
-
-    private Long id;
+public class UsuarioDtoIn {
 
     private String  nome;
 
@@ -22,7 +20,6 @@ public class UsuarioDto {
 
     private Usuario.Perfil perfil;
 
-    private List<ContaDtoOut> contas;
-
+    private String senha;
 
 }

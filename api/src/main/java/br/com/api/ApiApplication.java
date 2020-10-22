@@ -16,13 +16,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class ApiApplication implements CommandLineRunner {
 
 
-	public final ContaSetup contaSetup;
+	//public final ContaSetup contaSetup;
 	public final UsuarioService usarioService;
 	public final UsuarioRepository usuarioRepository ;
 
 	@Autowired
-	public ApiApplication(ContaSetup contaSetup, UsuarioService usarioService, UsuarioRepository usuarioRepository) {
-		this.contaSetup = contaSetup;
+	public ApiApplication( UsuarioService usarioService, UsuarioRepository usuarioRepository) {
 		this.usarioService = usarioService;
 		this.usuarioRepository = usuarioRepository;
 	}
@@ -35,17 +34,20 @@ public class ApiApplication implements CommandLineRunner {
 	public void run(String... args) {
 		//contaSetup.setup();
 
-		usuarioRepository.deleteAll();
+		//usuarioRepository.deleteAll();
+		try {
+			Usuario usuario = Usuario.builder()
+					.senha("senha")
+					.email("duplomalte@gmail.com")
+					.cnpj("1234")
+					.nome("Duplo Malte")
+					.perfil(Usuario.Perfil.ADMIN)
+					.build();
 
-		Usuario usuario = Usuario.builder()
-				.senha("senha")
-				.email("duplomalte@gmail.com")
-				.cnpj("1234")
-				.nome("Duplo Malte")
-				.perfil(Usuario.Perfil.ADMIN)
-				.build();
+			usarioService.save(usuario);
+		}catch (Exception e){
 
-		usarioService.save(usuario);
+		}
 
 	}
 
