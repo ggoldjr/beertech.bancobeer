@@ -60,10 +60,5 @@ public class JwtAuthenticaionFilter extends BasicAuthenticationFilter {
         response.setStatus(200);
         response.getWriter().append(token);
 
-        //response.addHeader("Authorization", String.format("Bearer %s", token));
-        //Usuario user = userDetailsService.byEmail(userDetails.getEmail());
-
-        //response.getWriter().append(new ObjectMapper().writeValueAsString(user));
-
     }
 }

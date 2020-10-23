@@ -2,6 +2,7 @@ package br.com.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ExtratoDto {
 
     private String tipo;
@@ -20,5 +22,11 @@ public class ExtratoDto {
     private Double valor;
 
     private LocalDateTime data;
+
+    private String hashContaOrigem;
+
+    private String hashContaDestino;
+
+
 
 }

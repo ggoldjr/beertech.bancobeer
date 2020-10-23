@@ -1,5 +1,6 @@
 package br.com.api.controller;
 
+import br.com.api.dto.AlterarSenhaDto;
 import br.com.api.dto.UsuarioDto;
 import br.com.api.dto.UsuarioDtoIn;
 import br.com.api.model.Usuario;
@@ -30,7 +31,7 @@ public class UsuarioController {
     }
 
     @PostMapping(produces={MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value="Criar usuário.", produces="application/json")
+    @ApiOperation(value="Criar usuário.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity criarUsuario(@RequestBody UsuarioDtoIn usuarioRequest){
 
         return ResponseEntity
@@ -40,7 +41,7 @@ public class UsuarioController {
 
 
     @GetMapping(path="/{email}",produces={MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value="Buscar usuário por e-mail.", produces="application/json")
+    @ApiOperation(value="Buscar usuário por e-mail.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity buscaUsuario( @ApiParam(name="email", required=true, value="E-mail do usuário", example="teste@teste.com")
                                     @PathVariable String email){
         return ResponseEntity
@@ -51,7 +52,7 @@ public class UsuarioController {
 
 
     @PutMapping(produces={MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value="Atualiza usuário.", produces="application/json")
+    @ApiOperation(value="Atualiza usuário.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity atualizaUsuario(@RequestBody Usuario usuarioRequest){
 
         return ResponseEntity
@@ -70,6 +71,24 @@ public class UsuarioController {
 
     }
 
+    @PatchMapping
+    @ApiOperation(value="Trocar senha usuário.")
+    public ResponseEntity alterarSenha(@RequestBody AlterarSenhaDto request) {
 
+        try {
+            usuarioService.updatePassword(request);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .build();
+        }catch (Exception e){
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+
+        }
+
+    }
 
 }

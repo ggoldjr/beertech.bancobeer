@@ -1,5 +1,6 @@
 package br.com.api.service;
 
+import br.com.api.dto.AlterarSenhaDto;
 import br.com.api.dto.UsuarioDto;
 import br.com.api.dto.UsuarioDtoIn;
 import br.com.api.exception.NotFoundException;
@@ -17,11 +18,13 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final ContaService contaService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository, ContaService contaService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ContaService contaService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.contaService = contaService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public Usuario save(Usuario usuario){
@@ -97,6 +100,24 @@ public class UsuarioService {
                 .nome(req.getNome())
                 .senha(req.getSenha())
                 .build();
+
+    }
+
+    public void updatePassword(AlterarSenhaDto request) throws Exception {
+
+        Usuario usuario = findById(request.getIdUsuario());
+
+        if(request.getSenhaAntiga().matches(request.getSenhaNova())){
+            throw new Exception("Senha nova não pode ser igual a antiga");
+        }
+
+        if (!bCryptPasswordEncoder.matches(request.getSenhaAntiga(),usuario.getSenha())){
+            throw new Exception("Senha antiga inválida");
+        }
+
+        usuario.setSenha(bCryptPasswordEncoder.encode(request.getSenhaNova()));
+
+        usuarioRepository.save(usuario);
 
     }
 }

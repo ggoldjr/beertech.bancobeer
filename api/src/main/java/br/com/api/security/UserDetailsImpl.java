@@ -20,6 +20,7 @@ public class UserDetailsImpl implements UserDetails {
     private String name;
     private String email;
     private String password;
+    private String hashConta;
     private Collection<? extends GrantedAuthority> authorities;
 
 

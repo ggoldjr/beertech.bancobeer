@@ -1,8 +1,6 @@
 package br.com.api.security;
 
-import br.com.api.model.Usuario;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,9 +30,12 @@ public class JwtService {
         LocalDateTime expirationDateTime = LocalDateTime.now().plusMinutes(expTime);
         Instant instante = expirationDateTime.atZone(ZoneId.systemDefault()).toInstant();
         Date expirationDate = Date.from(instante);
+
+
         return Jwts.builder()
                 .setSubject(encode(user))
                 .setExpiration(expirationDate)
+                .claim("hashConta",user.getHashConta())
                 .signWith(SignatureAlgorithm.HS512, base64EncodedSecretKey)
                 .compact();
     }

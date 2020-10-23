@@ -1,32 +1,38 @@
 package br.com.api.security;
 
+import br.com.api.exception.NotFoundException;
+import br.com.api.model.Conta;
 import br.com.api.model.Usuario;
-import br.com.api.service.UsuarioService;
+import br.com.api.repository.ContaRepository;
+import br.com.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
+    private final ContaRepository contaRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+    public UserDetailsServiceImpl(UsuarioRepository usuarioRepository, ContaRepository contaRepository) {
+        this.usuarioRepository = usuarioRepository;
+        this.contaRepository = contaRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioService.findByEmail(username);
+
+        Usuario usuario = usuarioRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
+
+        Conta conta = contaRepository.getByUsuarioId(usuario.getId()).stream().findFirst().orElse(null);
 
         UserDetailsImpl userDetails = UserDetailsImpl.builder()
                 .id(usuario.getId())
@@ -34,13 +40,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .name(usuario.getNome())
                 .authorities(List.of(new SimpleGrantedAuthority(usuario.getPerfil().name().toUpperCase())))
                 .password(usuario.getSenha())
+                .hashConta(null==conta?null:conta.getHash())
                 .build();
 
         return userDetails;
     }
 
-    public Usuario byEmail(String email) {
-        return usuarioService.findByEmail(email);
-    }
 
 }

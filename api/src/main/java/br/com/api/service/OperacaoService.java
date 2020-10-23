@@ -54,13 +54,13 @@ public class OperacaoService {
         List<ExtratoDto> listaOperacao =
                 getOperacoesConta(contaHash)
                 .stream()
-                        .map(e -> new ExtratoDto(e.getTipo().name(),e.getValor(),e.getCriado_em()) )
+                        .map(e -> new ExtratoDto(e.getTipo().name(),e.getValor(),e.getCriado_em(),null,e.getHashContaDestino()) )
                         .collect(Collectors.toList());
 
         List<ExtratoDto> listaTransferencia =
                 getTransferenciasInConta(contaHash)
                         .stream()
-                        .map(e -> new ExtratoDto("TRANSFERENCIA RECEBIDA",e.getValor(),e.getCriado_em()) )
+                        .map(e -> new ExtratoDto("TRANSFERENCIA RECEBIDA",e.getValor(),e.getCriado_em(),e.getConta().getHash(),null) )
                         .collect(Collectors.toList());
         listaOperacao.addAll(listaTransferencia);
 
