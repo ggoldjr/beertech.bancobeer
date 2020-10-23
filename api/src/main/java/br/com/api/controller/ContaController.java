@@ -56,7 +56,7 @@ public class ContaController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por hash ou id.", produces = "application/json")
     public ResponseEntity getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                      @PathVariable String contaHash
+                                         @PathVariable String contaHash
 
     ) {
 
@@ -71,7 +71,7 @@ public class ContaController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por id.", produces = "application/json")
     public ResponseEntity getContaById(@ApiParam(name = "contaId", required = true, value = "Id da conta", example = "1")
-                                    @PathVariable Long contaId
+                                       @PathVariable Long contaId
 
     ) {
         return ResponseEntity
@@ -80,13 +80,11 @@ public class ContaController {
     }
 
     @RolesAllowed({"ADMIN"})
-    @GetMapping(path = "/extratos/{contaHash}",
+    @GetMapping(path = "/{contaHash}/extratos",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Obter extrato da conta pelo hash.", produces = "application/json")
     public ResponseEntity getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                            @PathVariable String contaHash
-
-    ) {
+                                          @PathVariable String contaHash) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(contaService.listaOperacoesByHash(contaHash));
@@ -136,12 +134,11 @@ public class ContaController {
     @GetMapping(path = "/{contaHash}/saldos")
     @ApiOperation(value = "Retorna saldo da conta.")
     public ResponseEntity getSaldo(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                             @PathVariable String contaHash) {
+                                   @PathVariable String contaHash) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(contaService.listSaldo(contaHash));
-
 
 
     }

@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class ApiApplication implements CommandLineRunner {
 
 
-	//public final ContaSetup contaSetup;
 	public final UsuarioService usarioService;
 	public final UsuarioRepository usuarioRepository ;
 
@@ -32,9 +31,6 @@ public class ApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		//contaSetup.setup();
-
-		//usuarioRepository.deleteAll();
 		try {
 			Usuario usuario = Usuario.builder()
 					.senha("senha")

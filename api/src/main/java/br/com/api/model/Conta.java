@@ -47,7 +47,7 @@ public class Conta implements Serializable {
     @LastModifiedDate
     private LocalDateTime atualizado_em;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 

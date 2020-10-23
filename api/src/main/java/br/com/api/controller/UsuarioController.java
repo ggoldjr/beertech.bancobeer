@@ -36,7 +36,7 @@ public class UsuarioController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(usuarioService.create(usuarioRequest));
-    }
+}
 
 
     @GetMapping(path="/{email}",produces={MediaType.APPLICATION_JSON_VALUE})

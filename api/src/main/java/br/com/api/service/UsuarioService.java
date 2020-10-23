@@ -78,6 +78,7 @@ public class UsuarioService {
     public UsuarioDto usuarioToUsuarioDto(Usuario usuario){
 
         return UsuarioDto.builder()
+                .id(usuario.getId())
                 .cnpj(usuario.getCnpj())
                 .email(usuario.getEmail())
                 .nome(usuario.getNome())
