@@ -12,4 +12,6 @@ public interface DoacaoRepository extends JpaRepository<Doacao, Long> {
 
     List<Doacao> findAllByUsuarioId(Long usuarioBeneficiario);
 
+    List<Doacao> findAllByAndIdUsuarioDoador(Long idDoador);
+
 }
