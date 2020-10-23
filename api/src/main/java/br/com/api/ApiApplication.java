@@ -11,17 +11,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Optional;
+
 @SpringBootApplication
 @EnableJpaAuditing
 public class ApiApplication implements CommandLineRunner {
 
 
-	public final UsuarioService usarioService;
 	public final UsuarioRepository usuarioRepository ;
 
 	@Autowired
-	public ApiApplication( UsuarioService usarioService, UsuarioRepository usuarioRepository) {
-		this.usarioService = usarioService;
+	public ApiApplication(  UsuarioRepository usuarioRepository) {
 		this.usuarioRepository = usuarioRepository;
 	}
 
@@ -31,19 +31,22 @@ public class ApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		try {
-			Usuario usuario = Usuario.builder()
-					.senha("senha")
-					.email("duplomalte@gmail.com")
-					.cnpj("1234")
-					.nome("Duplo Malte")
-					.perfil(Usuario.Perfil.ADMIN)
-					.build();
 
-			usarioService.save(usuario);
-		}catch (Exception e){
+		Optional<Usuario> usuario = usuarioRepository.findByEmail("duplomalte@gmail.com");
 
+		if(!usuario.isPresent()){
+			usuarioRepository.save(
+					Usuario.builder()
+							.senha("senha")
+							.email("duplomalte@gmail.com")
+							.cnpj("1234")
+							.nome("Duplo Malte")
+							.perfil(Usuario.Perfil.ADMIN)
+							.build()
+			);
 		}
+
+
 
 	}
 
