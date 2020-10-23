@@ -2,8 +2,6 @@ package br.com.api;
 
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
-import br.com.api.seed.ContaSetup;
-import br.com.api.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,10 +17,12 @@ public class ApiApplication implements CommandLineRunner {
 
 
 	public final UsuarioRepository usuarioRepository ;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
-	public ApiApplication(  UsuarioRepository usuarioRepository) {
+	public ApiApplication(  UsuarioRepository usuarioRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.usuarioRepository = usuarioRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
 	public static void main(String[] args) {
@@ -37,7 +37,8 @@ public class ApiApplication implements CommandLineRunner {
 		if(!usuario.isPresent()){
 			usuarioRepository.save(
 					Usuario.builder()
-							.senha("senha")
+//							.senha("senha")
+							.senha(bCryptPasswordEncoder.encode("senha"))
 							.email("duplomalte@gmail.com")
 							.cnpj("1234")
 							.nome("Duplo Malte")
