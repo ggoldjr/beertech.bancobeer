@@ -63,4 +63,8 @@ public class Usuario {
     @JsonIgnore
     private List<Doacao> doacoes;
 
+    public boolean podeDoar(Double saldo, Double valorParaDoar) {
+        return saldo >= valorParaDoar && !podeReceberDoacoes;
+    }
+
 }
