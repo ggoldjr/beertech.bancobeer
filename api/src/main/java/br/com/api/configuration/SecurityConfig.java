@@ -1,9 +1,20 @@
-package br.com.api.configuration;
+/*
+  Projeto: BeerTech - BancoBeer
+  Equipe: DuploMalte
+  Participantes: Demetrius / Fernando / Jeovane / Geraldo
+  Criado em: 12/10/2020
 
+  ContaController.java
+
+  Descricao: classe de configuracao de segurando e permissao de acesso ao metodos
+           e microservicos
+ */
+package br.com.api.configuration;
 
 import br.com.api.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -63,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/usuarios").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
