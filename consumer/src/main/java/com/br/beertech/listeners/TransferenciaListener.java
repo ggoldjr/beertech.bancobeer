@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class TransferenciaListener {
 
     private static final Logger logger = LoggerFactory.getLogger(TransferenciaListener.class);
-    private static final String URL = String.format("http://localhost:8080/transferencias");
+    private static final String URL = String.format(System.getenv("API_URL") + "transferencias");
     private final RestTemplate restTemplate;
 
     @Autowired

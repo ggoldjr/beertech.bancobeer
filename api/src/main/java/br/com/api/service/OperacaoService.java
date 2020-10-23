@@ -1,5 +1,6 @@
 package br.com.api.service;
 
+import br.com.api.dto.ExtratoDto;
 import br.com.api.dto.OperacaoDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OperacaoService {
@@ -30,6 +32,45 @@ public class OperacaoService {
     }
 
     public List<Operacao> getOperacaoDaConta(String contaHash) {
-        return operacaoRepository.findAllByContaHash(contaHash);
+
+        return  operacaoRepository.findAllByContaHash(contaHash);
+
     }
+
+    public List<Operacao> getOperacoesConta(String contaHash) {
+
+        return  operacaoRepository.findAllByContaHash(contaHash);
+
+    }
+
+    public List<Operacao> getTransferenciasInConta(String contaHash) {
+
+        return  operacaoRepository.findAllByhashContaDestino(contaHash);
+
+    }
+
+    public List<ExtratoDto> getExtrato(String contaHash) {
+
+        List<ExtratoDto> listaOperacao =
+                getOperacoesConta(contaHash)
+                .stream()
+                        .map(e -> new ExtratoDto(e.getTipo().name(),e.getValor(),e.getCriado_em(),null,e.getHashContaDestino()) )
+                        .collect(Collectors.toList());
+
+        List<ExtratoDto> listaTransferencia =
+                getTransferenciasInConta(contaHash)
+                        .stream()
+                        .map(e -> new ExtratoDto("TRANSFERENCIA RECEBIDA",e.getValor(),e.getCriado_em(),e.getConta().getHash(),null) )
+                        .collect(Collectors.toList());
+        listaOperacao.addAll(listaTransferencia);
+
+        return listaOperacao;
+
+
+    }
+
+
+
+
+
 }

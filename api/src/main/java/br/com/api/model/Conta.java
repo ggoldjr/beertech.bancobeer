@@ -37,19 +37,19 @@ public class Conta implements Serializable {
     @Column(unique = true)
     private String hash;
 
-    @OneToMany(mappedBy = "conta", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Operacao> operacoes;
-
-    @OneToMany(mappedBy = "contaOrigem", cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private List<Transferencia> transferencias;
 
     @CreatedDate
     private LocalDateTime criado_em;
 
     @LastModifiedDate
     private LocalDateTime atualizado_em;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     public Conta() {}
 
@@ -70,4 +70,5 @@ public class Conta implements Serializable {
     public boolean saldoEmaiorOrIgualA(Double valor) {
         return this.saldo >= valor;
     }
+
 }

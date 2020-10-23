@@ -1,5 +1,6 @@
-package br.com.api.conta;
+package br.com.api.e2e.conta;
 
+import br.com.api.dto.ContaDtoIn;
 import br.com.api.model.Conta;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
@@ -32,8 +33,9 @@ public class CriarContaTest {
 
         @BeforeEach
         void setup() throws JsonProcessingException {
+            testUtil.login(port);
             String url = String.format("http://localhost:%s/contas", port);
-            HttpEntity<String> httpEntity = testUtil.getHttpEntity();
+            HttpEntity<String> httpEntity = testUtil.getHttpEntity(ContaDtoIn.builder().idUsuario(1l).build());
             responseEntity = testUtil.restTemplate.postForEntity(url, httpEntity, String.class);
             if (responseEntity.getStatusCodeValue() == 201) {
                 contaCriada = testUtil.parseSuccessfulResponse(responseEntity, Conta.class);

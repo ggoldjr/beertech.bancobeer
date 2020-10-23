@@ -12,5 +12,11 @@ public interface OperacaoRepository extends JpaRepository<Operacao, Long> {
     Optional<Operacao> findByContaId(Long id);
 
     List<Operacao> findAllByContaHash(String contaHash);
+
+    List<Operacao> findAllByhashContaDestino(String contaHash);
+
+    void deleteByContaId(Long id);
+
+
 }
 

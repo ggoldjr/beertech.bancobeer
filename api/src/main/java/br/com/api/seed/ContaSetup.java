@@ -2,6 +2,8 @@ package br.com.api.seed;
 
 import br.com.api.model.Conta;
 import br.com.api.repository.ContaRepository;
+import br.com.api.repository.OperacaoRepository;
+import br.com.api.repository.UsuarioRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,16 +17,23 @@ import java.util.stream.Stream;
 @Service
 public class ContaSetup {
 
+    private final OperacaoRepository operacaoRepository;
     private final ContaRepository contaRepository;
+    private final UsuarioRepository usuarioRepository;
     @Getter
     private List<Conta> contas = new ArrayList<>();
 
     @Autowired
-    public ContaSetup(ContaRepository contaRepository) {
+    public ContaSetup(OperacaoRepository operacaoRepository, ContaRepository contaRepository, UsuarioRepository usuarioRepository) {
+        this.operacaoRepository = operacaoRepository;
         this.contaRepository = contaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public void setup() {
+
+        usuarioRepository.deleteAll();
+        operacaoRepository.deleteAll();
         contaRepository.deleteAll();
         contas = Stream.iterate(1, i -> i + 1)
                 .map(integer -> criar())

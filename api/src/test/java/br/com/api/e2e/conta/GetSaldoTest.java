@@ -1,6 +1,7 @@
-package br.com.api.conta;
+package br.com.api.e2e.conta;
 
 import br.com.api.dto.OperacaoDto;
+import br.com.api.dto.SaldoDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.seed.ContaSetup;
@@ -42,17 +43,18 @@ public class GetSaldoTest {
         String contaHash;
         ResponseError responseError;
         Conta conta;
-        Double saldo;
+        SaldoDto saldoDto;
 
         @BeforeEach
         void setup() throws JsonProcessingException {
+            testUtil.login(port);
             contaSetup.setup();
             setupConta();
             setContaHash();
             String url = String.format("http://localhost:%s/contas/%s/saldos", port, contaHash);
             responseEntity = testUtil.restTemplate.exchange(url, HttpMethod.GET, testUtil.getHttpEntity(), String.class);
             if (responseEntity.getStatusCodeValue() == 200) {
-                saldo = testUtil.parseSuccessfulResponse(responseEntity, Double.class);
+                saldoDto = testUtil.parseSuccessfulResponse(responseEntity, SaldoDto.class);
                 conta = contaService.findByHash(contaHash);
             } else {
                 responseError = testUtil.parseResponseError(responseEntity);
@@ -87,7 +89,7 @@ public class GetSaldoTest {
 
         @Test
         void DeveRetornarSadoIgualA950() {
-            assertThat(saldo).isEqualTo(950);
+            assertThat(saldoDto.getSaldo()).isEqualTo(950);
         }
     }
 
