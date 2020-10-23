@@ -36,6 +36,7 @@ public class DoacaoController {
 
     @GetMapping(path = "/me")
     @RolesAllowed({"USUARIO"})
+    @ApiOperation(value = "Listar doações do usuário logado.", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Doacao> doacoesDoUsuario(@AuthenticationPrincipal UserDetailsImpl loggedUser) {
         return doacaoService.doacoesDoUsuario(loggedUser.getId());
     }
