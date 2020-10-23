@@ -3,6 +3,7 @@ package br.com.api.controller;
 import br.com.api.dto.AlterarSenhaDto;
 import br.com.api.dto.UsuarioDtoIn;
 import br.com.api.model.Usuario;
+import br.com.api.security.UserDetailsImpl;
 import br.com.api.service.ContaService;
 import br.com.api.service.UsuarioService;
 import io.swagger.annotations.ApiOperation;
@@ -11,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -87,4 +92,9 @@ public class UsuarioController {
 
     }
 
+    @GetMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RolesAllowed({"USUARIO"})
+    public List<Usuario> usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UserDetailsImpl loggedUser) {
+        return usuarioService.usuariosQuePodemReceberDoacao(loggedUser.getId());
+    }
 }

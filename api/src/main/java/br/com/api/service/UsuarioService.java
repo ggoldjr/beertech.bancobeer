@@ -120,4 +120,9 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
     }
+
+    public List<Usuario> usuariosQuePodemReceberDoacao(Long id) {
+        return usuarioRepository.findAllByPodeReceberDoacoesTrue().stream().filter(usuario -> usuario.getId() != id)
+                .collect(Collectors.toList());
+    }
 }
