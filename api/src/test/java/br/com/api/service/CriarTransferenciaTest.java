@@ -1,8 +1,6 @@
 package br.com.api.service;
 
-import br.com.api.dto.OperacaoDto;
 import br.com.api.dto.TransferenciaDto;
-import br.com.api.exception.FieldErrorMessage;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.seed.ContaSetup;
