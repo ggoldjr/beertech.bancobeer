@@ -1,6 +1,5 @@
 package br.com.api.dto;
 
-import br.com.api.model.Conta;
 import br.com.api.model.Usuario;
 import lombok.Builder;
 import lombok.Data;

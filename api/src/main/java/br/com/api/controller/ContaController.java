@@ -1,7 +1,6 @@
 package br.com.api.controller;
 
 import br.com.api.dto.*;
-import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.service.ContaService;
 import io.swagger.annotations.ApiOperation;
@@ -11,11 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/contas")
@@ -43,6 +41,13 @@ public class ContaController {
     @RolesAllowed({"ADMIN"})
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista as contas disponíveis.", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "Retorno da lista de contas executado com sucesso..."),
+//            @ApiResponse(code = 401, message = "Você não tem autorização para acessar este recurso"),
+//            @ApiResponse(code = 403, message = "Você não tem permissão para acessar este recurso"),
+//            @ApiResponse(code = 404, message = "Conta não encontrada"),
+//            @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
+//    })
     public ResponseEntity listAll() {
 
         return ResponseEntity
@@ -90,7 +95,7 @@ public class ContaController {
                 .body(contaService.listaOperacoesByHash(contaHash));
     }
 
-
+    @ApiIgnore
     @PostMapping(path = "/{contaHash}/operacoes",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -1,7 +1,6 @@
 package br.com.api.controller;
 
 import br.com.api.dto.AlterarSenhaDto;
-import br.com.api.dto.UsuarioDto;
 import br.com.api.dto.UsuarioDtoIn;
 import br.com.api.model.Usuario;
 import br.com.api.service.ContaService;
@@ -13,9 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuarios")

@@ -84,28 +84,29 @@ public class RabbitConfig {
   @Primary
   public ConnectionFactory bancoConnectionFactory() {
 
-    final URI rabbitMqUrl;
-    try {
-      rabbitMqUrl = new URI(System.getenv("CLOUDAMQP_URL"));
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
-
-    final CachingConnectionFactory factory = new CachingConnectionFactory();
-    factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
-    factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
-    factory.setHost(rabbitMqUrl.getHost());
-    factory.setPort(rabbitMqUrl.getPort());
-    factory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
-
-    return factory;
-//    final CachingConnectionFactory connectionFactory =
-//        new CachingConnectionFactory("localhost",5672);
-//    connectionFactory.setUsername("guest");
-//    connectionFactory.setPassword("guest");
-//    connectionFactory.setVirtualHost("/");
+//    final URI rabbitMqUrl;
+//    try {
+//      rabbitMqUrl = new URI(System.getenv("CLOUDAMQP_URL"));
+//    } catch (URISyntaxException e) {
+//      throw new RuntimeException(e);
+//    }
 //
-//    return connectionFactory;
+//    final CachingConnectionFactory factory = new CachingConnectionFactory();
+//    factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
+//    factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
+//    factory.setHost(rabbitMqUrl.getHost());
+//    factory.setPort(rabbitMqUrl.getPort());
+//    factory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
+//
+//    return factory;
+
+    final CachingConnectionFactory connectionFactory =
+        new CachingConnectionFactory("localhost",5672);
+    connectionFactory.setUsername("guest");
+    connectionFactory.setPassword("guest");
+    connectionFactory.setVirtualHost("/");
+
+    return connectionFactory;
   }
 
   @Bean
