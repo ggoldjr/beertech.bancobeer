@@ -31,8 +31,8 @@ public class DoacaoController {
     @PostMapping
     @RolesAllowed({"USUARIO"})
     @ApiOperation(value = "Criar doação", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity criar(@AuthenticationPrincipal UsuarioLogado loggedUser, @RequestBody DoacaoDto doacaoDto) {
-        Doacao doacao = doacaoService.criar(loggedUser.getId(), doacaoDto);
+    public ResponseEntity criar(@AuthenticationPrincipal UsuarioLogado usuarioLogado, @RequestBody DoacaoDto doacaoDto) {
+        Doacao doacao = doacaoService.criar(usuarioLogado.toUsuario(), doacaoDto);
         return ResponseEntity.status(201).body(doacao);
     }
 }

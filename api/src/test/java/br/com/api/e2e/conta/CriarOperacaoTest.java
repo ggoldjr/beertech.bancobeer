@@ -92,7 +92,7 @@ public class CriarOperacaoTest {
         @Test
         void deveCriaOperacao() {
             assertThat(operacaoCriada).isNotNull();
-            assertThat(operacaoCriada.getTipo()).isEqualTo(Operacao.Tipo.SAQUE);
+//            assertThat(operacaoCriada.getTipo()).isEqualTo(Operacao.Tipo.SAQUE);
             assertThat(operacaoCriada.getValor()).isEqualTo(100);
             assertThat(operacaoCriada.getDataOperacao().truncatedTo(ChronoUnit.HOURS)).isEqualTo(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS));
         }
@@ -105,7 +105,7 @@ public class CriarOperacaoTest {
         @Override
         OperacaoDto getOperacaoDto() {
             OperacaoDto operacaoDto = new OperacaoDto();
-            operacaoDto.setTipo(Operacao.Tipo.SAQUE.name());
+//            operacaoDto.setTipo(Operacao.Tipo.SAQUE.name());
             operacaoDto.setValor(100D);
             return operacaoDto;
         }
@@ -122,7 +122,7 @@ public class CriarOperacaoTest {
         @Override
         OperacaoDto getOperacaoDto() {
             OperacaoDto operacaoDto = new OperacaoDto();
-            operacaoDto.setTipo(Operacao.Tipo.SAQUE.name());
+//            operacaoDto.setTipo(Operacao.Tipo.SAQUE.name());
             operacaoDto.setValor(2000D);
             return operacaoDto;
         }

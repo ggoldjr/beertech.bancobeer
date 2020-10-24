@@ -71,7 +71,7 @@ public class Usuario {
     @LastModifiedDate
     private LocalDateTime atualizado_em;
 
-    private boolean podeReceberDoacoes;
+    private Boolean podeReceberDoacoes;
 
     @OneToMany(mappedBy = "usuario")
     @JsonIgnore

@@ -66,7 +66,7 @@ public class UsuarioController {
     }
 
     @Secured("ADMIN")
-    @GetMapping(produces={MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/all", produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Lista todos usuários.", produces="application/json")
     public ResponseEntity listaUsuarios(@AuthenticationPrincipal UsuarioLogado usuarioLogado){
         return ResponseEntity
@@ -89,9 +89,12 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @RolesAllowed({"USUARIO"})
-    public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UsuarioLogado loggedUser) {
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Secured({"USUARIO"})
+    public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UsuarioLogado loggedUser,
+                                                        @RequestParam String podeReceberDoacao,
+                                                        @RequestParam String minhasDoacoes,
+                                                        @RequestParam String semDoacoes) {
         List<UsuarioDto> usuarioDtos = usuarioService.usuariosQuePodemReceberDoacao(loggedUser.getId()).stream()
                 .map(Usuario::toUsuarioDto)
                 .collect(Collectors.toList());

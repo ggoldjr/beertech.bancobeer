@@ -29,7 +29,7 @@ public class Operacao implements Serializable {
                 .build();
     }
 
-    public enum Tipo { DEPOSITO, SAQUE, TRANSFERENCIA, DOACAO, TRANSFERENCIA_RECEBIDA, DOACAO_RECEBIDA, BONUS }
+    public enum Tipo { DEPOSITO, TRANSFERENCIA, DOACAO, TRANSFERENCIA_RECEBIDA, DOACAO_RECEBIDA, BONUS }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

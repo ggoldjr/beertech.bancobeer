@@ -28,13 +28,6 @@ public class OperacaoService {
         this.contaService = contaService;
     }
 
-    public Operacao saque(String contaHash, OperacaoDto operacaoDto, Usuario usuario) {
-        Conta conta = contaService.findByHash(contaHash, usuario);
-        Operacao operacao = Operacao.criar(operacaoDto, conta);
-        conta.saque(operacao.getValor(), usuario);
-        return operacaoRepository.save(operacao);
-    }
-
     public Operacao deposito(String contaHash, OperacaoDto operacaoDto) {
         Conta conta = contaService.findByHash(contaHash);
         Operacao operacao = Operacao.criar(operacaoDto, conta);

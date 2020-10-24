@@ -7,6 +7,7 @@ import br.com.api.model.Doacao;
 import br.com.api.model.Usuario;
 import br.com.api.repository.DoacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,8 +32,8 @@ public class DoacaoService {
     }
 
 
-    public Doacao criar(Long idUsuarioDoador, DoacaoDto doacaoDto) {
-        Usuario usuarioDoador = usuarioService.buscarPorId(idUsuarioDoador);
+    public Doacao criar(Usuario usuarioLogado, DoacaoDto doacaoDto) {
+        Usuario usuarioDoador = usuarioService.buscarPorId(usuarioLogado.getId());
         List<Conta> contas = contaService.listContasUsuario(usuarioDoador);
         boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(contas.get(0).getSaldo(), doacaoDto.getValorDoado().doubleValue());
         if (usuarioDoadorPodeDoar) {
@@ -46,9 +47,9 @@ public class DoacaoService {
                         .build();
                 return doacaoRepository.save(doacao);
             }
-            throw new DoacaoException(String.format("Usuário %s não pode receber doação", usuarioBeneficiario.getNome()));
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode receber doação", usuarioBeneficiario.getNome()));
         }
-        throw new DoacaoException(String.format("Usuário %s não pode fazer doação", usuarioDoador.getNome()));
+        throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode fazer doação", usuarioDoador.getNome()));
     }
 
     public boolean podeReceber(Usuario usuarioBeneficiario) {
@@ -56,7 +57,7 @@ public class DoacaoService {
                 .filter(doacao -> doacao.getDataDaDoacao().getMonthValue() == LocalDate.now().getMonthValue())
                 .map(Doacao::getValorRecebido)
                 .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO).doubleValue() < 1000;
+                .orElse(BigDecimal.ZERO).doubleValue() < 1000 && usuarioBeneficiario.getPodeReceberDoacoes();
     }
 
 }

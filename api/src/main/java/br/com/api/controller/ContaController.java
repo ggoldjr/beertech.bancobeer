@@ -96,21 +96,6 @@ public class ContaController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Secured("USUARIO")
-    @PostMapping(path = "/{contaHash}/operacoes/saques",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Realiza saque na conta.", produces = "application/json")
-    public ResponseEntity saque(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                @PathVariable String contaHash,
-                                @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
-                                @Valid @RequestBody OperacaoDto operacaoDto,
-                                @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
-        operacaoDto.setTipo(Operacao.Tipo.SAQUE.name());
-        operacaoService.saque(contaHash, operacaoDto, usuarioLogado.toUsuario());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     @Secured({"USUARIO", "ADMIN"})
     @GetMapping(path = "/{contaHash}/saldos")
     @ApiOperation(value = "Retorna saldo da conta.")
