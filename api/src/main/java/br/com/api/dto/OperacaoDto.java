@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Positive;
+import java.math.BigDecimal;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -16,6 +17,6 @@ public class OperacaoDto {
     private String tipo;
 
     @Positive(message = "Valor deve ser maior que zero")
-    private Double valor;
+    private BigDecimal valor;
 
 }

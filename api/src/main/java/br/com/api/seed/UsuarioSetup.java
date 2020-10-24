@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class UsuarioSetup {
 
@@ -63,8 +65,8 @@ public class UsuarioSetup {
                 .build();
         usuario1 = usuarioService.criar(usuarioParaCriar1);
         usuario2 = usuarioService.criar(usuarioParaCriar2);
-        operacaoService.deposito(usuario1.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
-        operacaoService.deposito(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
+        operacaoService.deposito(usuario1.getContaHash(), new OperacaoDto("DEPOSITO", BigDecimal.valueOf(1000D)));
+        operacaoService.deposito(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", BigDecimal.valueOf(1000D)));
 
         admin = Usuario.builder()
                 .nome("Admin admin")

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +62,7 @@ public class CriarTransferenciaTest {
         @Override
         TransferenciaDto getTransferenciaDto() {
             return TransferenciaDto.builder()
-                    .valor(100d)
+                    .valor(BigDecimal.valueOf(100d))
                     .hashContaOrigem(contaOrigem.getHash())
                     .hashContaDestino(contaDestino.getHash())
                     .build();

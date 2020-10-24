@@ -92,10 +92,10 @@ public class UsuarioController {
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @Secured({"USUARIO"})
     public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UsuarioLogado loggedUser,
-                                                        @RequestParam String podeReceberDoacao,
-                                                        @RequestParam String minhasDoacoes,
-                                                        @RequestParam String semDoacoes) {
-        List<UsuarioDto> usuarioDtos = usuarioService.usuariosQuePodemReceberDoacao(loggedUser.getId()).stream()
+                                                        @RequestParam(defaultValue = "") String podeReceberDoacao,
+                                                        @RequestParam(defaultValue = "") String minhasDoacoes,
+                                                        @RequestParam(defaultValue = "") String semDoacoes) {
+        List<UsuarioDto> usuarioDtos = usuarioService.listaUsuarios(loggedUser.toUsuario(), podeReceberDoacao, minhasDoacoes, semDoacoes).stream()
                 .map(Usuario::toUsuarioDto)
                 .collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(usuarioDtos);

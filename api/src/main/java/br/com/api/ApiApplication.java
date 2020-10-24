@@ -31,9 +31,7 @@ public class ApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-
 		Optional<Usuario> usuario = usuarioRepository.findByEmail("duplomalte@gmail.com");
-
 		if(!usuario.isPresent()){
 			usuarioRepository.save(Usuario.builder()
 							.senha(bCryptPasswordEncoder.encode("senha"))
@@ -41,11 +39,8 @@ public class ApiApplication implements CommandLineRunner {
 							.cnpj("1234")
 							.nome("Duplo Malte")
 							.perfil(Usuario.Perfil.ADMIN)
+							.podeReceberDoacoes(false)
 							.build());
 		}
-
-
-
 	}
-
 }

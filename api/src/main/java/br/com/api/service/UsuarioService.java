@@ -4,9 +4,9 @@ import br.com.api.dto.AlterarSenhaDto;
 import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
+import br.com.api.model.Operacao;
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
-import br.com.api.security.UsuarioLogado;
 import br.com.api.spec.AtualizarUsuarioSpec;
 import br.com.api.spec.ContaSpec;
 import br.com.api.spec.UsuarioSpec;
@@ -24,12 +24,17 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final ContaService contaService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final OperacaoService operacaoService;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository, ContaService contaService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          ContaService contaService,
+                          BCryptPasswordEncoder bCryptPasswordEncoder,
+                          OperacaoService operacaoService) {
         this.usuarioRepository = usuarioRepository;
         this.contaService = contaService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.operacaoService = operacaoService;
     }
 
     //todo: refatorar depois
@@ -89,11 +94,26 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public List<Usuario> usuariosQuePodemReceberDoacao(Long id) {
-        return usuarioRepository.findAllByPodeReceberDoacoesTrue().stream()
-                .filter(usuario -> usuario.getId() != id)
-                .map(this::resolveConta)
-                .collect(Collectors.toList());
+    //todo: refatorar
+
+    public List<Usuario> listaUsuarios(Usuario usuario, String podeReceberDoacao, String minhasDoacoes, String semDoacoes) {
+        List<Usuario> all = usuarioRepository.findAllByIdIsNot(usuario.getId());
+        if (!podeReceberDoacao.isEmpty() && podeReceberDoacao.equals("sim")) {
+            all = all.stream().filter(operacaoService::podeReceber).collect(Collectors.toList());
+        }
+        if (!minhasDoacoes.isEmpty() && minhasDoacoes.equals("sim")) {
+            List<Long> ids = operacaoService.findAllByAndHashUsuarioDoador(usuario.getContaHash()).stream()
+                    .map(operacao -> operacao.getConta().getUsuario().getId())
+                    .collect(Collectors.toList());
+            all = all.stream().filter(u -> ids.contains(u.getId())).collect(Collectors.toList());
+        }
+        if (!semDoacoes.isEmpty() && semDoacoes.equals("sim")) {
+            List<Long> ids = operacaoService.doacoesDoMes().stream()
+                    .map(doacao -> doacao.getConta().getUsuario().getId())
+                    .collect(Collectors.toList());
+            all = all.stream().filter(usuario1 -> !ids.contains(usuario1.getId())).collect(Collectors.toList());
+        }
+        return all.stream().map(this::resolveConta).collect(Collectors.toList());
     }
 
     public void habilitarOuDesabilitarDoacao(HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {

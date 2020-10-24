@@ -20,6 +20,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -72,11 +74,11 @@ public class GetSaldoTest {
         protected void setupConta() {
             OperacaoDto operacaoDto = new OperacaoDto();
 //            operacaoDto.setTipo(Operacao.Tipo.SAQUE.name());
-            operacaoDto.setValor(100D);
+            operacaoDto.setValor(BigDecimal.valueOf(100D));
 
             OperacaoDto operacaoDto1 = new OperacaoDto();
             operacaoDto1.setTipo(Operacao.Tipo.DEPOSITO.name());
-            operacaoDto1.setValor(50d);
+            operacaoDto1.setValor(BigDecimal.valueOf(50d));
 
 //            operacaoService.saque(usuario1.getContaHash(), operacaoDto, usuario1);
             operacaoService.deposito(usuario1.getContaHash(), operacaoDto1);

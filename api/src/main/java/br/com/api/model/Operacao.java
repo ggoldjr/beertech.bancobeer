@@ -11,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,7 +26,7 @@ public class Operacao implements Serializable {
         return Operacao.builder()
                 .tipo(Tipo.valueOf(operacaoDto.getTipo().toUpperCase()))
                 .valor(operacaoDto.getValor())
-                .dataOperacao(LocalDateTime.now())
+                .dataOperacao(LocalDate.now())
                 .conta(conta)
                 .build();
     }
@@ -35,12 +37,12 @@ public class Operacao implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private double valor;
+    private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
 
-    private LocalDateTime dataOperacao;
+    private LocalDate dataOperacao;
 
     @ManyToOne
     @JoinColumn(name = "conta_id" )
