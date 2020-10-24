@@ -26,9 +26,6 @@ public class CriarTransferenciaTest {
     ContaService contaService;
 
     @Autowired
-    ContaSetup contaSetup;
-
-    @Autowired
     UsuarioSetup usuarioSetup;
 
     @Nested
@@ -40,8 +37,7 @@ public class CriarTransferenciaTest {
 
 
         @BeforeEach
-        void run() throws ExecutionException, InterruptedException {
-            contaSetup.setup();
+        void run() {
             usuarioSetup.setup();
             setup();
             Usuario usuario = usuarioSetup.getUsuario1();
@@ -69,8 +65,6 @@ public class CriarTransferenciaTest {
 
         @Override
         void setup() {
-            contaOrigem = contaSetup.getContas().get(0);
-            contaDestino = contaSetup.getContas().get(1);
         }
 
         @Test
