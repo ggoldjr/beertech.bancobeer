@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -22,12 +24,15 @@ public class OperacaoListener {
   }
 
   @RabbitListener(queues = "operacao",containerFactory = "simpleContainerFactory")
-  public void receive(@Payload OperacaoMessage operacaoMessage){
+  public void receive(@Payload OperacaoMessage operacaoMessage, @Header("Authorization") String auth){
     logger.info("enviando requisição para conta: {}", operacaoMessage.getContaHash());
     TransacaoDto transacaoDto = new TransacaoDto(operacaoMessage.getOperacao(),operacaoMessage.getValor());
     try{
       String url = String.format(System.getenv("API_URL") + "contas/%s/operacao", operacaoMessage.getContaHash());
-      restTemplate.postForObject(url, transacaoDto ,Void.class);
+      HttpHeaders httpHeaders = new HttpHeaders();
+      httpHeaders.add("Authorization", auth);
+      httpHeaders.add("Content-Type", "application/json");
+      restTemplate.postForObject(url, transacaoDto ,Void.class, httpHeaders);
     }catch (Exception e){
       logger.error("Error on try request", e);
     }

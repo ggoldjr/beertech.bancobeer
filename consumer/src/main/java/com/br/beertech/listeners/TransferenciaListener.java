@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -23,11 +25,14 @@ public class TransferenciaListener {
     }
 
     @RabbitListener(queues = "transferencia",containerFactory = "simpleContainerFactory")
-    public void receive(@Payload TransferenciaMessage transferenciaMessage){
+    public void receive(@Payload TransferenciaMessage transferenciaMessage, @Header("Authorization") String auth){
         logger.info("enviando trasferencia de {} para {}", transferenciaMessage.getHashContaOrigem(), transferenciaMessage.getHashContaDestino());
         try{
             TransferenciaDto transferenciaDto = TransferenciaDto.criar(transferenciaMessage);
-            restTemplate.postForObject(URL, transferenciaDto, Void.class);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add("Authorization", auth);
+            httpHeaders.add("Content-Type", "application/json");
+            restTemplate.postForObject(URL, transferenciaDto, Void.class, httpHeaders);
         }catch (Exception e){
             logger.error("Error on try request:", e);
         }
