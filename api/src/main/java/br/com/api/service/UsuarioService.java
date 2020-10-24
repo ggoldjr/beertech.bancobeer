@@ -2,9 +2,9 @@ package br.com.api.service;
 
 import br.com.api.dto.AlterarSenhaDto;
 import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
+import br.com.api.exception.ApplicationException;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
-import br.com.api.model.Operacao;
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
 import br.com.api.spec.AtualizarUsuarioSpec;

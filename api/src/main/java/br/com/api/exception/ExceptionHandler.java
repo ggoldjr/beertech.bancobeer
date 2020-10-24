@@ -23,6 +23,12 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<StandardError> applicationException(ApplicationException applicationException) {
+        StandardError standardError = new StandardError(applicationException.getStatus(), applicationException.getMessage());
+        return ResponseEntity.status(HttpStatus.valueOf(applicationException.getStatus())).body(standardError);
+    }
+
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException nfe,
                                                                HttpHeaders headers,

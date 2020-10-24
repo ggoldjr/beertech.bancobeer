@@ -1,4 +1,4 @@
-package br.com.api.e2e.conta;
+package br.com.api.e2e.usuario;
 
 import br.com.api.dto.UsuarioDto;
 import br.com.api.model.Usuario;

@@ -28,12 +28,10 @@ import java.util.stream.Collectors;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final ContaService   contaService;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService, ContaService contaService) {
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        this.contaService = contaService;
     }
 
     @PostMapping(produces={MediaType.APPLICATION_JSON_VALUE})

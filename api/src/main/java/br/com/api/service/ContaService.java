@@ -1,5 +1,6 @@
 package br.com.api.service;
 
+import br.com.api.exception.ApplicationException;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
 import br.com.api.model.Usuario;

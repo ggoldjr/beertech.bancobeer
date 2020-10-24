@@ -44,13 +44,6 @@ public class TestUtil {
         }
     }
 
-    public HttpEntity<String> getHttpEntityWithoutHeaders(Object body)  {
-        try {
-            return new HttpEntity<>(mapper.writeValueAsString(body));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
     public HttpEntity<String> getHttpEntity() {
         return new HttpEntity<>(getHttpHeader());
     }

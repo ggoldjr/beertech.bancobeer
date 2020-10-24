@@ -4,6 +4,7 @@ import br.com.api.dto.DoacaoDto;
 import br.com.api.dto.ExtratoDto;
 import br.com.api.dto.OperacaoDto;
 import br.com.api.dto.TransferenciaDto;
+import br.com.api.exception.ApplicationException;
 import br.com.api.exception.NotFoundException;
 import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.model.Conta;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.MonthDay;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.stream.Collectors;
