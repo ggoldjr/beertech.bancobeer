@@ -4,8 +4,6 @@ import br.com.api.model.Usuario;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 
 @Data
 @Builder

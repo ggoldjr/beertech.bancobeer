@@ -1,8 +1,8 @@
 package br.com.api.service;
 
-import br.com.api.dto.ContaDto;
 import br.com.api.dto.DoacaoDto;
 import br.com.api.exception.DoacaoException;
+import br.com.api.model.Conta;
 import br.com.api.model.Doacao;
 import br.com.api.model.Usuario;
 import br.com.api.repository.DoacaoRepository;
@@ -33,8 +33,8 @@ public class DoacaoService {
 
     public Doacao criar(Long idUsuarioDoador, DoacaoDto doacaoDto) {
         Usuario usuarioDoador = usuarioService.findById(idUsuarioDoador);
-        List<ContaDto> contaDtos = contaService.listContasUsuario(usuarioDoador);
-        boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(contaDtos.get(0).getSaldo(), doacaoDto.getValorDoado().doubleValue());
+        List<Conta> contas = contaService.listContasUsuario(usuarioDoador);
+        boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(contas.get(0).getSaldo(), doacaoDto.getValorDoado().doubleValue());
         if (usuarioDoadorPodeDoar) {
             Usuario usuarioBeneficiario = usuarioService.findById(doacaoDto.getIdUsuarioBeneficiario());
             if (podeReceber(usuarioBeneficiario)) {

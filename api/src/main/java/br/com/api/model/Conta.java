@@ -1,7 +1,6 @@
 package br.com.api.model;
 
 import br.com.api.dto.ContaDto;
-import br.com.api.exception.NotFoundException;
 import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.spec.ContaSpec;
 import com.fasterxml.jackson.annotation.JsonIgnore;

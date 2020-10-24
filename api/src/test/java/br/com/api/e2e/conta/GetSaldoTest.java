@@ -5,7 +5,6 @@ import br.com.api.dto.SaldoDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.model.Usuario;
-import br.com.api.seed.ContaSetup;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.service.ContaService;
 import br.com.api.service.OperacaoService;
@@ -20,8 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-
-import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

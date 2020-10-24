@@ -1,22 +1,16 @@
 package br.com.api.service;
 
-import br.com.api.dto.*;
+import br.com.api.dto.ExtratoDto;
+import br.com.api.dto.SaldoDto;
 import br.com.api.exception.NotFoundException;
-import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.model.Conta;
-import br.com.api.model.Operacao;
 import br.com.api.model.Usuario;
 import br.com.api.repository.ContaRepository;
-import br.com.api.repository.OperacaoRepository;
-import br.com.api.repository.UsuarioRepository;
 import br.com.api.spec.ContaSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Service
 public class ContaService {
