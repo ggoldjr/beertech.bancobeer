@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContaDtoIn {
+public class ContaDto {
 
-    private Long idUsuario;
-
+    Long id;
+    String hash;
+    UsuarioDto usuarioDto;
+    Double saldo;
 }

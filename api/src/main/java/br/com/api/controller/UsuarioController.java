@@ -2,11 +2,12 @@ package br.com.api.controller;
 
 import br.com.api.dto.AlterarSenhaDto;
 import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
-import br.com.api.dto.UsuarioDtoIn;
+import br.com.api.dto.UsuarioDto;
 import br.com.api.model.Usuario;
 import br.com.api.security.UserDetailsImpl;
 import br.com.api.service.ContaService;
 import br.com.api.service.UsuarioService;
+import br.com.api.spec.UsuarioSpec;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -34,11 +36,11 @@ public class UsuarioController {
 
     @PostMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Criar usuário.", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity criarUsuario(@RequestBody UsuarioDtoIn usuarioRequest){
+    public ResponseEntity criarUsuario(@RequestBody UsuarioSpec usuarioSpec){
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(usuarioService.create(usuarioRequest));
+                .body(usuarioService.create(usuarioSpec).toUsuarioDto());
 }
 
 
@@ -48,7 +50,7 @@ public class UsuarioController {
                                     @PathVariable String email){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.listByEmail(email));
+                .body(usuarioService.findByEmail(email).toUsuarioDto());
 
     }
 
@@ -59,7 +61,7 @@ public class UsuarioController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.update(usuarioRequest));
+                .body(usuarioService.update(usuarioRequest).toUsuarioDto());
 
     }
 
@@ -69,34 +71,32 @@ public class UsuarioController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.list());
+                .body(usuarioService.listAll().stream().map(Usuario::toUsuarioDto).collect(Collectors.toList()));
 
     }
 
     @PatchMapping
     @ApiOperation(value="Trocar senha usuário.")
     public ResponseEntity alterarSenha(@RequestBody AlterarSenhaDto request) {
-
         try {
             usuarioService.updatePassword(request);
-
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .build();
-        }catch (Exception e){
-
+        } catch (Exception e){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
-
         }
-
     }
 
     @GetMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
     @RolesAllowed({"USUARIO"})
-    public List<Usuario> usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UserDetailsImpl loggedUser) {
-        return usuarioService.usuariosQuePodemReceberDoacao(loggedUser.getId());
+    public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UserDetailsImpl loggedUser) {
+        List<UsuarioDto> usuarioDtos = usuarioService.usuariosQuePodemReceberDoacao(loggedUser.getId()).stream()
+                .map(Usuario::toUsuarioDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioDtos);
     }
 
     @PatchMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})

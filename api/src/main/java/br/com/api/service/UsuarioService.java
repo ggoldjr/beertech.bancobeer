@@ -2,8 +2,11 @@ package br.com.api.service;
 
 import br.com.api.dto.*;
 import br.com.api.exception.NotFoundException;
+import br.com.api.model.Conta;
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
+import br.com.api.spec.ContaSpec;
+import br.com.api.spec.UsuarioSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,16 +28,13 @@ public class UsuarioService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Usuario save(Usuario usuario){
-        try {
-            usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
-
-            return usuarioRepository.save(usuario);
-        }
-        catch (Throwable e){
-            throw e;
-        }
-
+    public Usuario create(UsuarioSpec usuarioSpec){
+        Usuario usuario = Usuario.criar(usuarioSpec);
+        usuario = usuarioRepository.save(usuario);
+        ContaSpec contaSpec = ContaSpec.builder().idUsuario(usuario.getId()).build();
+        Conta conta = contaService.create(contaSpec, usuario);
+        usuario.setContaHash(conta.getHash());
+        return usuarioRepository.save(usuario);
     }
 
     public Usuario findByEmail(String email){
@@ -50,76 +50,22 @@ public class UsuarioService {
     }
 
 
-    public UsuarioDto update(Usuario usuarioRequest) {
-
-        findById(usuarioRequest.getId());
-        return usuarioToUsuarioDto(save(usuarioRequest));
-
+    public Usuario update(Usuario usuarioParaAtualizar) {
+        findById(usuarioParaAtualizar.getId());
+        return usuarioRepository.save(usuarioParaAtualizar);
     }
 
-    public UsuarioDto create(UsuarioDtoIn req){
-        Usuario usuario = usuarioDtoInToUsuario(req);
-        usuario = save(usuario);
-        ContaDtoOut contaDtoOut = contaService.create(ContaDtoIn.builder().idUsuario(usuario.getId()).build());
-        usuario.setContaHash(contaDtoOut.getHash());
-        return usuarioToUsuarioDto(save(usuario));
 
-
-    }
-
-    public List<UsuarioDto> list(){
-        return listAll().stream()
-                .map( usuario -> usuarioToUsuarioDto(usuario))
-                .collect(Collectors.toList());
-    }
-
-    public UsuarioDto listByEmail(String email){
-
-        return usuarioToUsuarioDto(findByEmail(email));
-
-    }
-
-    public UsuarioDto usuarioToUsuarioDto(Usuario usuario){
-
-        return UsuarioDto.builder()
-                .id(usuario.getId())
-                .cnpj(usuario.getCnpj())
-                .email(usuario.getEmail())
-                .nome(usuario.getNome())
-                .perfil(usuario.getPerfil())
-                .contas(contaService.listContasUsuario(usuario))
-                .build();
-
-    }
-
-    public Usuario usuarioDtoInToUsuario (UsuarioDtoIn req){
-
-        return Usuario.builder()
-                .perfil(req.getPerfil())
-                .cnpj(req.getCnpj())
-                .email(req.getEmail())
-                .nome(req.getNome())
-                .senha(req.getSenha())
-                .build();
-
-    }
-
-    public void updatePassword(AlterarSenhaDto request) throws Exception {
-
+    public void updatePassword(AlterarSenhaDto request) {
         Usuario usuario = findById(request.getIdUsuario());
-
         if(request.getSenhaAntiga().matches(request.getSenhaNova())){
-            throw new Exception("Senha nova não pode ser igual a antiga");
+            throw new RuntimeException("Senha nova não pode ser igual a antiga");
         }
-
         if (!bCryptPasswordEncoder.matches(request.getSenhaAntiga(),usuario.getSenha())){
-            throw new Exception("Senha antiga inválida");
+            throw new RuntimeException("Senha antiga inválida");
         }
-
         usuario.setSenha(bCryptPasswordEncoder.encode(request.getSenhaNova()));
-
         usuarioRepository.save(usuario);
-
     }
 
     public List<Usuario> usuariosQuePodemReceberDoacao(Long id) {

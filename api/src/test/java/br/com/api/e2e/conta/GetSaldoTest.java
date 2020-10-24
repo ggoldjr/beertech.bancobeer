@@ -8,6 +8,7 @@ import br.com.api.model.Usuario;
 import br.com.api.seed.ContaSetup;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.service.ContaService;
+import br.com.api.service.OperacaoService;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,6 +39,9 @@ public class GetSaldoTest {
 
     @Autowired
     UsuarioSetup usuarioSetup;
+
+    @Autowired
+    OperacaoService operacaoService;
 
     @Nested
     public abstract class SetupGetSaldo {
@@ -77,12 +81,8 @@ public class GetSaldoTest {
             operacaoDto1.setTipo(Operacao.Tipo.DEPOSITO.name());
             operacaoDto1.setValor(50d);
 
-            try {
-                contaService.criarOperacao(operacaoDto, usuario1.getContaHash()).get();
-                contaService.criarOperacao(operacaoDto1, usuario1.getContaHash()).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+            operacaoService.criar(usuario1.getContaHash(), operacaoDto);
+            operacaoService.criar(usuario1.getContaHash(), operacaoDto1);
         }
     }
 

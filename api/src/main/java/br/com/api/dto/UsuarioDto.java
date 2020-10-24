@@ -10,18 +10,10 @@ import java.util.List;
 @Data
 @Builder
 public class UsuarioDto {
-
     private Long id;
-
     private String  nome;
-
     private String  cnpj;
-
     private String  email;
-
+    private String  contaHash;
     private Usuario.Perfil perfil;
-
-    private List<ContaDtoOut> contas;
-
-
 }

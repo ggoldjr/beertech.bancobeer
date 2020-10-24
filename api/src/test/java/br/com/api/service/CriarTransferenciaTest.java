@@ -18,6 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CriarTransferenciaTest {
 
     @Autowired
+    OperacaoService operacaoService;
+
+    @Autowired
     ContaService contaService;
 
     @Autowired
@@ -35,9 +38,9 @@ public class CriarTransferenciaTest {
         void run() throws ExecutionException, InterruptedException {
             contaSetup.setup();
             setup();
-            operacao = contaService.criarOperacao(getTransferenciaDto()).get();
+            operacao = operacaoService.criarTransferencia(getTransferenciaDto()).get();
             contaOrigem = contaService.findByHash(contaOrigem.getHash());
-            contaDestino = contaService.findByHash(contaDestino.getHash());
+            contaDestino =contaService.findByHash(contaDestino.getHash());
         }
 
         abstract TransferenciaDto getTransferenciaDto();

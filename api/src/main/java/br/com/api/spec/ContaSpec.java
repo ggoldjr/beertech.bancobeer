@@ -1,4 +1,4 @@
-package br.com.api.dto;
+package br.com.api.spec;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContaDtoOut {
-
-    Long id;
-    String hash;
-    String usuario;
-    Double saldo;
-
-
-
+public class ContaSpec {
+    private Long idUsuario;
 }

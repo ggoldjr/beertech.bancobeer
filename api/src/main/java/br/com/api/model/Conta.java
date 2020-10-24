@@ -1,6 +1,9 @@
 package br.com.api.model;
 
+import br.com.api.dto.ContaDto;
+import br.com.api.exception.NotFoundException;
 import br.com.api.exception.SaldoInsuficienteException;
+import br.com.api.spec.ContaSpec;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +20,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -24,6 +28,14 @@ import java.util.Optional;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Conta implements Serializable {
+
+    public static Conta criar(ContaSpec contaSpec, Usuario usuario) {
+        return Conta.builder()
+                .hash(UUID.randomUUID().toString())
+                .saldo(0d)
+                .usuario(usuario)
+                .build();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,4 +83,12 @@ public class Conta implements Serializable {
         return this.saldo >= valor;
     }
 
+    public ContaDto toContaDto() {
+        return ContaDto.builder()
+                .hash(this.hash)
+                .id(this.id)
+                .saldo(this.saldo)
+                .usuarioDto(this.usuario.toUsuarioDto())
+                .build();
+    }
 }

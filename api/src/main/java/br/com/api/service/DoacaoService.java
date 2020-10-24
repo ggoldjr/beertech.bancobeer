@@ -1,13 +1,11 @@
 package br.com.api.service;
 
-import br.com.api.dto.ContaDtoOut;
+import br.com.api.dto.ContaDto;
 import br.com.api.dto.DoacaoDto;
 import br.com.api.exception.DoacaoException;
-import br.com.api.exception.NotFoundException;
 import br.com.api.model.Doacao;
 import br.com.api.model.Usuario;
 import br.com.api.repository.DoacaoRepository;
-import br.com.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +33,8 @@ public class DoacaoService {
 
     public Doacao criar(Long idUsuarioDoador, DoacaoDto doacaoDto) {
         Usuario usuarioDoador = usuarioService.findById(idUsuarioDoador);
-        List<ContaDtoOut> contaDtoOuts = contaService.listContasUsuario(usuarioDoador);
-        boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(contaDtoOuts.get(0).getSaldo(), doacaoDto.getValorDoado().doubleValue());
+        List<ContaDto> contaDtos = contaService.listContasUsuario(usuarioDoador);
+        boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(contaDtos.get(0).getSaldo(), doacaoDto.getValorDoado().doubleValue());
         if (usuarioDoadorPodeDoar) {
             Usuario usuarioBeneficiario = usuarioService.findById(doacaoDto.getIdUsuarioBeneficiario());
             if (podeReceber(usuarioBeneficiario)) {

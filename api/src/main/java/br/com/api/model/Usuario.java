@@ -1,5 +1,7 @@
 package br.com.api.model;
 
+import br.com.api.dto.UsuarioDto;
+import br.com.api.spec.UsuarioSpec;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,16 @@ import java.util.List;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Usuario {
+
+    public static Usuario criar(UsuarioSpec usuarioSpec){
+        return Usuario.builder()
+                .perfil(usuarioSpec.getPerfil())
+                .cnpj(usuarioSpec.getCnpj())
+                .email(usuarioSpec.getEmail())
+                .nome(usuarioSpec.getNome())
+                .senha(usuarioSpec.getSenha())
+                .build();
+    }
 
     public enum Perfil { USUARIO, ADMIN }
 
@@ -69,4 +81,15 @@ public class Usuario {
         return saldo >= valorParaDoar && !podeReceberDoacoes;
     }
 
+
+    public UsuarioDto toUsuarioDto() {
+        return UsuarioDto.builder()
+                .cnpj(this.cnpj)
+                .email(this.email)
+                .id(this.id)
+                .nome(this.nome)
+                .contaHash(this.contaHash)
+                .perfil(this.perfil)
+                .build();
+    }
 }

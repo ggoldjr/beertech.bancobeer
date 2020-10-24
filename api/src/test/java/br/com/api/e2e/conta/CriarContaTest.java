@@ -1,9 +1,8 @@
 package br.com.api.e2e.conta;
 
-import br.com.api.dto.ContaDtoIn;
-import br.com.api.dto.ContaDtoOut;
-import br.com.api.model.Conta;
+import br.com.api.dto.ContaDto;
 import br.com.api.seed.UsuarioSetup;
+import br.com.api.spec.ContaSpec;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +34,7 @@ public class CriarContaTest {
     @Nested
     abstract class CriarContaSetup {
         ResponseEntity<String> responseEntity;
-        ContaDtoOut contaCriada;
+        ContaDto contaCriada;
         ResponseError responseError;
 
         @BeforeEach
@@ -43,10 +42,10 @@ public class CriarContaTest {
             usuarioSetup.setup();
             testUtil.login(port, usuarioSetup.getUsuario1().getEmail());
             String url = String.format("http://localhost:%s/contas", port);
-            HttpEntity<String> httpEntity = testUtil.getHttpEntity(ContaDtoIn.builder().idUsuario(1l).build());
+            HttpEntity<String> httpEntity = testUtil.getHttpEntity(ContaSpec.builder().idUsuario(1l).build());
             responseEntity = testUtil.restTemplate.postForEntity(url, httpEntity, String.class);
             if (responseEntity.getStatusCodeValue() == 201) {
-                contaCriada = testUtil.parseSuccessfulResponse(responseEntity, ContaDtoOut.class);
+                contaCriada = testUtil.parseSuccessfulResponse(responseEntity, ContaDto.class);
             } else {
                 responseError = testUtil.parseResponseError(responseEntity);
             }
