@@ -1,7 +1,7 @@
 package br.com.api.model;
 
 import br.com.api.dto.ContaDto;
-import br.com.api.dto.UsuarioDto;
+import br.com.api.dto.UsuarioSimplificado;
 import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.service.ApplicationException;
 import br.com.api.spec.ContaSpec;
@@ -87,13 +87,18 @@ public class Conta implements Serializable {
     }
 
     public ContaDto toContaDto() {
-        UsuarioDto usuarioDto = this.usuario.toUsuarioDto();
-        usuarioDto.setContaDto(null);
+        UsuarioSimplificado usuarioSimplificado = UsuarioSimplificado.builder()
+                .nome(this.usuario.getNome())
+                .email(this.usuario.getEmail())
+                .cnpj(this.usuario.getCnpj())
+                .id(this.usuario.getId())
+                .perfil(this.usuario.getPerfil())
+                .build();
         return ContaDto.builder()
                 .hash(this.hash)
                 .id(this.id)
                 .saldo(this.saldo)
-                .usuarioDto(usuarioDto)
+                .usuario(usuarioSimplificado)
                 .build();
     }
 }

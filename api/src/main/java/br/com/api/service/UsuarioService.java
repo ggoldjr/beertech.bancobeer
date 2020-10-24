@@ -40,6 +40,7 @@ public class UsuarioService {
     //todo: refatorar depois
     public Usuario criar(UsuarioSpec usuarioSpec){
         Usuario usuario = Usuario.criar(usuarioSpec);
+        usuario.setSenha(bCryptPasswordEncoder.encode(usuario.getSenha()));
         usuario = usuarioRepository.save(usuario);
         ContaSpec contaSpec = ContaSpec.builder().idUsuario(usuario.getId()).build();
         Conta conta = contaService.create(contaSpec, usuario);
@@ -124,7 +125,7 @@ public class UsuarioService {
 
     private Usuario resolveConta(Usuario usuario) {
         Conta conta = contaService.findByHash(usuario.getContaHash());
-        usuario.setConta(conta);
+        usuario.setContaDto(conta.toContaDto());
         return usuario;
     }
 }

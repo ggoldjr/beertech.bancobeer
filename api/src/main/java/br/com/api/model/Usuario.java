@@ -33,6 +33,7 @@ public class Usuario {
                 .email(usuarioSpec.getEmail())
                 .nome(usuarioSpec.getNome())
                 .senha(usuarioSpec.getSenha())
+                .podeReceberDoacoes(false)
                 .build();
     }
 
@@ -74,20 +75,21 @@ public class Usuario {
 
     private Boolean podeReceberDoacoes;
 
+    @Transient
+    private ContaDto contaDto;
+
     public boolean podeDoar(Double saldo, Double valorParaDoar) {
         return saldo >= valorParaDoar && !podeReceberDoacoes;
     }
 
 
     public UsuarioDto toUsuarioDto() {
-        ContaDto contaDto = this.conta.toContaDto();
-        contaDto.setUsuarioDto(null);
         return UsuarioDto.builder()
                 .cnpj(this.cnpj)
                 .email(this.email)
                 .id(this.id)
                 .nome(this.nome)
-                .contaDto(contaDto)
+                .contaDto(this.contaDto)
                 .perfil(this.perfil)
                 .build();
     }

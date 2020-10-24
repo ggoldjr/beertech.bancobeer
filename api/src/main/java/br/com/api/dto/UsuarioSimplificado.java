@@ -6,16 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-@Data
+@AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class UsuarioDto {
+@Data
+public class UsuarioSimplificado {
     private Long id;
     private String  nome;
     private String  cnpj;
     private String  email;
-    private ContaDto contaDto;
     private Usuario.Perfil perfil;
 }

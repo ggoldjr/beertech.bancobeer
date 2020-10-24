@@ -48,8 +48,7 @@ public class UsuarioSetup {
     //TODO: corrigir para deletar conta ao deletar usuário
 
     public void setup() {
-        contaRepository.deleteAll();
-        usuarioRepository.deleteAll();
+        deleteAll();
         UsuarioSpec usuarioParaCriar1 = UsuarioSpec.builder()
                 .nome("Usuario teste 1")
                 .email("teste1@gmail.com")
@@ -74,7 +73,13 @@ public class UsuarioSetup {
                 .senha(bCryptPasswordEncoder.encode("senha"))
                 .cnpj("49415525000187")
                 .perfil(Usuario.Perfil.ADMIN)
+                .podeReceberDoacoes(false)
                 .build();
         usuarioRepository.save(admin);
+    }
+
+    public void deleteAll() {
+        contaRepository.deleteAll();
+        usuarioRepository.deleteAll();
     }
 }

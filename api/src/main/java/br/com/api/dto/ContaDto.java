@@ -13,6 +13,6 @@ public class ContaDto {
 
     Long id;
     String hash;
-    UsuarioDto usuarioDto;
+    UsuarioSimplificado usuario;
     Double saldo;
 }

@@ -2,11 +2,11 @@ package br.com.api.e2e.conta;
 
 import br.com.api.dto.UsuarioDto;
 import br.com.api.model.Usuario;
+import br.com.api.repository.UsuarioRepository;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.spec.UsuarioSpec;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ public class CriarUsuarioTest {
             }
         }
         abstract UsuarioSpec getUsuarioSpec();
-        void setup(){}
+        void setup(){ usuarioSetup.deleteAll();}
     }
 
 
@@ -96,11 +96,14 @@ public class CriarUsuarioTest {
 
         @Override
         void setup() {
+            super.setup();
             usuarioSetup.setup();
         }
 
         @Test
         void deveRetornarMensagemDeErro() {
+            assertThat(responseError.getMessage()).isEqualTo("Saldo Insuficiente");
+            assertThat(responseError.getStatus()).isEqualTo(400);
         }
     }
 }
