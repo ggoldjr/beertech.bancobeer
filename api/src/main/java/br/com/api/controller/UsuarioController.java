@@ -90,7 +90,7 @@ public class UsuarioController {
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    @Secured({"USUARIO"})
+    @Secured({"USUARIO","ADMIN"})
     public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UsuarioLogado loggedUser,
                                                         @RequestParam(defaultValue = "") String podeReceberDoacao,
                                                         @RequestParam(defaultValue = "") String minhasDoacoes,

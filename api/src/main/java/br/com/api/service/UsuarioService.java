@@ -120,7 +120,10 @@ public class UsuarioService {
                     .collect(Collectors.toList());
             all = all.stream().filter(usuario1 -> !ids.contains(usuario1.getId())).collect(Collectors.toList());
         }
-        return all.stream().map(this::resolveConta).collect(Collectors.toList());
+        return all.stream()
+                .filter(usuario1 -> usuario1.getPerfil() != Usuario.Perfil.ADMIN)
+                .map(this::resolveConta)
+                .collect(Collectors.toList());
     }
 
     public void habilitarOuDesabilitarDoacao(HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {
