@@ -74,7 +74,7 @@ public class ContaController {
     @ApiOperation(value = "Obter extrato da conta pelo hash.", produces = "application/json")
     public ResponseEntity getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                           @PathVariable String contaHash) {
-        return ResponseEntity.status(HttpStatus.OK).body(contaService.listaOperacoesByHash(contaHash));
+        return ResponseEntity.status(HttpStatus.OK).body(operacaoService.getExtrato(contaHash));
     }
 
     @ApiIgnore
@@ -106,6 +106,7 @@ public class ContaController {
     @PostMapping(path = "/{contaHash}/operacoes/depositos",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RolesAllowed({"USUARIO"})
     @ApiOperation(value = "Realiza depósito na conta.", produces = "application/json")
     public ResponseEntity deposito(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                    @PathVariable String contaHash,

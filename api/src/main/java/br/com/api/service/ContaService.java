@@ -1,6 +1,5 @@
 package br.com.api.service;
 
-import br.com.api.dto.ExtratoDto;
 import br.com.api.dto.SaldoDto;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
@@ -16,15 +15,11 @@ import java.util.List;
 public class ContaService {
 
     private final ContaRepository contaRepository;
-    private final OperacaoService operacaoService;
-
 
     @Autowired
-    public ContaService(ContaRepository contaRepository,
-                        OperacaoService operacaoService) {
+    public ContaService(ContaRepository contaRepository) {
 
         this.contaRepository = contaRepository;
-        this.operacaoService = operacaoService;
     }
 
     public List<Conta> listAll() {
@@ -50,10 +45,6 @@ public class ContaService {
 
     public Conta atualizarConta(Conta conta) {
         return contaRepository.save(conta);
-    }
-
-    public List<ExtratoDto> listaOperacoesByHash(String contaHash) {
-        return operacaoService.getExtrato(contaHash);
     }
 
     public List<Conta> listContasUsuario(Usuario usuario) {

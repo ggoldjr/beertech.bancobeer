@@ -35,16 +35,13 @@ public class ApiApplication implements CommandLineRunner {
 		Optional<Usuario> usuario = usuarioRepository.findByEmail("duplomalte@gmail.com");
 
 		if(!usuario.isPresent()){
-			usuarioRepository.save(
-					Usuario.builder()
-//							.senha("senha")
+			usuarioRepository.save(Usuario.builder()
 							.senha(bCryptPasswordEncoder.encode("senha"))
 							.email("duplomalte@gmail.com")
 							.cnpj("1234")
 							.nome("Duplo Malte")
 							.perfil(Usuario.Perfil.ADMIN)
-							.build()
-			);
+							.build());
 		}
 
 
