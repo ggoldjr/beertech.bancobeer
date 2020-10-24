@@ -1,6 +1,7 @@
 package br.com.api.controller;
 
 import br.com.api.dto.AlterarSenhaDto;
+import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
 import br.com.api.dto.UsuarioDtoIn;
 import br.com.api.model.Usuario;
 import br.com.api.security.UserDetailsImpl;
@@ -96,5 +97,12 @@ public class UsuarioController {
     @RolesAllowed({"USUARIO"})
     public List<Usuario> usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UserDetailsImpl loggedUser) {
         return usuarioService.usuariosQuePodemReceberDoacao(loggedUser.getId());
+    }
+
+    @PatchMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RolesAllowed({"ADMIN"})
+    public ResponseEntity podeReceberDoacao(@RequestBody HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {
+        usuarioService.habilitarOuDesabilitarDoacao(habilitarOrDesabilitarDoacaoDto);
+        return ResponseEntity.status(204).build();
     }
 }

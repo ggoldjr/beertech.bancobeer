@@ -1,6 +1,7 @@
 package br.com.api.service;
 
 import br.com.api.dto.AlterarSenhaDto;
+import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
 import br.com.api.dto.UsuarioDto;
 import br.com.api.dto.UsuarioDtoIn;
 import br.com.api.exception.NotFoundException;
@@ -124,5 +125,11 @@ public class UsuarioService {
     public List<Usuario> usuariosQuePodemReceberDoacao(Long id) {
         return usuarioRepository.findAllByPodeReceberDoacoesTrue().stream().filter(usuario -> usuario.getId() != id)
                 .collect(Collectors.toList());
+    }
+
+    public void habilitarOuDesabilitarDoacao(HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {
+        Usuario usuario = findById(habilitarOrDesabilitarDoacaoDto.getIdUsuario());
+        usuario.setPodeReceberDoacoes(habilitarOrDesabilitarDoacaoDto.getPodeReceberDoacao());
+        usuarioRepository.save(usuario);
     }
 }
