@@ -53,7 +53,6 @@ public class UsuarioSetup {
                 .email("teste1@gmail.com")
                 .senha(bCryptPasswordEncoder.encode("senha"))
                 .cnpj("82826677000148")
-                .perfil(Usuario.Perfil.USUARIO)
                 .build();
 
         UsuarioSpec usuarioParaCriar2 = UsuarioSpec.builder()
@@ -61,7 +60,6 @@ public class UsuarioSetup {
                 .email("teste2@gmail.com")
                 .senha(bCryptPasswordEncoder.encode("senha"))
                 .cnpj("48028968000152")
-                .perfil(Usuario.Perfil.USUARIO)
                 .build();
         usuario1 = usuarioService.criar(usuarioParaCriar1);
         usuario2 = usuarioService.criar(usuarioParaCriar2);

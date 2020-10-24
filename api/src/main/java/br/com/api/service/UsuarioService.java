@@ -6,9 +6,12 @@ import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
+import br.com.api.security.UsuarioLogado;
+import br.com.api.spec.AtualizarUsuarioSpec;
 import br.com.api.spec.ContaSpec;
 import br.com.api.spec.UsuarioSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +43,12 @@ public class UsuarioService {
         return resolveConta(usuario);
     }
 
-    public Usuario buscarPorEmail(String email){
-        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
-        return resolveConta(usuario);
+    public Usuario buscarPorEmail(String email, Usuario usuario){
+        if (!usuario.eAdmin() && email.equals(usuario.getEmail())) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode buscar sua usuário");
+        }
+        Usuario usuarioSalvo = usuarioRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
+        return resolveConta(usuarioSalvo);
     }
 
     public Usuario buscarPorId(Long id){
@@ -50,25 +56,36 @@ public class UsuarioService {
         return resolveConta(usuario);
     }
 
-    public List<Usuario> listAll(){
-        return usuarioRepository.findAll().stream().map(this::resolveConta).collect(Collectors.toList());
+    public List<Usuario> listAll(Usuario usuario){
+        return usuarioRepository.findAllByIdIsNot(usuario.getId()).stream()
+                .map(this::resolveConta)
+                .collect(Collectors.toList());
     }
 
-    public Usuario update(Usuario usuarioParaAtualizar) {
-        buscarPorId(usuarioParaAtualizar.getId());
-        Usuario usuario = usuarioRepository.save(usuarioParaAtualizar);
-        return resolveConta(usuario);
+    public Usuario update(AtualizarUsuarioSpec usuarioSpec, Usuario usuarioLogado) {
+        if (usuarioLogado.getEmail().equals(usuarioSpec.getEmail())) {
+            Usuario usuarioParaAtualizar = buscarPorId(usuarioLogado.getId());
+            usuarioParaAtualizar.setEmail(usuarioSpec.getEmail());
+            usuarioParaAtualizar.setCnpj(usuarioSpec.getCnpj());
+            usuarioParaAtualizar.setNome(usuarioSpec.getNome());
+            Usuario usuario = usuarioRepository.save(usuarioParaAtualizar);
+            return resolveConta(usuario);
+        }
+        throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode atualizar informações dos outros usuários");
     }
 
-    public void updatePassword(AlterarSenhaDto request) {
-        Usuario usuario = buscarPorId(request.getIdUsuario());
-        if(request.getSenhaAntiga().matches(request.getSenhaNova())){
+    public void updatePassword(AlterarSenhaDto alterarSenhaDto, Usuario usuarioLogado) {
+        if (usuarioLogado.getId() != alterarSenhaDto.getIdUsuario()) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode atualizar senha dos outros usuários");
+        }
+        Usuario usuario = buscarPorId(alterarSenhaDto.getIdUsuario());
+        if(alterarSenhaDto.getSenhaAntiga().matches(alterarSenhaDto.getSenhaNova())){
             throw new RuntimeException("Senha nova não pode ser igual a antiga");
         }
-        if (!bCryptPasswordEncoder.matches(request.getSenhaAntiga(),usuario.getSenha())){
+        if (!bCryptPasswordEncoder.matches(alterarSenhaDto.getSenhaAntiga(),usuario.getSenha())){
             throw new RuntimeException("Senha antiga inválida");
         }
-        usuario.setSenha(bCryptPasswordEncoder.encode(request.getSenhaNova()));
+        usuario.setSenha(bCryptPasswordEncoder.encode(alterarSenhaDto.getSenhaNova()));
         usuarioRepository.save(usuario);
     }
 

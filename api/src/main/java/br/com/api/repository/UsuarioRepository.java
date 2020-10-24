@@ -15,4 +15,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findAllByPodeReceberDoacoesTrue();
 
+    List<Usuario> findAllByIdIsNot(Long id);
+
 }

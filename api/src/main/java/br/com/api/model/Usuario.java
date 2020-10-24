@@ -27,7 +27,7 @@ public class Usuario {
 
     public static Usuario criar(UsuarioSpec usuarioSpec){
         return Usuario.builder()
-                .perfil(usuarioSpec.getPerfil())
+                .perfil(Perfil.USUARIO)
                 .cnpj(usuarioSpec.getCnpj())
                 .email(usuarioSpec.getEmail())
                 .nome(usuarioSpec.getNome())

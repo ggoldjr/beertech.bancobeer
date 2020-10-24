@@ -7,6 +7,7 @@ import br.com.api.model.Usuario;
 import br.com.api.security.UsuarioLogado;
 import br.com.api.service.ContaService;
 import br.com.api.service.UsuarioService;
+import br.com.api.spec.AtualizarUsuarioSpec;
 import br.com.api.spec.UsuarioSpec;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,45 +48,44 @@ public class UsuarioController {
     @GetMapping(path="/{email}",produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Buscar usuário por e-mail.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity buscaUsuario(@ApiParam(name="email", required=true, value="E-mail do usuário", example="teste@teste.com")
-                                       @PathVariable String email){
+                                       @PathVariable String email,
+                                       @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.buscarPorEmail(email).toUsuarioDto());
+                .body(usuarioService.buscarPorEmail(email, usuarioLogado.toUsuario()).toUsuarioDto());
     }
 
-
+    @Secured("USUARIO")
     @PutMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Atualiza usuário.", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity atualizaUsuario(@RequestBody Usuario usuarioRequest){
-
+    public ResponseEntity atualizaUsuario(@RequestBody AtualizarUsuarioSpec atualizarUsuarioSpec,
+                                          @AuthenticationPrincipal UsuarioLogado usuarioLogado){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.update(usuarioRequest).toUsuarioDto());
-
+                .body(usuarioService.update(atualizarUsuarioSpec, usuarioLogado.toUsuario()).toUsuarioDto());
     }
 
+    @Secured("ADMIN")
     @GetMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Lista todos usuários.", produces="application/json")
-    public ResponseEntity listaUsuarios(){
-
+    public ResponseEntity listaUsuarios(@AuthenticationPrincipal UsuarioLogado usuarioLogado){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.listAll().stream().map(Usuario::toUsuarioDto).collect(Collectors.toList()));
-
+                .body(usuarioService.listAll(usuarioLogado.toUsuario()).stream()
+                        .map(Usuario::toUsuarioDto)
+                        .collect(Collectors.toList()));
     }
 
+    @Secured("USUARIO")
     @PatchMapping
     @ApiOperation(value="Trocar senha usuário.")
-    public ResponseEntity alterarSenha(@RequestBody AlterarSenhaDto request) {
+    public ResponseEntity alterarSenha(@RequestBody AlterarSenhaDto request,
+                                       @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         try {
-            usuarioService.updatePassword(request);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .build();
+            usuarioService.updatePassword(request, usuarioLogado.toUsuario());
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -98,7 +99,7 @@ public class UsuarioController {
     }
 
     @PatchMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @RolesAllowed({"ADMIN"})
+    @Secured({"ADMIN"})
     public ResponseEntity podeReceberDoacao(@RequestBody HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {
         usuarioService.habilitarOuDesabilitarDoacao(habilitarOrDesabilitarDoacaoDto);
         return ResponseEntity.status(204).build();
