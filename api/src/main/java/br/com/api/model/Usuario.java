@@ -57,7 +57,7 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Perfil perfil;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumn(name = "conta_id")
     @JsonIgnore
     private Conta conta;

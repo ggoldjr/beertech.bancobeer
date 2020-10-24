@@ -38,8 +38,13 @@ public class ContaService {
         return findByHash(contaHash).getSaldo();
     }
 
+    //TODO: corrigir depois
+
     public Conta create(ContaSpec contaSpec, Usuario usuario) {
         Conta conta = Conta.criar(contaSpec, usuario);
+        conta.setUsuario(null);
+        conta = contaRepository.save(conta);
+        conta.setUsuario(usuario);
         return contaRepository.save(conta);
     }
 

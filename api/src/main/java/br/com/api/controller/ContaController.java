@@ -4,6 +4,7 @@ import br.com.api.dto.OperacaoDto;
 import br.com.api.dto.TransferenciaDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
+import br.com.api.security.UserDetailsImpl;
 import br.com.api.service.ContaService;
 import br.com.api.service.OperacaoService;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -106,12 +109,13 @@ public class ContaController {
     @PostMapping(path = "/{contaHash}/operacoes/depositos",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    @RolesAllowed({"USUARIO"})
+    @Secured("USUARIO")
     @ApiOperation(value = "Realiza depósito na conta.", produces = "application/json")
     public ResponseEntity deposito(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                    @PathVariable String contaHash,
                                    @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
-                                   @Valid @RequestBody OperacaoDto request) {
+                                   @Valid @RequestBody OperacaoDto request,
+                                   @AuthenticationPrincipal UserDetailsImpl loggedUser) {
         request.setTipo(Operacao.Tipo.DEPOSITO.name());
         operacaoService.criar(contaHash, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();

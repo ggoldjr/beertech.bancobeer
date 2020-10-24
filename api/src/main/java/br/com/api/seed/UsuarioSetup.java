@@ -2,8 +2,8 @@ package br.com.api.seed;
 
 import br.com.api.dto.OperacaoDto;
 import br.com.api.model.Usuario;
+import br.com.api.repository.ContaRepository;
 import br.com.api.repository.UsuarioRepository;
-import br.com.api.service.ContaService;
 import br.com.api.service.OperacaoService;
 import br.com.api.service.UsuarioService;
 import br.com.api.spec.UsuarioSpec;
@@ -19,6 +19,7 @@ public class UsuarioSetup {
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final OperacaoService operacaoService;
+    private final ContaRepository contaRepository;
 
     @Getter
     private Usuario usuario1;
@@ -33,15 +34,19 @@ public class UsuarioSetup {
     public UsuarioSetup(UsuarioService usuarioService,
                         UsuarioRepository usuarioRepository,
                         BCryptPasswordEncoder bCryptPasswordEncoder,
-                        OperacaoService operacaoService) {
+                        OperacaoService operacaoService, ContaRepository contaRepository) {
 
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.operacaoService = operacaoService;
+        this.contaRepository = contaRepository;
     }
 
+    //TODO: corrigir para deletar conta ao deletar usuário
+
     public void setup() {
+        contaRepository.deleteAll();
         usuarioRepository.deleteAll();
         UsuarioSpec usuarioParaCriar1 = UsuarioSpec.builder()
                 .nome("Usuario teste 1")

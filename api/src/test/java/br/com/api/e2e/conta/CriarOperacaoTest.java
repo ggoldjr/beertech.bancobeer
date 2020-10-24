@@ -59,7 +59,7 @@ public class CriarOperacaoTest {
         @BeforeEach
         void setup() throws JsonProcessingException, InterruptedException {
             usuarioSetup.setup();
-            testUtil.login(port, usuarioSetup.getAdmin().getEmail());
+            testUtil.login(port, usuarioSetup.getUsuario1().getEmail());
             contaHash = usuarioSetup.getUsuario1().getContaHash();
             String url = String.format("http://localhost:%s/contas/%s/operacoes/%s", port, contaHash, getOperacao());
             HttpEntity<String> httpEntity = testUtil.getHttpEntity(getOperacaoDto());
