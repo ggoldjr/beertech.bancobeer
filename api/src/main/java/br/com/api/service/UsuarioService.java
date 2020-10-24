@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,8 +64,6 @@ public class UsuarioService {
     }
 
     public List<Usuario> listAll(Usuario usuario){
-        System.out.println("usuario.getId()");
-        System.out.println("usuario.getId()" + usuario.getId());
         List<Usuario> collect = usuarioRepository.findAllByIdIsNot(usuario.getId()).stream()
                 .map(this::resolveConta)
                 .collect(Collectors.toList());
@@ -73,7 +72,10 @@ public class UsuarioService {
 
 
     public Usuario update(AtualizarUsuarioSpec usuarioSpec, Usuario usuarioLogado) {
-        if (usuarioLogado.getEmail().equals(usuarioSpec.getEmail())) {
+
+        Usuario usuarioValidacao = usuarioRepository.findByEmail(usuarioSpec.getEmail()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
+
+        if (usuarioValidacao.getId().compareTo(usuarioLogado.getId())==0) {
             Usuario usuarioParaAtualizar = buscarPorId(usuarioLogado.getId());
             usuarioParaAtualizar.setEmail(usuarioSpec.getEmail());
             usuarioParaAtualizar.setCnpj(usuarioSpec.getCnpj());
