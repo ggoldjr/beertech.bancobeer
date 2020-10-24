@@ -21,7 +21,8 @@ public class Doacao {
     private Long id;
 
     @ManyToOne
-    private Usuario usuarioBeneficiario;
+    @JoinColumn(name = "usuario_id" )
+    private Usuario usuario;
 
     private Long idUsuarioDoador;
 

@@ -59,7 +59,7 @@ public class Usuario {
 
     private boolean podeReceberDoacoes;
 
-    @OneToMany(mappedBy = "usuarioBeneficiario")
+    @OneToMany(mappedBy = "usuario")
     @JsonIgnore
     private List<Doacao> doacoes;
 

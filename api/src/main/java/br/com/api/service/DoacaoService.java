@@ -43,7 +43,7 @@ public class DoacaoService {
                 Doacao doacao = Doacao.builder()
                         .dataDaDoacao(LocalDate.now())
                         .idUsuarioDoador(usuarioDoador.getId())
-                        .usuarioBeneficiario(usuarioBeneficiario)
+                        .usuario(usuarioBeneficiario)
                         .valorRecebido(doacaoDto.getValorDoado())
                         .build();
                 return doacaoRepository.save(doacao);
