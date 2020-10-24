@@ -37,7 +37,6 @@ public class UsuarioController {
     @PostMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Criar usuário.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity criarUsuario(@RequestBody UsuarioSpec usuarioSpec){
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(usuarioService.criar(usuarioSpec).toUsuarioDto());
@@ -46,12 +45,11 @@ public class UsuarioController {
 
     @GetMapping(path="/{email}",produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Buscar usuário por e-mail.", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity buscaUsuario( @ApiParam(name="email", required=true, value="E-mail do usuário", example="teste@teste.com")
-                                    @PathVariable String email){
+    public ResponseEntity buscaUsuario(@ApiParam(name="email", required=true, value="E-mail do usuário", example="teste@teste.com")
+                                       @PathVariable String email){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioService.buscarPorEmail(email).toUsuarioDto());
-
     }
 
 

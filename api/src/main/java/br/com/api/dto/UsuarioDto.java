@@ -12,6 +12,6 @@ public class UsuarioDto {
     private String  nome;
     private String  cnpj;
     private String  email;
-    private String  contaHash;
+    private ContaDto contaDto;
     private Usuario.Perfil perfil;
 }

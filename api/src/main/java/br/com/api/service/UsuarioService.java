@@ -29,33 +29,36 @@ public class UsuarioService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    //todo: refatorar depois
     public Usuario criar(UsuarioSpec usuarioSpec){
         Usuario usuario = Usuario.criar(usuarioSpec);
         usuario = usuarioRepository.save(usuario);
         ContaSpec contaSpec = ContaSpec.builder().idUsuario(usuario.getId()).build();
         Conta conta = contaService.create(contaSpec, usuario);
         usuario.setContaHash(conta.getHash());
-        return usuarioRepository.save(usuario);
+        usuario = usuarioRepository.save(usuario);
+        return resolveConta(usuario);
     }
 
     public Usuario buscarPorEmail(String email){
-        return usuarioRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
+        return resolveConta(usuario);
     }
 
     public Usuario buscarPorId(Long id){
-        return usuarioRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
+        return resolveConta(usuario);
     }
 
     public List<Usuario> listAll(){
-        return usuarioRepository.findAll();
+        return usuarioRepository.findAll().stream().map(this::resolveConta).collect(Collectors.toList());
     }
-
 
     public Usuario update(Usuario usuarioParaAtualizar) {
         buscarPorId(usuarioParaAtualizar.getId());
-        return usuarioRepository.save(usuarioParaAtualizar);
+        Usuario usuario = usuarioRepository.save(usuarioParaAtualizar);
+        return resolveConta(usuario);
     }
-
 
     public void updatePassword(AlterarSenhaDto request) {
         Usuario usuario = buscarPorId(request.getIdUsuario());
@@ -70,7 +73,9 @@ public class UsuarioService {
     }
 
     public List<Usuario> usuariosQuePodemReceberDoacao(Long id) {
-        return usuarioRepository.findAllByPodeReceberDoacoesTrue().stream().filter(usuario -> usuario.getId() != id)
+        return usuarioRepository.findAllByPodeReceberDoacoesTrue().stream()
+                .filter(usuario -> usuario.getId() != id)
+                .map(this::resolveConta)
                 .collect(Collectors.toList());
     }
 
@@ -78,5 +83,11 @@ public class UsuarioService {
         Usuario usuario = buscarPorId(habilitarOrDesabilitarDoacaoDto.getIdUsuario());
         usuario.setPodeReceberDoacoes(habilitarOrDesabilitarDoacaoDto.getPodeReceberDoacao());
         usuarioRepository.save(usuario);
+    }
+
+    private Usuario resolveConta(Usuario usuario) {
+        Conta conta = contaService.findByHash(usuario.getContaHash());
+        usuario.setConta(conta);
+        return usuario;
     }
 }

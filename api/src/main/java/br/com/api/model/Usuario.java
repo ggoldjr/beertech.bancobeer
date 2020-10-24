@@ -1,5 +1,6 @@
 package br.com.api.model;
 
+import br.com.api.dto.ContaDto;
 import br.com.api.dto.UsuarioDto;
 import br.com.api.spec.UsuarioSpec;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -82,12 +83,14 @@ public class Usuario {
 
 
     public UsuarioDto toUsuarioDto() {
+        ContaDto contaDto = this.conta.toContaDto();
+        contaDto.setUsuarioDto(null);
         return UsuarioDto.builder()
                 .cnpj(this.cnpj)
                 .email(this.email)
                 .id(this.id)
                 .nome(this.nome)
-                .contaHash(this.contaHash)
+                .contaDto(contaDto)
                 .perfil(this.perfil)
                 .build();
     }
