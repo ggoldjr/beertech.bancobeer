@@ -59,9 +59,4 @@ public class DoacaoService {
                 .orElse(BigDecimal.ZERO).doubleValue() < 1000;
     }
 
-    public List<Doacao> doacoesDoUsuario(Long id) {
-        return doacaoRepository.findAllByAndIdUsuarioDoador(id).stream()
-                .sorted(Comparator.comparing(Doacao::getDataDaDoacao))
-                .collect(Collectors.toList());
-    }
 }

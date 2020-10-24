@@ -65,8 +65,8 @@ public class UsuarioSetup {
                 .build();
         usuario1 = usuarioService.criar(usuarioParaCriar1);
         usuario2 = usuarioService.criar(usuarioParaCriar2);
-        operacaoService.criar(usuario1.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
-        operacaoService.criar(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
+        operacaoService.deposito(usuario1.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
+        operacaoService.deposito(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
 
         admin = Usuario.builder()
                 .nome("Admin admin")

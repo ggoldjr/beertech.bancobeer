@@ -59,7 +59,7 @@ public class GetSaldoTest {
             responseEntity = testUtil.restTemplate.exchange(url, HttpMethod.GET, testUtil.getHttpEntity(), String.class);
             if (responseEntity.getStatusCodeValue() == 200) {
                 saldoDto = testUtil.parseSuccessfulResponse(responseEntity, SaldoDto.class);
-                conta = contaService.findByHash(contaHash);
+                conta = contaService.findByHash(contaHash, usuario1);
             } else {
                 responseError = testUtil.parseResponseError(responseEntity);
             }
@@ -78,8 +78,8 @@ public class GetSaldoTest {
             operacaoDto1.setTipo(Operacao.Tipo.DEPOSITO.name());
             operacaoDto1.setValor(50d);
 
-            operacaoService.criar(usuario1.getContaHash(), operacaoDto);
-            operacaoService.criar(usuario1.getContaHash(), operacaoDto1);
+            operacaoService.saque(usuario1.getContaHash(), operacaoDto, usuario1);
+            operacaoService.deposito(usuario1.getContaHash(), operacaoDto1);
         }
     }
 

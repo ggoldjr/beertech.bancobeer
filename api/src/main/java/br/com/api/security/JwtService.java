@@ -25,7 +25,7 @@ public class JwtService {
     @Value("${security.jwt.secretKey}")
     private String base64EncodedSecretKey;
 
-    public String generateToken(UserDetailsImpl user) {
+    public String generateToken(UsuarioLogado user) {
         long expTime = Long.parseLong(tokenExpiration);
         LocalDateTime expirationDateTime = LocalDateTime.now().plusMinutes(expTime);
         Instant instante = expirationDateTime.atZone(ZoneId.systemDefault()).toInstant();
@@ -62,7 +62,7 @@ public class JwtService {
     private String encodePermission(Collection<? extends GrantedAuthority> authorities) {
         return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
     }
-    private String encode(UserDetailsImpl user) {
+    private String encode(UsuarioLogado user) {
         return String.format("%s:%s:%s:%s", user.getId(), user.getName(), user.getEmail(), encodePermission(user.getAuthorities()));
     }
 
@@ -71,11 +71,11 @@ public class JwtService {
                 .map(s -> new SimpleGrantedAuthority(s.toUpperCase()))
                 .collect(Collectors.toSet());
     }
-    public UserDetailsImpl decode(String encoded) {
+    public UsuarioLogado decode(String encoded) {
         try {
             String subject = getClaims(encoded).getSubject();
             String[] split = subject.split(":");
-            return UserDetailsImpl.builder()
+            return UsuarioLogado.builder()
                     .id(Long.parseLong(split[0]))
                     .name(split[1])
                     .email(split[2])

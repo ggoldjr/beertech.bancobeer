@@ -3,7 +3,9 @@ package br.com.api.service;
 import br.com.api.dto.TransferenciaDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
+import br.com.api.model.Usuario;
 import br.com.api.seed.ContaSetup;
+import br.com.api.seed.UsuarioSetup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,9 @@ public class CriarTransferenciaTest {
     @Autowired
     ContaSetup contaSetup;
 
+    @Autowired
+    UsuarioSetup usuarioSetup;
+
     @Nested
     abstract class CriarTransferenciaSetup {
 
@@ -37,10 +42,12 @@ public class CriarTransferenciaTest {
         @BeforeEach
         void run() throws ExecutionException, InterruptedException {
             contaSetup.setup();
+            usuarioSetup.setup();
             setup();
-            operacao = operacaoService.criarTransferencia(getTransferenciaDto()).get();
-            contaOrigem = contaService.findByHash(contaOrigem.getHash());
-            contaDestino =contaService.findByHash(contaDestino.getHash());
+            Usuario usuario = usuarioSetup.getUsuario1();
+            operacao = operacaoService.criarTransferencia(getTransferenciaDto(), usuario);
+            contaOrigem = contaService.findByHash(contaOrigem.getHash(), usuario);
+            contaDestino =contaService.findByHash(contaDestino.getHash(), usuario);
         }
 
         abstract TransferenciaDto getTransferenciaDto();

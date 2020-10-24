@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Conta conta = contaRepository.getByUsuarioId(usuario.getId()).stream().findFirst().orElse(null);
 
-        UserDetailsImpl userDetails = UserDetailsImpl.builder()
+        UsuarioLogado userDetails = UsuarioLogado.builder()
                 .id(usuario.getId())
                 .email(usuario.getEmail())
                 .name(usuario.getNome())

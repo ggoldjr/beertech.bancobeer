@@ -4,7 +4,7 @@ import br.com.api.dto.OperacaoDto;
 import br.com.api.dto.TransferenciaDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
-import br.com.api.security.UserDetailsImpl;
+import br.com.api.security.UsuarioLogado;
 import br.com.api.service.ContaService;
 import br.com.api.service.OperacaoService;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
@@ -37,7 +36,7 @@ public class ContaController {
         this.operacaoService = operacaoService;
     }
 
-    @RolesAllowed({"ADMIN"})
+    @Secured("ADMIN")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista as contas disponíveis.", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
@@ -53,46 +52,51 @@ public class ContaController {
                 .collect(Collectors.toList()));
     }
 
-    @RolesAllowed({"ADMIN"})
+    @Secured({"ADMIN", "USUARIO"})
     @GetMapping(path = "/{contaHash}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por hash ou id.", produces = "application/json")
     public ResponseEntity getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                         @PathVariable String contaHash) {
-        return ResponseEntity.status(HttpStatus.OK).body(contaService.findByHash(contaHash).toContaDto());
+                                         @PathVariable String contaHash,
+                                         @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        return ResponseEntity.status(HttpStatus.OK).body(contaService.findByHash(contaHash, usuarioLogado.toUsuario()).toContaDto());
     }
 
-    @RolesAllowed({"ADMIN"})
+    @Secured({"ADMIN", "USUARIO"})
     @GetMapping(path = "/id/{contaId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Lista conta por id.", produces = "application/json")
     public ResponseEntity getContaById(@ApiParam(name = "contaId", required = true, value = "Id da conta", example = "1")
-                                       @PathVariable Long contaId) {
-        return ResponseEntity.status(HttpStatus.OK).body(contaService.findById(contaId).toContaDto());
+                                       @PathVariable Long contaId,
+                                       @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        return ResponseEntity.status(HttpStatus.OK).body(contaService.findById(contaId, usuarioLogado.toUsuario()).toContaDto());
     }
 
-    @RolesAllowed({"ADMIN"})
+    @Secured({"ADMIN", "USUARIO"})
     @GetMapping(path = "/{contaHash}/extratos",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Obter extrato da conta pelo hash.", produces = "application/json")
     public ResponseEntity getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                          @PathVariable String contaHash) {
-        return ResponseEntity.status(HttpStatus.OK).body(operacaoService.getExtrato(contaHash));
+                                          @PathVariable String contaHash,
+                                          @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        return ResponseEntity.status(HttpStatus.OK).body(operacaoService.getExtrato(contaHash, usuarioLogado.toUsuario()));
     }
 
-    @ApiIgnore
-    @PostMapping(path = "/{contaHash}/operacoes",
+    @Secured("ADMIN")
+    @PostMapping(path = "/{contaHash}/operacoes/depositos",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Realiza saque na conta.", produces = "application/json")
-    public ResponseEntity operacao(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
+    @ApiOperation(value = "Realiza depósito na conta.", produces = "application/json")
+    public ResponseEntity deposito(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                    @PathVariable String contaHash,
                                    @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
                                    @Valid @RequestBody OperacaoDto request) {
-        operacaoService.criar(contaHash, request);
+        request.setTipo(Operacao.Tipo.DEPOSITO.name());
+        operacaoService.deposito(contaHash, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Secured("USUARIO")
     @PostMapping(path = "/{contaHash}/operacoes/saques",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -100,39 +104,28 @@ public class ContaController {
     public ResponseEntity saque(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                 @PathVariable String contaHash,
                                 @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
-                                @Valid @RequestBody OperacaoDto request) {
-        request.setTipo(Operacao.Tipo.SAQUE.name());
-        operacaoService.criar(contaHash, request);
+                                @Valid @RequestBody OperacaoDto operacaoDto,
+                                @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        operacaoDto.setTipo(Operacao.Tipo.SAQUE.name());
+        operacaoService.saque(contaHash, operacaoDto, usuarioLogado.toUsuario());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping(path = "/{contaHash}/operacoes/depositos",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    @Secured("USUARIO")
-    @ApiOperation(value = "Realiza depósito na conta.", produces = "application/json")
-    public ResponseEntity deposito(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                   @PathVariable String contaHash,
-                                   @ApiParam(name = "request", required = true, value = "Objeto com as reservas a serem criadas/atualizadas")
-                                   @Valid @RequestBody OperacaoDto request,
-                                   @AuthenticationPrincipal UserDetailsImpl loggedUser) {
-        request.setTipo(Operacao.Tipo.DEPOSITO.name());
-        operacaoService.criar(contaHash, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
+    @Secured({"USUARIO", "ADMIN"})
     @GetMapping(path = "/{contaHash}/saldos")
     @ApiOperation(value = "Retorna saldo da conta.")
     public ResponseEntity getSaldo(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
-                                   @PathVariable String contaHash) {
-        return ResponseEntity.status(HttpStatus.OK).body(contaService.listSaldo(contaHash));
+                                   @PathVariable String contaHash,
+                                   @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        return ResponseEntity.status(HttpStatus.OK).body(contaService.listSaldo(contaHash, usuarioLogado.toUsuario()));
     }
 
-
+    @Secured("USUARIO")
     @PostMapping(path = "/operacoes/tranferencias", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Cria uma transferência.", produces = "application/json")
-    public ResponseEntity criarTransferencia(@Valid @RequestBody TransferenciaDto transferenciaDto) {
-        operacaoService.criarTransferencia(transferenciaDto);
+    public ResponseEntity criarTransferencia(@Valid @RequestBody TransferenciaDto transferenciaDto,
+                                             @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        operacaoService.criarTransferencia(transferenciaDto, usuarioLogado.toUsuario());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

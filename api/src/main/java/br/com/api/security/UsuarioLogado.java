@@ -1,5 +1,6 @@
 package br.com.api.security;
 
+import br.com.api.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDetailsImpl implements UserDetails {
+public class UsuarioLogado implements UserDetails {
 
     private Long id;
     private String name;
@@ -56,5 +57,20 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Usuario toUsuario() {
+        Usuario.Perfil perfil = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .map(s -> Usuario.Perfil.valueOf(s.toUpperCase()))
+                .findFirst().get();
+
+        return Usuario.builder()
+                .nome(this.name)
+                .email(this.email)
+                .senha(this.password)
+                .contaHash(this.hashConta)
+                .perfil(perfil)
+                .build();
     }
 }

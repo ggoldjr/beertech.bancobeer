@@ -51,7 +51,7 @@ public class JwtAuthenticaionFilter extends BasicAuthenticationFilter {
     protected void onSuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response,
                                               Authentication authResult) throws IOException {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
+        UsuarioLogado userDetails = (UsuarioLogado) authResult.getPrincipal();
         String token = jwtService.generateToken(userDetails);
 
         response.setStatus(200);

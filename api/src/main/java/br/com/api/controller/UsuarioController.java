@@ -4,7 +4,7 @@ import br.com.api.dto.AlterarSenhaDto;
 import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
 import br.com.api.dto.UsuarioDto;
 import br.com.api.model.Usuario;
-import br.com.api.security.UserDetailsImpl;
+import br.com.api.security.UsuarioLogado;
 import br.com.api.service.ContaService;
 import br.com.api.service.UsuarioService;
 import br.com.api.spec.UsuarioSpec;
@@ -92,7 +92,7 @@ public class UsuarioController {
 
     @GetMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
     @RolesAllowed({"USUARIO"})
-    public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UserDetailsImpl loggedUser) {
+    public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UsuarioLogado loggedUser) {
         List<UsuarioDto> usuarioDtos = usuarioService.usuariosQuePodemReceberDoacao(loggedUser.getId()).stream()
                 .map(Usuario::toUsuarioDto)
                 .collect(Collectors.toList());

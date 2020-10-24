@@ -1,12 +1,12 @@
 package br.com.api.service;
 
-import br.com.api.dto.SaldoDto;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
 import br.com.api.model.Usuario;
 import br.com.api.repository.ContaRepository;
 import br.com.api.spec.ContaSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,16 +26,22 @@ public class ContaService {
         return contaRepository.findAll();
     }
 
+    public Conta findByHash(String contaHash, Usuario usuario) {
+        if (!usuario.eAdmin() && !contaHash.equals(usuario.getContaHash())) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode buscar sua conta");
+        }
+        return contaRepository.findByHash(contaHash).orElseThrow(() -> new NotFoundException("Conta com hash " + contaHash));
+    }
+
     public Conta findByHash(String contaHash) {
         return contaRepository.findByHash(contaHash).orElseThrow(() -> new NotFoundException("Conta com hash " + contaHash));
     }
 
-    public Conta findById(Long id) {
+    public Conta findById(Long id, Usuario usuario) {
+        if (!usuario.eAdmin() && id != usuario.getId()) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode buscar sua conta");
+        }
         return contaRepository.findById(id).orElseThrow(() -> new NotFoundException("Conta com id " + id));
-    }
-
-    public Double getSaldo(String contaHash) {
-        return findByHash(contaHash).getSaldo();
     }
 
     //TODO: corrigir depois
@@ -56,11 +62,13 @@ public class ContaService {
         return contaRepository.getByUsuarioId(usuario.getId());
     }
 
-    public SaldoDto listSaldo(String hash) {
-        Conta conta = findByHash(hash);
-        return SaldoDto.builder()
-                .hash(conta.getHash())
-                .saldo(getSaldo(hash))
-                .build();
+    public Double listSaldo(String hash, Usuario usuario) {
+        if (usuario.eAdmin()) {
+            return findByHash(hash, usuario).getSaldo();
+        }
+        if (usuario.getContaHash().equals(hash)) {
+            return findByHash(hash, usuario).getSaldo();
+        }
+        throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não é permitido ver saldo de outra conta");
     }
 }

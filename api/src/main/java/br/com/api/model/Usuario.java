@@ -91,4 +91,8 @@ public class Usuario {
                 .perfil(this.perfil)
                 .build();
     }
+
+    public boolean eAdmin() {
+        return perfil == Perfil.ADMIN;
+    }
 }

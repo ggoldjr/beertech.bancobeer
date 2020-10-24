@@ -2,6 +2,7 @@ package br.com.api.model;
 
 import br.com.api.dto.ContaDto;
 import br.com.api.exception.SaldoInsuficienteException;
+import br.com.api.service.ApplicationException;
 import br.com.api.spec.ContaSpec;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -68,7 +70,8 @@ public class Conta implements Serializable {
         return Optional.ofNullable(saldo).orElse(0d);
     }
 
-    public Double saque(Double valor) {
+    public Double saque(Double valor, Usuario usuario) {
+        if (usuario.getContaHash().equals(this.hash)) throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode sacar de outras contas");
         if (!saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
         this.setSaldo(this.saldo + valor *-1);
         return valor;

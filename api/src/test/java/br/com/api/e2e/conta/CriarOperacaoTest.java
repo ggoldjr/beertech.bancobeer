@@ -4,6 +4,7 @@ import br.com.api.dto.OperacaoDto;
 import br.com.api.exception.FieldErrorMessage;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
+import br.com.api.model.Usuario;
 import br.com.api.seed.ContaSetup;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.service.ContaService;
@@ -60,7 +61,8 @@ public class CriarOperacaoTest {
         void setup() throws JsonProcessingException, InterruptedException {
             usuarioSetup.setup();
             testUtil.login(port, usuarioSetup.getUsuario1().getEmail());
-            contaHash = usuarioSetup.getUsuario1().getContaHash();
+            Usuario usuario = usuarioSetup.getUsuario1();
+            contaHash = usuario.getContaHash();
             String url = String.format("http://localhost:%s/contas/%s/operacoes/%s", port, contaHash, getOperacao());
             HttpEntity<String> httpEntity = testUtil.getHttpEntity(getOperacaoDto());
             responseEntity = testUtil.restTemplate.postForEntity(url, httpEntity, String.class);
