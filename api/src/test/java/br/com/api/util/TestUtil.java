@@ -36,22 +36,38 @@ public class TestUtil {
         return headers;
     }
 
-    public HttpEntity<String> getHttpEntity(Object body) throws JsonProcessingException {
-        return new HttpEntity<>(mapper.writeValueAsString(body), getHttpHeader());
+    public HttpEntity<String> getHttpEntity(Object body)  {
+        try {
+            return new HttpEntity<>(mapper.writeValueAsString(body), getHttpHeader());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
     public HttpEntity<String> getHttpEntity() {
         return new HttpEntity<>(getHttpHeader());
     }
 
-    public <T> T parseSuccessfulResponse(ResponseEntity<String> responseEntity, Class<T> tclass) throws JsonProcessingException {
-        return mapper.readValue(responseEntity.getBody(), tclass);
+    public <T> T parseSuccessfulResponse(ResponseEntity<String> responseEntity, Class<T> tclass) {
+        try {
+            return mapper.readValue(responseEntity.getBody(), tclass);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public <T> List<T> parseSuccessfulResponseList(ResponseEntity<String> responseEntity, Class<T> tclass) throws JsonProcessingException {
-        return mapper.readValue(responseEntity.getBody(), new TypeReference<>() {});
+    public <T> List<T> parseSuccessfulResponseList(ResponseEntity<String> responseEntity, Class<T> tclass) {
+        try {
+            return mapper.readValue(responseEntity.getBody(), new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ResponseError parseResponseError(ResponseEntity<String> responseEntity) throws JsonProcessingException {
-        return mapper.readValue(responseEntity.getBody(), ResponseError.class);
+    public ResponseError parseResponseError(ResponseEntity<String> responseEntity) {
+        try {
+            return mapper.readValue(responseEntity.getBody(), ResponseError.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

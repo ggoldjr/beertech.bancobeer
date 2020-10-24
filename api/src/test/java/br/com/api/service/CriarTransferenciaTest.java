@@ -4,7 +4,6 @@ import br.com.api.dto.TransferenciaDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.model.Usuario;
-import br.com.api.seed.ContaSetup;
 import br.com.api.seed.UsuarioSetup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
