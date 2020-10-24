@@ -29,7 +29,7 @@ public class UsuarioService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Usuario create(UsuarioSpec usuarioSpec){
+    public Usuario criar(UsuarioSpec usuarioSpec){
         Usuario usuario = Usuario.criar(usuarioSpec);
         usuario = usuarioRepository.save(usuario);
         ContaSpec contaSpec = ContaSpec.builder().idUsuario(usuario.getId()).build();
@@ -38,11 +38,11 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario findByEmail(String email){
+    public Usuario buscarPorEmail(String email){
         return usuarioRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
     }
 
-    public Usuario findById(Long id){
+    public Usuario buscarPorId(Long id){
         return usuarioRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
     }
 
@@ -52,13 +52,13 @@ public class UsuarioService {
 
 
     public Usuario update(Usuario usuarioParaAtualizar) {
-        findById(usuarioParaAtualizar.getId());
+        buscarPorId(usuarioParaAtualizar.getId());
         return usuarioRepository.save(usuarioParaAtualizar);
     }
 
 
     public void updatePassword(AlterarSenhaDto request) {
-        Usuario usuario = findById(request.getIdUsuario());
+        Usuario usuario = buscarPorId(request.getIdUsuario());
         if(request.getSenhaAntiga().matches(request.getSenhaNova())){
             throw new RuntimeException("Senha nova não pode ser igual a antiga");
         }
@@ -75,7 +75,7 @@ public class UsuarioService {
     }
 
     public void habilitarOuDesabilitarDoacao(HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {
-        Usuario usuario = findById(habilitarOrDesabilitarDoacaoDto.getIdUsuario());
+        Usuario usuario = buscarPorId(habilitarOrDesabilitarDoacaoDto.getIdUsuario());
         usuario.setPodeReceberDoacoes(habilitarOrDesabilitarDoacaoDto.getPodeReceberDoacao());
         usuarioRepository.save(usuario);
     }

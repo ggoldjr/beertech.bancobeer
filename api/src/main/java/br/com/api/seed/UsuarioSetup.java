@@ -56,8 +56,8 @@ public class UsuarioSetup {
                 .cnpj("48028968000152")
                 .perfil(Usuario.Perfil.USUARIO)
                 .build();
-        usuario1 = usuarioService.create(usuarioParaCriar1);
-        usuario2 = usuarioService.create(usuarioParaCriar2);
+        usuario1 = usuarioService.criar(usuarioParaCriar1);
+        usuario2 = usuarioService.criar(usuarioParaCriar2);
         operacaoService.criar(usuario1.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
         operacaoService.criar(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", 1000D));
     }

@@ -40,7 +40,7 @@ public class UsuarioController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(usuarioService.create(usuarioSpec).toUsuarioDto());
+                .body(usuarioService.criar(usuarioSpec).toUsuarioDto());
 }
 
 
@@ -50,7 +50,7 @@ public class UsuarioController {
                                     @PathVariable String email){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.findByEmail(email).toUsuarioDto());
+                .body(usuarioService.buscarPorEmail(email).toUsuarioDto());
 
     }
 

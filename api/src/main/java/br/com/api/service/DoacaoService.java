@@ -32,11 +32,11 @@ public class DoacaoService {
 
 
     public Doacao criar(Long idUsuarioDoador, DoacaoDto doacaoDto) {
-        Usuario usuarioDoador = usuarioService.findById(idUsuarioDoador);
+        Usuario usuarioDoador = usuarioService.buscarPorId(idUsuarioDoador);
         List<Conta> contas = contaService.listContasUsuario(usuarioDoador);
         boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(contas.get(0).getSaldo(), doacaoDto.getValorDoado().doubleValue());
         if (usuarioDoadorPodeDoar) {
-            Usuario usuarioBeneficiario = usuarioService.findById(doacaoDto.getIdUsuarioBeneficiario());
+            Usuario usuarioBeneficiario = usuarioService.buscarPorId(doacaoDto.getIdUsuarioBeneficiario());
             if (podeReceber(usuarioBeneficiario)) {
                 Doacao doacao = Doacao.builder()
                         .dataDaDoacao(LocalDate.now())
