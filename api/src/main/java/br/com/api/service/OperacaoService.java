@@ -65,13 +65,13 @@ public class OperacaoService {
     }
 
     public Operacao criarTransferencia(TransferenciaDto transferenciaDto, Usuario usuario) {
-        Conta contaOrigem =  contaService.findByHash(transferenciaDto.getHashContaOrigem(), usuario);
+        Conta contaOrigem =  contaService.findByHash(transferenciaDto.getHashContaOrigem());
         if (contaOrigem.getUsuario().getId().longValue() != usuario.getId().longValue()) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro da sua conta");
         }
         Double valor = transferenciaDto.getValor().doubleValue();
         if (!contaOrigem.saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
-        Conta contaDestino = contaService.findByHash(transferenciaDto.getHashContaDestino(), usuario);
+        Conta contaDestino = contaService.findByHash(transferenciaDto.getHashContaDestino());
         Operacao operacao = Operacao.builder()
                 .conta(contaOrigem)
                 .hashContaDestino(contaDestino.getHash())

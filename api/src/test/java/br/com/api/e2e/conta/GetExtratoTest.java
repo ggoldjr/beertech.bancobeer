@@ -63,7 +63,7 @@ public class GetExtratoTest {
             usuario2 = usuarioSetup.getUsuario2();
             testUtil.login(port, usuario1.getEmail());
             setup();
-            String url = String.format("http://localhost:%s/contas/%s/extratos", port, contaHash);
+            String url = String.format("http://localhost:%s/contas/%s/extratos", port, usuario1.getContaHash());
             responseEntity = testUtil.restTemplate.exchange(url, HttpMethod.GET, testUtil.getHttpEntity(), String.class);
             if (responseEntity.getStatusCodeValue() == 200) {
                 extratos = testUtil.mapper.readValue(responseEntity.getBody(), new TypeReference<>(){});

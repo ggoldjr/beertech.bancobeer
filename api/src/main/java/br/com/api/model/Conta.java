@@ -72,7 +72,7 @@ public class Conta implements Serializable {
     }
 
     public Double saque(Double valor, Usuario usuario) {
-        if (usuario.getContaHash().equals(this.hash)) throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode sacar de outras contas");
+        if (!usuario.getContaHash().equals(this.hash)) throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode sacar de outras contas");
         if (!saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
         this.setSaldo(this.saldo + valor *-1);
         return valor;
