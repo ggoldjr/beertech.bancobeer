@@ -63,10 +63,14 @@ public class UsuarioService {
     }
 
     public List<Usuario> listAll(Usuario usuario){
-        return usuarioRepository.findAllByIdIsNot(usuario.getId()).stream()
+        System.out.println("usuario.getId()");
+        System.out.println("usuario.getId()" + usuario.getId());
+        List<Usuario> collect = usuarioRepository.findAllByIdIsNot(usuario.getId()).stream()
                 .map(this::resolveConta)
                 .collect(Collectors.toList());
+        return collect;
     }
+
 
     public Usuario update(AtualizarUsuarioSpec usuarioSpec, Usuario usuarioLogado) {
         if (usuarioLogado.getEmail().equals(usuarioSpec.getEmail())) {
@@ -81,7 +85,7 @@ public class UsuarioService {
     }
 
     public void updatePassword(AlterarSenhaDto alterarSenhaDto, Usuario usuarioLogado) {
-        if (usuarioLogado.getId() != alterarSenhaDto.getIdUsuario()) {
+        if (usuarioLogado.getId().compareTo(alterarSenhaDto.getIdUsuario())!=0) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode atualizar senha dos outros usuários");
         }
         Usuario usuario = buscarPorId(alterarSenhaDto.getIdUsuario());

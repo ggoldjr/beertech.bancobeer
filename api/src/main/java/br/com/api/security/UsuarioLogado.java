@@ -66,6 +66,7 @@ public class UsuarioLogado implements UserDetails {
                 .findFirst().get();
 
         return Usuario.builder()
+                .id(this.id)
                 .nome(this.name)
                 .email(this.email)
                 .senha(this.password)
