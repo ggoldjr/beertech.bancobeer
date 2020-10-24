@@ -40,7 +40,9 @@ public class OperacaoService {
         Conta conta = contaService.findByHash(contaHash);
         Operacao operacao = Operacao.criar(operacaoDto, conta);
         conta.deposito(operacao.getValor().doubleValue());
-        return operacaoRepository.save(operacao);
+        Operacao operacaoCriada = operacaoRepository.save(operacao);
+        contaService.atualizarConta(conta);
+        return operacaoCriada;
     }
 
     public List<ExtratoDto> getExtrato(String contaHash, Usuario usuario) {
@@ -64,7 +66,7 @@ public class OperacaoService {
 
     public Operacao criarTransferencia(TransferenciaDto transferenciaDto, Usuario usuario) {
         Conta contaOrigem =  contaService.findByHash(transferenciaDto.getHashContaOrigem(), usuario);
-        if (contaOrigem.getUsuario().getId() != usuario.getId()) {
+        if (contaOrigem.getUsuario().getId().longValue() != usuario.getId().longValue()) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro da sua conta");
         }
         Double valor = transferenciaDto.getValor().doubleValue();
