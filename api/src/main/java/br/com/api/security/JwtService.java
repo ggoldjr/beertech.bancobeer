@@ -73,6 +73,9 @@ public class JwtService {
     }
     public UsuarioLogado decode(String encoded) {
         try {
+            Claims claims = getClaims(encoded);
+            String hashConta = claims.get("hashConta", String.class);
+
             String subject = getClaims(encoded).getSubject();
             String[] split = subject.split(":");
             return UsuarioLogado.builder()
@@ -80,6 +83,7 @@ public class JwtService {
                     .name(split[1])
                     .email(split[2])
                     .authorities(decodePermission(split[3]))
+                    .hashConta(hashConta)
                     .build();
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;

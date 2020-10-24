@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -32,7 +33,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Usuario usuario = usuarioRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
 
-        Conta conta = contaRepository.getByUsuarioId(usuario.getId()).stream().findFirst().orElse(null);
+        Optional<Conta> conta = contaRepository.getByUsuarioId(usuario.getId())
+                .stream()
+                .findFirst();
+
+        String hashConta = conta.isPresent()?conta.get().getHash():null;
 
         UsuarioLogado userDetails = UsuarioLogado.builder()
                 .id(usuario.getId())
@@ -40,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .name(usuario.getNome())
                 .authorities(List.of(new SimpleGrantedAuthority(usuario.getPerfil().name().toUpperCase())))
                 .password(usuario.getSenha())
-                .hashConta(null==conta?null:conta.getHash())
+                .hashConta(hashConta)
                 .build();
 
         return userDetails;
