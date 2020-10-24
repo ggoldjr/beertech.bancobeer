@@ -33,13 +33,13 @@ public class OperacaoService {
 
     public List<Operacao> getOperacaoDaConta(String contaHash) {
 
-        return  operacaoRepository.findAllByContaHash(contaHash);
+        return  operacaoRepository.findAllByContaId(contaHash);
 
     }
 
     public List<Operacao> getOperacoesConta(String contaHash) {
 
-        return  operacaoRepository.findAllByContaHash(contaHash);
+        return  operacaoRepository.findAllByContaId(contaHash);
 
     }
 

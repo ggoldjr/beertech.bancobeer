@@ -30,6 +30,7 @@ public class ContaController {
     }
 
     @PostMapping
+    @RolesAllowed({"USUARIO"})
     @ApiOperation(value = "Criar conta para o usuário.",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

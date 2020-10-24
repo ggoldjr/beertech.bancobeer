@@ -4,7 +4,9 @@ import br.com.api.dto.OperacaoDto;
 import br.com.api.dto.SaldoDto;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
+import br.com.api.model.Usuario;
 import br.com.api.seed.ContaSetup;
+import br.com.api.seed.UsuarioSetup;
 import br.com.api.service.ContaService;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
@@ -32,10 +34,10 @@ public class GetSaldoTest {
     TestUtil testUtil;
 
     @Autowired
-    ContaSetup contaSetup;
+    ContaService contaService;
 
     @Autowired
-    ContaService contaService;
+    UsuarioSetup usuarioSetup;
 
     @Nested
     public abstract class SetupGetSaldo {
@@ -44,12 +46,13 @@ public class GetSaldoTest {
         ResponseError responseError;
         Conta conta;
         SaldoDto saldoDto;
+        Usuario usuario1;
 
         @BeforeEach
         void setup() throws JsonProcessingException {
-            testUtil.login(port);
-            contaSetup.setup();
-            setupConta();
+            usuarioSetup.setup();
+            usuario1 = usuarioSetup.getUsuario1();
+            testUtil.login(port, usuario1.getEmail());
             setContaHash();
             String url = String.format("http://localhost:%s/contas/%s/saldos", port, contaHash);
             responseEntity = testUtil.restTemplate.exchange(url, HttpMethod.GET, testUtil.getHttpEntity(), String.class);
@@ -62,7 +65,7 @@ public class GetSaldoTest {
         }
 
         void setContaHash() {
-            contaHash = contaSetup.getContas().get(0).getHash();
+            contaHash = usuario1.getContaHash();
         }
 
         protected void setupConta() {
@@ -75,8 +78,8 @@ public class GetSaldoTest {
             operacaoDto1.setValor(50d);
 
             try {
-                contaService.criarOperacao(operacaoDto, contaSetup.getContas().get(0).getHash()).get();
-                contaService.criarOperacao(operacaoDto1, contaSetup.getContas().get(0).getHash()).get();
+                contaService.criarOperacao(operacaoDto, usuario1.getContaHash()).get();
+                contaService.criarOperacao(operacaoDto1, usuario1.getContaHash()).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }

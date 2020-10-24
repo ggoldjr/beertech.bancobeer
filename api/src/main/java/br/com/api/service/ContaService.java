@@ -110,11 +110,7 @@ public class ContaService {
     }
 
     public Conta criarConta(ContaDtoIn contaDtoIn) {
-
-        Usuario usuario = usuarioRepository.findById(contaDtoIn.getIdUsuario())
-                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
-
-
+        Usuario usuario = usuarioRepository.findById(contaDtoIn.getIdUsuario()).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
         Conta conta = Conta.builder()
                 .hash(UUID.randomUUID().toString())
                 .saldo(0d)

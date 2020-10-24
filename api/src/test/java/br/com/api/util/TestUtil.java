@@ -22,8 +22,8 @@ public class TestUtil {
     }
 
 
-    public void login(int port) {
-        ResponseEntity<String> responseEntity = restTemplate.withBasicAuth("duplomalte@gmail.com", "senha")
+    public void login(int port, String login) {
+        ResponseEntity<String> responseEntity = restTemplate.withBasicAuth(login, "senha")
                 .getForEntity(String.format("http://localhost:%s/login", port), String.class);
         authorization = String.format("Bearer %s", responseEntity.getBody());
     }

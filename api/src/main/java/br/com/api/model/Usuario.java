@@ -51,6 +51,8 @@ public class Usuario {
     @JsonIgnore
     private Conta conta;
 
+    private String contaHash;
+
     @CreatedDate
     private LocalDateTime criado_em;
 

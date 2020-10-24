@@ -32,8 +32,6 @@ public class ContaSetup {
 
     public void setup() {
 
-        usuarioRepository.deleteAll();
-        operacaoRepository.deleteAll();
         contaRepository.deleteAll();
         contas = Stream.iterate(1, i -> i + 1)
                 .map(integer -> criar())

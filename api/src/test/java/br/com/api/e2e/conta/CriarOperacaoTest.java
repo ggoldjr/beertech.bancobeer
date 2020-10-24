@@ -5,6 +5,7 @@ import br.com.api.exception.FieldErrorMessage;
 import br.com.api.model.Conta;
 import br.com.api.model.Operacao;
 import br.com.api.seed.ContaSetup;
+import br.com.api.seed.UsuarioSetup;
 import br.com.api.service.ContaService;
 import br.com.api.service.OperacaoService;
 import br.com.api.util.ResponseError;
@@ -44,6 +45,9 @@ public class CriarOperacaoTest {
     @Autowired
     OperacaoService operacaoService;
 
+    @Autowired
+    UsuarioSetup usuarioSetup;
+
     @Nested
     abstract class CriarOperacaoSetup {
         ResponseEntity<String> responseEntity;
@@ -54,17 +58,17 @@ public class CriarOperacaoTest {
 
         @BeforeEach
         void setup() throws JsonProcessingException, InterruptedException {
-            testUtil.login(port);
-            contaSetup.setup();
-            contaHash = contaSetup.getContas().get(0).getHash();
+            usuarioSetup.setup();
+            testUtil.login(port, usuarioSetup.getUsuario1().getEmail());
+            contaHash = usuarioSetup.getUsuario1().getContaHash();
             String url = String.format("http://localhost:%s/contas/%s/operacoes/%s", port, contaHash, getOperacao());
             HttpEntity<String> httpEntity = testUtil.getHttpEntity(getOperacaoDto());
             responseEntity = testUtil.restTemplate.postForEntity(url, httpEntity, String.class);
             Thread.sleep(3000);
             if (responseEntity.getStatusCodeValue() == 201) {
                 List<Operacao> operacoes = operacaoService.getOperacaoDaConta(contaHash);
-                assertThat(operacoes.size()).isEqualTo(1);
-                operacaoCriada = operacoes.get(0);
+                assertThat(operacoes.size()).isEqualTo(2);
+                operacaoCriada = operacoes.get(1);
                 conta = contaService.findByHash(contaHash);
             } else {
                 responseError = testUtil.parseResponseError(responseEntity);

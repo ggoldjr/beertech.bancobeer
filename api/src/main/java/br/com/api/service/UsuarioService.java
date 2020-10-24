@@ -1,9 +1,6 @@
 package br.com.api.service;
 
-import br.com.api.dto.AlterarSenhaDto;
-import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
-import br.com.api.dto.UsuarioDto;
-import br.com.api.dto.UsuarioDtoIn;
+import br.com.api.dto.*;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
@@ -61,8 +58,11 @@ public class UsuarioService {
     }
 
     public UsuarioDto create(UsuarioDtoIn req){
-
-        return usuarioToUsuarioDto(save(usuarioDtoInToUsuario(req)));
+        Usuario usuario = usuarioDtoInToUsuario(req);
+        usuario = save(usuario);
+        ContaDtoOut contaDtoOut = contaService.create(ContaDtoIn.builder().idUsuario(usuario.getId()).build());
+        usuario.setContaHash(contaDtoOut.getHash());
+        return usuarioToUsuarioDto(save(usuario));
 
 
     }
