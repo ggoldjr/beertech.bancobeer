@@ -3,6 +3,7 @@ package br.com.api.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
@@ -11,13 +12,13 @@ import java.math.BigDecimal;
 @Builder
 public class TransferenciaDto {
 
-    @NotNull(message = "Deve ser diferente de nulo")
+    @NotBlank(message = "{trasnferencia.hashorigem.notblank}")
     private String hashContaOrigem;
 
-    @NotNull(message = "Deve ser diferente de nulo")
+    @NotBlank(message = "trasnferencia.hahsdestino.notblank")
     private String hashContaDestino;
 
-    @NotNull(message = "Deve ser diferente de nulo")
-    @Positive(message = "Valor deve ser maior que zero")
+    @NotNull(message = "{tranferencia.valor.notnull}")
+    @Positive(message = "{tranferencia.valor.notnull}")
     private BigDecimal valor;
 }

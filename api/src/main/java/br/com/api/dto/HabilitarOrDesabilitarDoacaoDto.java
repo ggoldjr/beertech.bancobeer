@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class HabilitarOrDesabilitarDoacaoDto {
 
-    @NotNull(message = "ID não pode ser nulo.")
+    @NotNull(message = "{usuario.id.notnull}")
     private Long idUsuario;
-    @NotNull(message = "Poder receber doação não pode ser nulo.")
+    @NotNull(message = "{usuario.podereceberdoacao.notnull}")
     private Boolean podeReceberDoacao;
 }

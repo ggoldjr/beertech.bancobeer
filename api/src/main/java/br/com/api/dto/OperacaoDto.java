@@ -16,6 +16,6 @@ public class OperacaoDto {
 
     private String tipo;
 
-    @Positive(message = "Valor deve ser maior que zero")
+    @Positive(message = "{operacao.valor.notnull}")
     private BigDecimal valor;
 }
