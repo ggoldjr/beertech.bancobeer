@@ -68,11 +68,10 @@ public class UsuarioService {
     }
 
     public List<Usuario> listAll(Usuario usuario){
-        List<Usuario> collect = usuarioRepository.findAllByIdIsNot(usuario.getId()).stream()
+        return usuarioRepository.findAllByIdIsNot(usuario.getId()).stream()
+                .filter(usuario1 -> !usuario1.eAdmin() && usuario1.getId().longValue() != usuario.getId().longValue())
                 .map(this::resolveConta)
                 .collect(Collectors.toList());
-        if (!usuario.eAdmin()) return collect.stream().filter(usuario1 -> !usuario1.eAdmin()).collect(Collectors.toList());
-        return collect;
     }
 
 
