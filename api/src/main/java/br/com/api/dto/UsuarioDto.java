@@ -17,5 +17,6 @@ public class UsuarioDto {
     private String  cnpj;
     private String  email;
     private ContaDto contaDto;
+    private Boolean podeReceberDoacoes;
     private Usuario.Perfil perfil;
 }

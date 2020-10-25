@@ -7,12 +7,18 @@ import br.com.api.repository.UsuarioRepository;
 import br.com.api.service.OperacaoService;
 import br.com.api.service.UsuarioService;
 import br.com.api.spec.UsuarioSpec;
+import com.github.javafaker.Faker;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UsuarioSetup {
@@ -22,6 +28,7 @@ public class UsuarioSetup {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final OperacaoService operacaoService;
     private final ContaRepository contaRepository;
+    public Faker faker = new Faker(Locale.forLanguageTag("pt-BR"));
 
     @Getter
     private Usuario usuario1;
@@ -31,6 +38,9 @@ public class UsuarioSetup {
 
     @Getter
     private Usuario admin;
+
+    @Getter
+    private List<Usuario> usuarios;
 
     @Autowired
     public UsuarioSetup(UsuarioService usuarioService,
@@ -64,8 +74,8 @@ public class UsuarioSetup {
                 .build();
         usuario1 = usuarioService.criar(usuarioParaCriar1);
         usuario2 = usuarioService.criar(usuarioParaCriar2);
-        operacaoService.deposito(usuario1.getContaHash(), new OperacaoDto("DEPOSITO", BigDecimal.valueOf(1000D)));
-        operacaoService.deposito(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", BigDecimal.valueOf(1000D)));
+        operacaoService.deposito(usuario1.getContaHash(), new OperacaoDto("DEPOSITO", BigDecimal.valueOf(2000D)));
+        operacaoService.deposito(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", BigDecimal.valueOf(2000D)));
 
         admin = Usuario.builder()
                 .nome("Duplo Malte")
@@ -81,5 +91,29 @@ public class UsuarioSetup {
     public void deleteAll() {
         contaRepository.deleteAll();
         usuarioRepository.deleteAll();
+    }
+
+    public void criarUsuario(int quantidade) {
+        usuarios = new ArrayList<>();
+        for (int i = 0; i < quantidade; i++) {
+            boolean podeReceberDoacoes = false;
+            if (quantidade / 2 <= i) {
+                podeReceberDoacoes = true;
+            }
+            UsuarioSpec usuarioSpec = UsuarioSpec.builder()
+                    .nome(faker.name().fullName())
+                    .email(faker.name().firstName() + i + "@gmail.com")
+                    .senha("senha")
+                    .cnpj(CpfAndCnpjGenerator.cnpj())
+                    .build();
+            Usuario usuario = usuarioService.criar(usuarioSpec);
+            usuario.setPodeReceberDoacoes(podeReceberDoacoes);
+            Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+            usuarios.add(usuarioAtualizado);
+        }
+    }
+
+    public List<Usuario> getUsuariosQuePodeReceberDoacao() {
+        return usuarios.stream().filter(Usuario::getPodeReceberDoacoes).collect(Collectors.toList());
     }
 }

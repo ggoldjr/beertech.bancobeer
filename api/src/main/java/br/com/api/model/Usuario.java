@@ -82,6 +82,7 @@ public class Usuario {
                 .nome(this.nome)
                 .contaDto(this.contaDto)
                 .perfil(this.perfil)
+                .podeReceberDoacoes(this.podeReceberDoacoes)
                 .build();
     }
 
