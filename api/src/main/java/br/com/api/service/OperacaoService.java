@@ -105,7 +105,7 @@ public class OperacaoService {
 
     public Operacao criarDoacao(Usuario usuarioLogado, DoacaoDto doacaoDto) {
         Usuario usuarioDoador = usuarioRepository.findById(usuarioLogado.getId()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
-        Conta conta = contaService.listContaUsuario(usuarioDoador);
+        Conta conta = contaService.getContaUsuario(usuarioDoador);
         boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(conta.getSaldo(), doacaoDto.getValorDoado().doubleValue());
         if (usuarioDoadorPodeDoar) {
             Usuario usuarioBeneficiario = usuarioRepository.findById(doacaoDto.getIdUsuarioBeneficiario()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));

@@ -1,13 +1,11 @@
 package br.com.api.e2e.conta;
 
 import br.com.api.dto.TransferenciaDto;
-import br.com.api.dto.UsuarioDto;
 import br.com.api.exception.FieldErrorMessage;
 import br.com.api.model.Conta;
 import br.com.api.model.Usuario;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.service.ContaService;
-import br.com.api.spec.UsuarioSpec;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +18,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

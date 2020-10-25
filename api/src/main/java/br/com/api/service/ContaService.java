@@ -73,7 +73,7 @@ public class ContaService {
         return contaRepository.save(conta);
     }
 
-    public Conta listContaUsuario(Usuario usuario) {
+    public Conta getContaUsuario(Usuario usuario) {
         return contaRepository.getByUsuarioId(usuario.getId()).orElseThrow(() -> new NotFoundException("Conta com hash " + usuario.getId()));
     }
 
