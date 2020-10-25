@@ -112,16 +112,27 @@ public class UsuarioService {
         }
 
         if (!minhasDoacoes.isEmpty() && minhasDoacoes.equals("sim")) {
-            List<Long> ids = operacaoService.findAllByAndHashUsuarioDoador(usuario.getContaHash()).stream()
-                    .map(operacao -> operacao.getConta().getUsuario().getId())
+            List<String> hashDestino = operacaoService.findAllByAndHashUsuarioDoador(usuario.getContaHash()).stream()
+                    .map(operacao->operacao.getHashContaDestino())
                     .collect(Collectors.toList());
+
+            List<Long> ids = hashDestino.stream().distinct()
+                    .map(e ->e==null?null:contaService.findByHash(e).getUsuario().getId())
+                    .collect(Collectors.toList());
+
             all = all.stream().filter(u -> ids.contains(u.getId())).collect(Collectors.toList());
         }
 
         if (!semDoacoes.isEmpty() && semDoacoes.equals("sim")) {
-            List<Long> ids = operacaoService.doacoesDoMes().stream()
-                    .map(doacao -> doacao.getConta().getUsuario().getId())
+            List<String> hashDestino = operacaoService.doacoesDoMes().stream()
+                    .map(operacao->operacao.getHashContaDestino())
                     .collect(Collectors.toList());
+
+
+            List<Long> ids = hashDestino.stream().distinct()
+                    .map(e ->e==null?null:contaService.findByHash(e).getUsuario().getId())
+                    .collect(Collectors.toList());
+
             all = all.stream().filter(usuario1 -> !ids.contains(usuario1.getId())).collect(Collectors.toList());
         }
 
