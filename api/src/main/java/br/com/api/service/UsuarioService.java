@@ -79,16 +79,12 @@ public class UsuarioService {
 
 
     public Usuario update(AtualizarUsuarioSpec usuarioSpec, Usuario usuarioLogado) {
-        Usuario usuarioValidacao = usuarioRepository.findByEmail(usuarioSpec.getEmail()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
-        if (usuarioValidacao.getId().compareTo(usuarioLogado.getId())==0) {
-            Usuario usuarioParaAtualizar = buscarPorId(usuarioLogado.getId());
-            usuarioParaAtualizar.setEmail(usuarioSpec.getEmail());
-            usuarioParaAtualizar.setCnpj(usuarioSpec.getCnpj());
-            usuarioParaAtualizar.setNome(usuarioSpec.getNome());
-            Usuario usuario = usuarioRepository.save(usuarioParaAtualizar);
-            return resolveConta(usuario);
-        }
-        throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode atualizar informações dos outros usuários");
+        Usuario usuarioParaAtualizar = buscarPorId(usuarioLogado.getId());
+        usuarioParaAtualizar.setEmail(usuarioSpec.getEmail());
+        usuarioParaAtualizar.setCnpj(usuarioSpec.getCnpj());
+        usuarioParaAtualizar.setNome(usuarioSpec.getNome());
+        Usuario usuario = usuarioRepository.save(usuarioParaAtualizar);
+        return resolveConta(usuario);
     }
 
     public void updatePassword(AlterarSenhaDto alterarSenhaDto, Usuario usuarioLogado) {

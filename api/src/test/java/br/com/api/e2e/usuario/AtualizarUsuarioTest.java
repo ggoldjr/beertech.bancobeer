@@ -50,7 +50,7 @@ public class AtualizarUsuarioTest {
             String url = String.format("http://localhost:%s/usuarios", port);
             AtualizarUsuarioSpec atualizarUsuarioSpec = getAtualizarUsuarioSpec();
             HttpEntity<String> httpEntity = testUtil.getHttpEntity(atualizarUsuarioSpec);
-            responseEntity = testUtil.restTemplate.exchange(url, HttpMethod.PATCH, httpEntity, String.class);
+            responseEntity = testUtil.restTemplate.exchange(url, HttpMethod.PUT, httpEntity, String.class);
             if (responseEntity.getStatusCodeValue() == 200) {
                 usuario = testUtil.parseSuccessfulResponse(responseEntity, UsuarioDto.class);
             } else {
@@ -97,7 +97,7 @@ public class AtualizarUsuarioTest {
 
         @Test
         void deveRetornarErroDeValidacaoCorrespondente() {
-            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("nome", "Nome não pode ser nulo."));
+            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("nome", "Nome não pode ser nulo ou vazio."));
         }
     }
 
@@ -116,7 +116,8 @@ public class AtualizarUsuarioTest {
 
         @Test
         void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getMessage()).isEqualTo("");
+            assertThat(responseError.getMessage()).isEqualTo("Não tem permissão para acessar esse recurso.");
+            assertThat(responseError.getStatus()).isEqualTo(403);
         }
     }
 }
