@@ -113,4 +113,13 @@ public class ContaController {
         operacaoService.criarTransferencia(transferenciaDto, usuarioLogado.toUsuario());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+
+    @Secured({ "ADMIN"})
+    @GetMapping(path = "/depositos")
+    @ApiOperation(value = "Retorna todos os depositos.")
+    public ResponseEntity getDepositos( @RequestParam(defaultValue = "") String contaHash,
+                                        @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        return ResponseEntity.status(HttpStatus.OK).body(operacaoService.getDepositos(contaHash));
+    }
 }
