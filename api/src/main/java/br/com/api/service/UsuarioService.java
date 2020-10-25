@@ -104,22 +104,27 @@ public class UsuarioService {
     //todo: refatorar
 
     public List<Usuario> listaUsuarios(Usuario usuario, String podeReceberDoacao, String minhasDoacoes, String semDoacoes) {
+
         List<Usuario> all = usuarioRepository.findAllByIdIsNot(usuario.getId());
+
         if (!podeReceberDoacao.isEmpty() && podeReceberDoacao.equals("sim")) {
             all = all.stream().filter(operacaoService::podeReceber).collect(Collectors.toList());
         }
+
         if (!minhasDoacoes.isEmpty() && minhasDoacoes.equals("sim")) {
             List<Long> ids = operacaoService.findAllByAndHashUsuarioDoador(usuario.getContaHash()).stream()
                     .map(operacao -> operacao.getConta().getUsuario().getId())
                     .collect(Collectors.toList());
             all = all.stream().filter(u -> ids.contains(u.getId())).collect(Collectors.toList());
         }
+
         if (!semDoacoes.isEmpty() && semDoacoes.equals("sim")) {
             List<Long> ids = operacaoService.doacoesDoMes().stream()
                     .map(doacao -> doacao.getConta().getUsuario().getId())
                     .collect(Collectors.toList());
             all = all.stream().filter(usuario1 -> !ids.contains(usuario1.getId())).collect(Collectors.toList());
         }
+
         return all.stream()
                 .filter(usuario1 -> usuario1.getPerfil() != Usuario.Perfil.ADMIN)
                 .map(this::resolveConta)

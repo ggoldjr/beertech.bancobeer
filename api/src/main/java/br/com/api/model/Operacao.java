@@ -2,9 +2,8 @@ package br.com.api.model;
 
 
 import br.com.api.dto.OperacaoDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,7 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
@@ -45,8 +45,10 @@ public class Operacao implements Serializable {
     private LocalDate dataOperacao;
 
     @ManyToOne
-    @JoinColumn(name = "conta_id" )
+    @JoinColumn(name="conta_id")
     private Conta conta;
+
+
 
     private String hashContaDestino;
 

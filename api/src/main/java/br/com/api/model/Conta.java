@@ -5,9 +5,7 @@ import br.com.api.dto.UsuarioSimplificado;
 import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.exception.ApplicationException;
 import br.com.api.spec.ContaSpec;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,7 +23,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
