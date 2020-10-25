@@ -37,6 +37,7 @@ public class ApiApplication implements CommandLineRunner {
 							.senha(bCryptPasswordEncoder.encode("senha"))
 							.email("duplomalte@gmail.com")
 							.nome("Duplo Malte")
+							.cnpj("47958997000150")
 							.perfil(Usuario.Perfil.ADMIN)
 							.podeReceberDoacoes(false)
 							.build());

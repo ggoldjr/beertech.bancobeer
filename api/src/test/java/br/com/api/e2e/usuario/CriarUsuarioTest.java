@@ -102,8 +102,8 @@ public class CriarUsuarioTest {
 
         @Test
         void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getMessage()).isEqualTo("Saldo Insuficiente");
-            assertThat(responseError.getStatus()).isEqualTo(400);
+            assertThat(responseError.getMessage()).isEqualTo("Já existe este recurso");
+            assertThat(responseError.getStatus()).isEqualTo(409);
         }
     }
 }

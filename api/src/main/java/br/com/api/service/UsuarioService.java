@@ -11,6 +11,7 @@ import br.com.api.spec.AtualizarUsuarioSpec;
 import br.com.api.spec.ContaSpec;
 import br.com.api.spec.UsuarioSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,11 @@ public class UsuarioService {
     public Usuario criar(UsuarioSpec usuarioSpec){
         Usuario usuario = Usuario.criar(usuarioSpec);
         usuario.setSenha(bCryptPasswordEncoder.encode(usuario.getSenha()));
-        usuario = usuarioRepository.save(usuario);
+        try {
+            usuario = usuarioRepository.save(usuario);
+        } catch (DataIntegrityViolationException e) {
+            throw new ApplicationException(409, "Já existe este recurso");
+        }
         ContaSpec contaSpec = ContaSpec.builder().idUsuario(usuario.getId()).build();
         Conta conta = contaService.create(contaSpec, usuario);
         usuario.setContaHash(conta.getHash());
