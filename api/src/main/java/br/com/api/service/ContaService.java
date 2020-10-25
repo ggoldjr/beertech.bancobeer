@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContaService {
@@ -36,6 +37,17 @@ public class ContaService {
     public Conta findByHash(String contaHash) {
         return contaRepository.findByHash(contaHash).orElseThrow(() -> new NotFoundException("Conta com hash " + contaHash));
     }
+
+    public String findNomeUsuarioByHash(String contaHash) {
+
+        Optional<Conta> conta = contaRepository.findByHash(contaHash);
+
+        if (!conta.isPresent()) return "";
+
+        return conta.get().getUsuario().getNome();
+
+    }
+
 
     public Conta findById(Long id, Usuario usuario) {
         Conta contaUsuario = findByHash(usuario.getContaHash());

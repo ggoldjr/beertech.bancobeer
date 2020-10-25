@@ -20,6 +20,9 @@ public class ExtratoDto {
     private Double valor;
     private String tipo;
     private LocalDateTime data;
-    private String hashContaOrigem;
+    private String hashContaOrigem ;
     private String hashContaDestino;
+    private String nomeUsuarioOrigem;
+    private String nomeUsuarioDestino;
+
 }

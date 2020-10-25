@@ -53,13 +53,27 @@ public class OperacaoService {
                 .map(operacao -> {
                     ExtratoDto.ExtratoDtoBuilder extratoDtoBuilder = ExtratoDto.builder()
                             .valor(operacao.getValor().doubleValue())
-                            .data(operacao.getCriado_em())
-                            .hashContaOrigem(operacao.getHashContaDestino());
-                    if (operacao.tipoEtransferenciaOUdoacao() && operacao.getHashContaDestino().equals(usuario.getContaHash())) {
+                            .data(operacao.getCriado_em());
+
+                    if (operacao.tipoEtransferenciaOUdoacao()) {
+                        extratoDtoBuilder.hashContaDestino(operacao.getHashContaDestino() == null ? "" : operacao.getHashContaDestino());
+                        extratoDtoBuilder.nomeUsuarioDestino(contaService.findNomeUsuarioByHash(operacao.getHashContaDestino()));
+                        extratoDtoBuilder.hashContaOrigem(operacao.getConta().getHash());
+                        extratoDtoBuilder.nomeUsuarioOrigem(operacao.getConta().getUsuario().getNome());
+                    }
+
+                    if (operacao.tipoEtransferenciaOUdoacao() &&
+                            operacao.getHashContaDestino().equals(contaHash)) {
+
                         extratoDtoBuilder.tipo(Operacao.Tipo.TRANSFERENCIA_RECEBIDA.name());
+
+
                     } else {
                         extratoDtoBuilder.tipo(operacao.getTipo().name());
                     }
+
+
+
                     return extratoDtoBuilder.build();
                 }).collect(Collectors.toList());
     }

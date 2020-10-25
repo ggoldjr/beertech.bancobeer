@@ -64,6 +64,6 @@ public class Operacao implements Serializable {
     }
 
     public boolean tipoEtransferenciaOUdoacao() {
-        return tipo == Tipo.DOACAO || tipo == Tipo.TRANSFERENCIA;
+        return this.tipo == Tipo.DOACAO || this.tipo == Tipo.TRANSFERENCIA;
     }
 }
