@@ -85,8 +85,8 @@ public class ListarTodosUsuariosTest {
 
         @Test
         void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getStatus()).isEqualTo(401);
-            assertThat(responseError.getMessage()).isEqualTo("Saldo Insuficiente");
+            assertThat(responseError.getStatus()).isEqualTo(403);
+            assertThat(responseError.getMessage()).isEqualTo("Não tem permissão para acessar esse recurso.");
         }
     }
 }
