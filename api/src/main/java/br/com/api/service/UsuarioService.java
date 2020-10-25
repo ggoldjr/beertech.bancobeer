@@ -51,7 +51,7 @@ public class UsuarioService {
     }
 
     public Usuario buscarPorEmail(String email, Usuario usuario){
-        if (!usuario.eAdmin() && email.equals(usuario.getEmail())) {
+        if (!usuario.eAdmin() && !email.equals(usuario.getEmail())) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode buscar sua usuário");
         }
         Usuario usuarioSalvo = usuarioRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));

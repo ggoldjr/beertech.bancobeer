@@ -77,6 +77,7 @@ public class OperacaoService {
                 .hashContaDestino(contaDestino.getHash())
                 .valor(transferenciaDto.getValor())
                 .tipo(Operacao.Tipo.TRANSFERENCIA)
+                .dataOperacao(LocalDate.now())
                 .build();
         operacao = operacaoRepository.save(operacao);
         contaDestino.deposito(contaOrigem.saque(valor, contaOrigem.getUsuario()));
