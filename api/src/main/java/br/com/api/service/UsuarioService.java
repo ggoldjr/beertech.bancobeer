@@ -97,10 +97,10 @@ public class UsuarioService {
         }
         Usuario usuario = buscarPorId(alterarSenhaDto.getIdUsuario());
         if(alterarSenhaDto.getSenhaAntiga().matches(alterarSenhaDto.getSenhaNova())){
-            throw new RuntimeException("Senha nova não pode ser igual a antiga");
+            throw new ApplicationException(400, "Senha nova não pode ser igual a antiga");
         }
         if (!bCryptPasswordEncoder.matches(alterarSenhaDto.getSenhaAntiga(),usuario.getSenha())){
-            throw new RuntimeException("Senha antiga inválida");
+            throw new ApplicationException(400, "Senha antiga inválida");
         }
         usuario.setSenha(bCryptPasswordEncoder.encode(alterarSenhaDto.getSenhaNova()));
         usuarioRepository.save(usuario);
