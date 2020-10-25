@@ -19,7 +19,6 @@ public class ContaService {
 
     @Autowired
     public ContaService(ContaRepository contaRepository) {
-
         this.contaRepository = contaRepository;
     }
 

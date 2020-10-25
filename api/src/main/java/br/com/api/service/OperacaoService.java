@@ -69,6 +69,9 @@ public class OperacaoService {
         if (contaOrigem.getUsuario().getId().longValue() != usuario.getId().longValue()) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro da sua conta");
         }
+        if (transferenciaDto.getHashContaDestino().equals(contaOrigem.getHash())) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro para você mesmo");
+        }
         Double valor = transferenciaDto.getValor().doubleValue();
         if (!contaOrigem.saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
         Conta contaDestino = contaService.findByHash(transferenciaDto.getHashContaDestino());
