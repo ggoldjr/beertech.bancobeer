@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.stream.Collectors;
@@ -57,7 +58,7 @@ public class ContaController {
     @ApiOperation(value = "Lista conta por hash ou id.", produces = "application/json")
     public ResponseEntity getContaByHash(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                          @PathVariable String contaHash,
-                                         @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                         @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         return ResponseEntity.status(HttpStatus.OK).body(contaService.findByHash(contaHash, usuarioLogado.toUsuario()).toContaDto());
     }
 
@@ -67,7 +68,7 @@ public class ContaController {
     @ApiOperation(value = "Lista conta por id.", produces = "application/json")
     public ResponseEntity getContaById(@ApiParam(name = "contaId", required = true, value = "Id da conta", example = "1")
                                        @PathVariable Long contaId,
-                                       @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                       @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         return ResponseEntity.status(HttpStatus.OK).body(contaService.findById(contaId, usuarioLogado.toUsuario()).toContaDto());
     }
 
@@ -77,7 +78,7 @@ public class ContaController {
     @ApiOperation(value = "Obter extrato da conta pelo hash.", produces = "application/json")
     public ResponseEntity getExtratoConta(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                           @PathVariable String contaHash,
-                                          @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                          @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         return ResponseEntity.status(HttpStatus.OK).body(operacaoService.getExtrato(contaHash, usuarioLogado.toUsuario()));
     }
 
@@ -100,7 +101,7 @@ public class ContaController {
     @ApiOperation(value = "Retorna saldo da conta.")
     public ResponseEntity getSaldo(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                    @PathVariable String contaHash,
-                                   @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                   @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         return ResponseEntity.status(HttpStatus.OK).body(contaService.listSaldo(contaHash, usuarioLogado.toUsuario()));
     }
 
@@ -108,7 +109,7 @@ public class ContaController {
     @PostMapping(path = "/operacoes/tranferencias", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Cria uma transferência.", produces = "application/json")
     public ResponseEntity criarTransferencia(@Valid @RequestBody TransferenciaDto transferenciaDto,
-                                             @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                             @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         operacaoService.criarTransferencia(transferenciaDto, usuarioLogado.toUsuario());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

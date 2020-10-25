@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -30,7 +31,7 @@ public class DoacaoController {
     @PostMapping
     @RolesAllowed({"USUARIO"})
     @ApiOperation(value = "Criar doação", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity criar(@AuthenticationPrincipal UsuarioLogado usuarioLogado, @RequestBody DoacaoDto doacaoDto) {
+    public ResponseEntity criar(@ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado, @RequestBody DoacaoDto doacaoDto) {
         operacaoService.criarDoacao(usuarioLogado.toUsuario(), doacaoDto);
         return ResponseEntity.status(201).build();
     }
