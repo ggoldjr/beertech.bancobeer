@@ -29,5 +29,10 @@ public interface OperacaoRepository extends JpaRepository<Operacao, Long> {
 
     List<Operacao> findAllByDataOperacaoIsBetween(LocalDate start, LocalDate end);
 
+    List<Operacao> findByTipo(Operacao.Tipo tipo);
+
+    List<Operacao> findAllByConta_IdAndTipo(Long conta_id, Operacao.Tipo tipo);
+
+
 }
 

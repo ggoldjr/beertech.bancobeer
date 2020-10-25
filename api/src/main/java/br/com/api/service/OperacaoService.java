@@ -167,4 +167,16 @@ public class OperacaoService {
     public List<Operacao> findAllByContaDestinoHash(String hash) {
         return operacaoRepository.findAllByHashContaDestino(hash);
     }
+
+    public Object getDepositos(String contaHash) {
+        if (contaHash.isEmpty()){
+            return operacaoRepository.findByTipo(Operacao.Tipo.DEPOSITO);
+        }
+
+        Conta conta = contaService.findByHash(contaHash);
+
+        List<Operacao> operacoes = operacaoRepository.findAllByConta_IdAndTipo(conta.getId(), Operacao.Tipo.DEPOSITO);
+
+        return operacoes;
+    }
 }
