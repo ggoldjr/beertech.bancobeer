@@ -99,8 +99,9 @@ public class UsuarioController {
 
     @PatchMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
     @Secured({"ADMIN"})
-    public ResponseEntity podeReceberDoacao(@Valid @RequestBody HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {
-        usuarioService.habilitarOuDesabilitarDoacao(habilitarOrDesabilitarDoacaoDto);
+    public ResponseEntity atualizarCampoPodeReceberDoacao(@Valid @RequestBody HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto,
+                                                          @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        usuarioService.atualizarCampoPodeReceberDoacao(habilitarOrDesabilitarDoacaoDto, usuarioLogado.toUsuario());
         return ResponseEntity.status(204).build();
     }
 }

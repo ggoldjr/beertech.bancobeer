@@ -140,7 +140,10 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    public void habilitarOuDesabilitarDoacao(HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto) {
+    public void atualizarCampoPodeReceberDoacao(HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto, Usuario usuarioLogado) {
+        if (habilitarOrDesabilitarDoacaoDto.getIdUsuario().longValue() == usuarioLogado.getId().longValue()) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode atualizar usuários com perfil de USUARIO");
+        }
         Usuario usuario = buscarPorId(habilitarOrDesabilitarDoacaoDto.getIdUsuario());
         usuario.setPodeReceberDoacoes(habilitarOrDesabilitarDoacaoDto.getPodeReceberDoacao());
         usuarioRepository.save(usuario);
