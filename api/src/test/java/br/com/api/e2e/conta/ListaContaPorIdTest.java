@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GetContaByHashTest {
+public class ListaContaPorIdTest {
 
     @LocalServerPort
     private int port;
@@ -30,18 +30,18 @@ public class GetContaByHashTest {
     UsuarioSetup usuarioSetup;
 
     @Nested
-    abstract class GetContaByHashSetup {
+    abstract class ListaContaPorIdSetup {
         ResponseEntity<String> responseEntity;
         ContaDto conta;
         ResponseError responseError;
-        String hash;
+        Long contaId;
 
         @BeforeEach
         void run() throws JsonProcessingException {
             usuarioSetup.setup();
             testUtil.login(port, getUsuarioLogado());
-            hash = getHash();
-            String url = String.format("http://localhost:%s/contas/%s", port, hash);
+            contaId = getContaId();
+            String url = String.format("http://localhost:%s/contas/id/%s", port, contaId);
             HttpEntity<String> httpEntity = testUtil.getHttpEntity();
             responseEntity = testUtil.restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
             if (responseEntity.getStatusCodeValue() == 200) {
@@ -55,27 +55,27 @@ public class GetContaByHashTest {
             return usuarioSetup.getAdmin().getEmail();
         }
 
-        protected abstract String getHash();
+        protected abstract Long getContaId();
     }
 
 
     @Nested
-    class QuandoAdminListaConta extends GetContaByHashSetup {
+    class QuandoAdminListaConta extends ListaContaPorIdSetup {
 
         @Override
-        protected String getHash() {
-            return usuarioSetup.getUsuario1().getContaHash();
+        protected Long getContaId() {
+            return usuarioSetup.getUsuario1().getContaDto().getId();
         }
 
         @Test
         void deveRetornarContaComHashPesquisado() {
-            assertThat(conta.getHash()).isEqualTo(hash);
+            assertThat(conta.getId()).isEqualTo(contaId);
         }
     }
 
 
     @Nested
-    class QuandoUsuarioBuscaConta extends GetContaByHashSetup {
+    class QuandoUsuarioBuscaConta extends ListaContaPorIdSetup {
 
         @Override
         protected String getUsuarioLogado() {
@@ -83,19 +83,19 @@ public class GetContaByHashTest {
         }
 
         @Override
-        protected String getHash() {
-            return usuarioSetup.getUsuario1().getContaHash();
+        protected Long getContaId() {
+            return usuarioSetup.getUsuario1().getContaDto().getId();
         }
 
         @Test
         void deveRetornarContaComHashPesquisado() {
-            assertThat(conta.getHash()).isEqualTo(hash);
+            assertThat(conta.getId()).isEqualTo(contaId);
         }
     }
 
 
     @Nested
-    class QuandoUsuarioBuscaContaDeOutroUsuario extends GetContaByHashSetup {
+    class QuandoUsuarioBuscaContaDeOutroUsuario extends ListaContaPorIdSetup {
 
         @Override
         protected String getUsuarioLogado() {
@@ -103,8 +103,8 @@ public class GetContaByHashTest {
         }
 
         @Override
-        protected String getHash() {
-            return usuarioSetup.getUsuario2().getContaHash();
+        protected Long getContaId() {
+            return usuarioSetup.getUsuario2().getContaDto().getId();
         }
 
         @Test

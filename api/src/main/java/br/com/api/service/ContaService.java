@@ -48,10 +48,12 @@ public class ContaService {
 
     }
 
-
     public Conta findById(Long id, Usuario usuario) {
+        if (usuario.eAdmin()) {
+            return contaRepository.findById(id).orElseThrow(() -> new NotFoundException("Conta com id " + id));
+        }
         Conta contaUsuario = findByHash(usuario.getContaHash());
-        if (!usuario.eAdmin() && id.compareTo(contaUsuario.getId()) !=0) {
+        if (!usuario.eAdmin() && !id.equals(contaUsuario.getId())) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode buscar sua conta");
         }
         return contaRepository.findById(id).orElseThrow(() -> new NotFoundException("Conta com id " + id));
