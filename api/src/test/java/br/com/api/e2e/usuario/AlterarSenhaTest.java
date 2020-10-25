@@ -115,7 +115,7 @@ public class AlterarSenhaTest {
 
         @Test
         void deveRetornarErroDeValidacaoCorrespondente() {
-            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("senhaAntiga", "Senha antiga não pode ser vazia."));
+            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("senhaAntiga", "Senha antiga deve ser preenchida."));
         }
     }
 

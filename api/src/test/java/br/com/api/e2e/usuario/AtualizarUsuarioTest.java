@@ -97,27 +97,7 @@ public class AtualizarUsuarioTest {
 
         @Test
         void deveRetornarErroDeValidacaoCorrespondente() {
-            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("nome", "Nome não pode ser nulo ou vazio."));
-        }
-    }
-
-
-    @Nested
-    class AtualizarDadosDeOutroUsuario extends AtualizarUsuarioSetup {
-
-        @Override
-        protected AtualizarUsuarioSpec getAtualizarUsuarioSpec() {
-            return AtualizarUsuarioSpec.builder()
-                    .nome("kkkk")
-                    .email(usuarioSetup.getUsuario2().getEmail())
-                    .cnpj("65648326000175")
-                    .build();
-        }
-
-        @Test
-        void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getMessage()).isEqualTo("Não tem permissão para acessar esse recurso.");
-            assertThat(responseError.getStatus()).isEqualTo(403);
+            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("nome", "não pode ser nulo"));
         }
     }
 }
