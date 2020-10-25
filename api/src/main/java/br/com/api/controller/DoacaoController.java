@@ -20,7 +20,6 @@ import javax.annotation.security.RolesAllowed;
 @RequestMapping("/doacoes")
 public class DoacaoController {
 
-
     private final OperacaoService operacaoService;
 
     @Autowired

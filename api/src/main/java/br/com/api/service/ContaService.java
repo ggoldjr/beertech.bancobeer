@@ -38,9 +38,7 @@ public class ContaService {
     }
 
     public Conta findById(Long id, Usuario usuario) {
-
         Conta contaUsuario = findByHash(usuario.getContaHash());
-
         if (!usuario.eAdmin() && id.compareTo(contaUsuario.getId()) !=0) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode buscar sua conta");
         }

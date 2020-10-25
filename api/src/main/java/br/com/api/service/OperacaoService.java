@@ -120,7 +120,7 @@ public class OperacaoService {
     public boolean podeReceber(Usuario usuarioBeneficiario) {
         return operacaoRepository.findAllByhashContaDestino(usuarioBeneficiario.getContaHash()).stream()
                 .filter(o -> o.getDataOperacao().getMonthValue() == LocalDate.now().getMonthValue())
-                .map(operacao -> operacao.getValor())
+                .map(Operacao::getValor)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO).doubleValue() < 1000 && usuarioBeneficiario.getPodeReceberDoacoes();
     }

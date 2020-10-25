@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,9 +76,7 @@ public class UsuarioService {
 
 
     public Usuario update(AtualizarUsuarioSpec usuarioSpec, Usuario usuarioLogado) {
-
         Usuario usuarioValidacao = usuarioRepository.findByEmail(usuarioSpec.getEmail()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
-
         if (usuarioValidacao.getId().compareTo(usuarioLogado.getId())==0) {
             Usuario usuarioParaAtualizar = buscarPorId(usuarioLogado.getId());
             usuarioParaAtualizar.setEmail(usuarioSpec.getEmail());
@@ -109,27 +106,22 @@ public class UsuarioService {
     //todo: refatorar
 
     public List<Usuario> listaUsuarios(Usuario usuario, String podeReceberDoacao, String minhasDoacoes, String semDoacoes) {
-
         List<Usuario> all = usuarioRepository.findAllByIdIsNot(usuario.getId());
-
         if (!podeReceberDoacao.isEmpty() && podeReceberDoacao.equals("sim")) {
             all = all.stream().filter(operacaoService::podeReceber).collect(Collectors.toList());
         }
-
         if (!minhasDoacoes.isEmpty() && minhasDoacoes.equals("sim")) {
             List<Long> ids = operacaoService.findAllByAndHashUsuarioDoador(usuario.getContaHash()).stream()
                     .map(operacao -> operacao.getConta().getUsuario().getId())
                     .collect(Collectors.toList());
             all = all.stream().filter(u -> ids.contains(u.getId())).collect(Collectors.toList());
         }
-
         if (!semDoacoes.isEmpty() && semDoacoes.equals("sim")) {
             List<Long> ids = operacaoService.doacoesDoMes().stream()
                     .map(doacao -> doacao.getConta().getUsuario().getId())
                     .collect(Collectors.toList());
             all = all.stream().filter(usuario1 -> !ids.contains(usuario1.getId())).collect(Collectors.toList());
         }
-
         return all.stream()
                 .filter(usuario1 -> usuario1.getPerfil() != Usuario.Perfil.ADMIN)
                 .map(this::resolveConta)

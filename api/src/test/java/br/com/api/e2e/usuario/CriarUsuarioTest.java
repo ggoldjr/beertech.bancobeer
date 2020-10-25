@@ -2,7 +2,6 @@ package br.com.api.e2e.usuario;
 
 import br.com.api.dto.UsuarioDto;
 import br.com.api.model.Usuario;
-import br.com.api.repository.UsuarioRepository;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.spec.UsuarioSpec;
 import br.com.api.util.ResponseError;

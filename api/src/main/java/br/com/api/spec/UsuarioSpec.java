@@ -1,6 +1,5 @@
 package br.com.api.spec;
 
-import br.com.api.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

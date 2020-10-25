@@ -4,7 +4,6 @@ import br.com.api.dto.ContaDto;
 import br.com.api.dto.UsuarioDto;
 import br.com.api.spec.UsuarioSpec;
 import lombok.*;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
