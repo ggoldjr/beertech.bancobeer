@@ -5,8 +5,13 @@ import br.com.api.dto.UsuarioSimplificado;
 import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.exception.ApplicationException;
 import br.com.api.spec.ContaSpec;
+
+import ch.qos.logback.core.util.COWArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.codehaus.jackson.annotate.JsonIgnore;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +23,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,8 +56,9 @@ public class Conta implements Serializable {
     @Column(unique = true)
     private String hash;
 
-    @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
+    @NotFound(action = NotFoundAction.IGNORE)
     private List<Operacao> operacoes;
 
     @CreatedDate
@@ -61,10 +68,12 @@ public class Conta implements Serializable {
     private LocalDateTime atualizado_em;
 
     @OneToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private Usuario usuario;
 
-    public Conta() {}
+    public Conta() {
+        this.operacoes = new ArrayList<>();
+    }
 
     public Double getSaldo() {
         return Optional.ofNullable(saldo).orElse(0d);

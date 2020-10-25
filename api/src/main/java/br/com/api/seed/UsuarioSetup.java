@@ -52,14 +52,14 @@ public class UsuarioSetup {
         UsuarioSpec usuarioParaCriar1 = UsuarioSpec.builder()
                 .nome("Usuario teste 1")
                 .email("teste1@gmail.com")
-                .senha(bCryptPasswordEncoder.encode("senha"))
+                .senha("senha")
                 .cnpj("82826677000148")
                 .build();
 
         UsuarioSpec usuarioParaCriar2 = UsuarioSpec.builder()
                 .nome("Usuario teste 2")
                 .email("teste2@gmail.com")
-                .senha(bCryptPasswordEncoder.encode("senha"))
+                .senha("senha")
                 .cnpj("48028968000152")
                 .build();
         usuario1 = usuarioService.criar(usuarioParaCriar1);
@@ -68,8 +68,8 @@ public class UsuarioSetup {
         operacaoService.deposito(usuario2.getContaHash(), new OperacaoDto("DEPOSITO", BigDecimal.valueOf(1000D)));
 
         admin = Usuario.builder()
-                .nome("Admin admin")
-                .email("admin@gmail.com")
+                .nome("Duplo Malte")
+                .email("duplomalte@gmail.com")
                 .senha(bCryptPasswordEncoder.encode("senha"))
                 .cnpj("49415525000187")
                 .perfil(Usuario.Perfil.ADMIN)

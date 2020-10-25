@@ -2,8 +2,9 @@ package br.com.api.model;
 
 
 import br.com.api.dto.OperacaoDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -44,11 +45,10 @@ public class Operacao implements Serializable {
 
     private LocalDate dataOperacao;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="conta_id")
+    @JoinColumn(name = "conta_id" )
     private Conta conta;
-
-
 
     private String hashContaDestino;
 
@@ -59,5 +59,9 @@ public class Operacao implements Serializable {
     private LocalDateTime atualizado_em;
 
     public Operacao() {
+    }
+
+    public boolean tipoEtransferenciaOUdoacao() {
+        return tipo == Tipo.DOACAO || tipo == Tipo.TRANSFERENCIA;
     }
 }

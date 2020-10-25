@@ -75,7 +75,6 @@ public class JwtService {
         try {
             Claims claims = getClaims(encoded);
             String hashConta = claims.get("hashConta", String.class);
-
             String subject = getClaims(encoded).getSubject();
             String[] split = subject.split(":");
             return UsuarioLogado.builder()

@@ -50,7 +50,6 @@ public class GetExtratoTest {
     @Nested
     public abstract class GetExtratoSetup {
         ResponseEntity<String> responseEntity;
-        String contaHash;
         ResponseError responseError;
         List<ExtratoDto> extratos;
         Usuario usuario1;

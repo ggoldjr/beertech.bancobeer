@@ -53,9 +53,7 @@ public class JwtAuthenticaionFilter extends BasicAuthenticationFilter {
                                               Authentication authResult) throws IOException {
         UsuarioLogado userDetails = (UsuarioLogado) authResult.getPrincipal();
         String token = jwtService.generateToken(userDetails);
-
         response.setStatus(200);
         response.getWriter().append(token);
-
     }
 }

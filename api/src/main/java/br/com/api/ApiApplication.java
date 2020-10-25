@@ -32,11 +32,10 @@ public class ApiApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 		Optional<Usuario> usuario = usuarioRepository.findByEmail("duplomalte@gmail.com");
-		if(!usuario.isPresent()){
+		if(usuario.isEmpty()){
 			usuarioRepository.save(Usuario.builder()
 							.senha(bCryptPasswordEncoder.encode("senha"))
 							.email("duplomalte@gmail.com")
-							.cnpj("1234")
 							.nome("Duplo Malte")
 							.perfil(Usuario.Perfil.ADMIN)
 							.podeReceberDoacoes(false)

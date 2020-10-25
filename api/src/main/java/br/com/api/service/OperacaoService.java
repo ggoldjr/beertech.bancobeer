@@ -55,7 +55,7 @@ public class OperacaoService {
                             .valor(operacao.getValor().doubleValue())
                             .data(operacao.getCriado_em())
                             .hashContaOrigem(operacao.getHashContaDestino());
-                    if (operacao.getHashContaDestino().equals(usuario.getContaHash())) {
+                    if (operacao.tipoEtransferenciaOUdoacao() && operacao.getHashContaDestino().equals(usuario.getContaHash())) {
                         extratoDtoBuilder.tipo(Operacao.Tipo.TRANSFERENCIA_RECEBIDA.name());
                     } else {
                         extratoDtoBuilder.tipo(operacao.getTipo().name());
