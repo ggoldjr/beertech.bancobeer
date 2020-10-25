@@ -11,11 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 public class AtualizarUsuarioSpec {
-    @NotNull(message = "Nome não pode ser nulo.")
     private String  nome;
-    @NotNull(message = "CNPJ não pode ser nulo.")
-    @CNPJ(message = "CNPJ inválido.")
     private String  cnpj;
-    @NotNull(message = "E-mail não pode ser nulo.")
     private String  email;
 }

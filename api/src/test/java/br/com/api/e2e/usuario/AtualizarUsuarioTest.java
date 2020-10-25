@@ -90,7 +90,6 @@ public class AtualizarUsuarioTest {
         @Override
         protected AtualizarUsuarioSpec getAtualizarUsuarioSpec() {
             return AtualizarUsuarioSpec.builder()
-                    .nome(null)
                     .email("emailatualizado@gmail.com")
                     .cnpj("65648326000175")
                     .build();
@@ -99,6 +98,25 @@ public class AtualizarUsuarioTest {
         @Test
         void deveRetornarErroDeValidacaoCorrespondente() {
             assertThat(responseError.getErrors()).contains(new FieldErrorMessage("nome", "Nome não pode ser nulo."));
+        }
+    }
+
+
+    @Nested
+    class AtualizarDadosDeOutroUsuario extends AtualizarUsuarioSetup {
+
+        @Override
+        protected AtualizarUsuarioSpec getAtualizarUsuarioSpec() {
+            return AtualizarUsuarioSpec.builder()
+                    .nome("kkkk")
+                    .email(usuarioSetup.getUsuario2().getEmail())
+                    .cnpj("65648326000175")
+                    .build();
+        }
+
+        @Test
+        void deveRetornarMensagemDeErro() {
+            assertThat(responseError.getMessage()).isEqualTo("");
         }
     }
 }
