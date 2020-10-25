@@ -152,8 +152,11 @@ public class UsuarioService {
     }
 
     private Usuario resolveConta(Usuario usuario) {
-        Conta conta = contaService.findByHash(usuario.getContaHash());
-        usuario.setContaDto(conta.toContaDto());
+        if (!usuario.eAdmin()) {
+            Conta conta = contaService.findByHash(usuario.getContaHash());
+            usuario.setContaDto(conta.toContaDto());
+            return usuario;
+        }
         return usuario;
     }
 }

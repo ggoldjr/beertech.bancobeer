@@ -49,7 +49,8 @@ public class AlterarSenhaTest {
         @BeforeEach
         void run() {
             usuarioSetup.setup();
-            testUtil.login(port, getUserLogin());
+            String login = getUserLogin();
+            testUtil.login(port, login);
             String url = String.format("http://localhost:%s/usuarios", port);
             AlterarSenhaDto alterarSenhaDto = getAlterarSenhaDto();
             HttpEntity<String> httpEntity = testUtil.getHttpEntity(alterarSenhaDto);
@@ -85,16 +86,21 @@ public class AlterarSenhaTest {
     }
 
     @Nested
-    class QuandoAAtualizaSenhaComInformacoesValidas extends AlterarSenhaSetup {
+    class QuandoAdminAtualizaSenhaComInformacoesValidas extends AlterarSenhaSetup {
 
         @Override
         protected String getUserLogin() {
             return usuarioSetup.getAdmin().getEmail();
         }
 
+        @Override
+        protected AlterarSenhaDto getAlterarSenhaDto() {
+            return super.getAlterarSenhaDto().withIdUsuario(usuarioSetup.getAdmin().getId());
+        }
+
         @Test
         void deveAtualizarSenha() {
-            assertThat(bCryptPasswordEncoder.matches("senhanova", usuario.getSenha())).isTrue();
+            assertThat(new BCryptPasswordEncoder().matches("senhanova", usuario.getSenha())).isTrue();
         }
     }
 
@@ -109,7 +115,7 @@ public class AlterarSenhaTest {
 
         @Test
         void deveRetornarErroDeValidacaoCorrespondente() {
-            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("senha", "Nome não pode ser nulo."));
+            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("senhaAntiga", "Senha antiga não pode ser vazia."));
         }
     }
 
@@ -124,7 +130,7 @@ public class AlterarSenhaTest {
 
         @Test
         void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getMessage()).contains("senha", "Nome não pode ser nulo.");
+            assertThat(responseError.getMessage()).isEqualTo("Não pode atualizar senha dos outros usuários");
         }
     }
 }
