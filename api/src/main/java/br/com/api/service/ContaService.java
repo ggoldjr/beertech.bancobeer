@@ -77,7 +77,7 @@ public class ContaService {
         return contaRepository.getByUsuarioId(usuario.getId()).orElseThrow(() -> new NotFoundException("Conta com hash " + usuario.getId()));
     }
 
-    public Double listSaldo(String hash, Usuario usuario) {
+    public Double getSaldo(String hash, Usuario usuario) {
         if (usuario.eAdmin()) {
             return findByHash(hash, usuario).getSaldo();
         }

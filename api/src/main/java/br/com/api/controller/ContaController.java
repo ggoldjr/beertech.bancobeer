@@ -102,7 +102,7 @@ public class ContaController {
     public ResponseEntity getSaldo(@ApiParam(name = "contaHash", required = true, value = "Hash de conta", example = "1")
                                    @PathVariable String contaHash,
                                    @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
-        return ResponseEntity.status(HttpStatus.OK).body(contaService.listSaldo(contaHash, usuarioLogado.toUsuario()));
+        return ResponseEntity.status(HttpStatus.OK).body(contaService.getSaldo(contaHash, usuarioLogado.toUsuario()));
     }
 
     @Secured("USUARIO")
