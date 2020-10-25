@@ -9,11 +9,11 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 public class AtualizarUsuarioSpec {
-    @NotNull(message = "não pode ser nulo")
+    @NotNull(message = "Nome não pode ser nulo.")
     private String  nome;
-    @NotNull(message = "não pode ser nulo")
-    @CNPJ(message = "cnpj inválido")
+    @NotNull(message = "CNPJ não pode ser nulo.")
+    @CNPJ(message = "CNPJ inválido.")
     private String  cnpj;
-    @NotNull(message = "não pode ser nulo")
+    @NotNull(message = "E-mail não pode ser nulo.")
     private String  email;
 }

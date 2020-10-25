@@ -37,12 +37,12 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException nfe,
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException notValidException,
                                                                HttpHeaders headers,
                                                                HttpStatus status,
                                                                WebRequest request) {
         ErroValidacao erroValidacao = new ErroValidacao(HttpStatus.BAD_REQUEST.value(), "Erro de validação");
-        nfe.getBindingResult().getFieldErrors().stream()
+        notValidException.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> new FieldErrorMessage(fieldError.getField(), fieldError.getDefaultMessage()))
                 .forEach(erroValidacao::addError);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroValidacao);

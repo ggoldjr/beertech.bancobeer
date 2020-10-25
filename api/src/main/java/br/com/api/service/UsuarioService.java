@@ -45,7 +45,8 @@ public class UsuarioService {
         try {
             usuario = usuarioRepository.save(usuario);
         } catch (DataIntegrityViolationException e) {
-            throw new ApplicationException(409, "Já existe este recurso");
+            String message = e.getMostSpecificCause().getMessage().split("for")[0].split(" ")[2];
+            throw new ApplicationException(409, "Já existe recurso com " + message + ".");
         }
         ContaSpec contaSpec = ContaSpec.builder().idUsuario(usuario.getId()).build();
         Conta conta = contaService.create(contaSpec, usuario);

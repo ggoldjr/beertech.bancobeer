@@ -1,6 +1,7 @@
 package br.com.api.e2e.usuario;
 
 import br.com.api.dto.UsuarioDto;
+import br.com.api.exception.FieldErrorMessage;
 import br.com.api.model.Usuario;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.spec.UsuarioSpec;
@@ -81,13 +82,32 @@ public class CriarUsuarioTest {
 
 
     @Nested
-    class CriarUsuarioDuplicado extends CriarUsuarioSetup {
+    class CriarUsuarioSemNome extends CriarUsuarioSetup {
+
+        @Override
+        UsuarioSpec getUsuarioSpec() {
+            return UsuarioSpec.builder()
+                    .cnpj("14072384000162")
+                    .email("teste@gmail.com")
+                    .senha("senha")
+                    .build();
+        }
+
+        @Test
+        void deveRetornarErroDeValidacaoCorrespondente() {
+            assertThat(responseError.getErrors()).contains(new FieldErrorMessage("nome", "Nome não pode ser nulo."));
+        }
+    }
+
+
+    @Nested
+    class CriarUsuarioComCNPJDuplicado extends CriarUsuarioSetup {
 
         @Override
         UsuarioSpec getUsuarioSpec() {
             return UsuarioSpec.builder()
                     .nome("Usuario teste 1")
-                    .email("teste1@gmail.com")
+                    .email("teste12@gmail.com")
                     .senha("senha")
                     .cnpj("82826677000148")
                     .build();
@@ -101,7 +121,33 @@ public class CriarUsuarioTest {
 
         @Test
         void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getMessage()).isEqualTo("Já existe este recurso");
+            assertThat(responseError.getMessage()).isEqualTo("Já existe recurso com '82826677000148'.");
+            assertThat(responseError.getStatus()).isEqualTo(409);
+        }
+    }
+
+    @Nested
+    class CriarUsuarioComEmailDuplicado extends CriarUsuarioSetup {
+
+        @Override
+        UsuarioSpec getUsuarioSpec() {
+            return UsuarioSpec.builder()
+                    .nome("Usuario teste 1")
+                    .email("teste1@gmail.com")
+                    .senha("senha")
+                    .cnpj("14072384000162")
+                    .build();
+        }
+
+        @Override
+        void setup() {
+            super.setup();
+            usuarioSetup.setup();
+        }
+
+        @Test
+        void deveRetornarMensagemDeErro() {
+            assertThat(responseError.getMessage()).isEqualTo("Já existe recurso com 'teste1@gmail.com'.");
             assertThat(responseError.getStatus()).isEqualTo(409);
         }
     }
