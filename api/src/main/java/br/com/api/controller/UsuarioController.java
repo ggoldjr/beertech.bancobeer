@@ -53,7 +53,7 @@ public class UsuarioController {
     }
 
     @Secured("USUARIO")
-    @PutMapping(produces={MediaType.APPLICATION_JSON_VALUE})
+    @PatchMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Atualiza usuário.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity atualizaUsuario(@Valid @RequestBody AtualizarUsuarioSpec atualizarUsuarioSpec,
                                           @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado){
