@@ -73,17 +73,13 @@ public class UsuarioController {
                         .collect(Collectors.toList()));
     }
 
-    @Secured("USUARIO")
+    @Secured({"USUARIO", "ADMIN"})
     @PatchMapping
     @ApiOperation(value="Trocar senha usuário.")
     public ResponseEntity alterarSenha(@Valid @RequestBody AlterarSenhaDto request,
                                        @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
-        try {
-            usuarioService.updatePassword(request, usuarioLogado.toUsuario());
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        usuarioService.updatePassword(request, usuarioLogado.toUsuario());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -94,6 +94,26 @@ public class BuscarUsuariosQuePodemReceberDoacaoTest {
 
 
     @Nested
+    class QuandoAdminListaUsuariosQuePodemReceberDoacoes extends BuscarUsuariosQuePodemReceberDoacaoSetup {
+
+        @Override
+        protected String getUserLogin() {
+            return usuarioSetup.getAdmin().getEmail();
+        }
+
+        @Override
+        protected String getQueryParams() {
+            return "podeReceberDoacao=sim";
+        }
+
+        @Test
+        void deveRetornarMensagemDeErro() {
+            assertThat(responseError.getStatus()).isEqualTo(403);
+            assertThat(responseError.getMessage()).isEqualTo("Não tem permissão para acessar esse recurso.");
+        }
+    }
+
+    @Nested
     class ListarUsuariosQueJaReceberamMinhaDoacao extends BuscarUsuariosQuePodemReceberDoacaoSetup {
 
         List<String> emails = new ArrayList<>();
