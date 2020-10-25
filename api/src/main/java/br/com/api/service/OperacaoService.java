@@ -91,27 +91,33 @@ public class OperacaoService {
 
     public Operacao criarDoacao(Usuario usuarioLogado, DoacaoDto doacaoDto) {
         Usuario usuarioDoador = usuarioRepository.findById(usuarioLogado.getId()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
-        List<Conta> contas = contaService.listContasUsuario(usuarioDoador);
-        boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(contas.get(0).getSaldo(), doacaoDto.getValorDoado().doubleValue());
+        Conta conta = contaService.listContaUsuario(usuarioDoador);
+        boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(conta.getSaldo(), doacaoDto.getValorDoado().doubleValue());
         if (usuarioDoadorPodeDoar) {
             Usuario usuarioBeneficiario = usuarioRepository.findById(doacaoDto.getIdUsuarioBeneficiario()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
             if (podeReceber(usuarioBeneficiario)) {
                 Operacao operacao = Operacao.builder()
-                        .conta(contas.get(0))
+                        .conta(conta)
                         .tipo(Operacao.Tipo.DOACAO)
                         .hashContaDestino(usuarioBeneficiario.getContaHash())
                         .valor(doacaoDto.getValorDoado())
                         .dataOperacao(LocalDate.now())
                         .build();
                 Operacao operacaoCriada = operacaoRepository.save(operacao);
-                Conta contaUsuarioDoador = contas.get(0);
+                Conta contaUsuarioDoador = conta;
                 contaUsuarioDoador.saque(doacaoDto.getValorDoado().doubleValue(), usuarioDoador);
                 Conta contaUsuarioBeneficiario = contaService.findByHash(usuarioBeneficiario.getContaHash());
                 contaUsuarioBeneficiario.deposito(doacaoDto.getValorDoado().doubleValue());
                 contaService.atualizarConta(contaUsuarioDoador);
                 contaService.atualizarConta(contaUsuarioBeneficiario);
+                if (atingiuLimiteMensalDedoacoes(usuarioBeneficiario)) {
+                    usuarioBeneficiario.setPodeReceberDoacoes(false);
+                    usuarioRepository.save(usuarioBeneficiario);
+                }
                 return operacaoCriada;
             }
+            usuarioBeneficiario.setPodeReceberDoacoes(false);
+            usuarioRepository.save(usuarioBeneficiario);
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode receber doação", usuarioBeneficiario.getNome()));
         }
         throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode fazer doação", usuarioDoador.getNome()));
@@ -125,7 +131,15 @@ public class OperacaoService {
                 .orElse(BigDecimal.ZERO).doubleValue() < 1000 && usuarioBeneficiario.getPodeReceberDoacoes();
     }
 
-    public List<Operacao> findAllByAndHashUsuarioDoador(String hashContaDoador) {
+    public boolean atingiuLimiteMensalDedoacoes(Usuario usuarioBeneficiario) {
+        return operacaoRepository.findAllByhashContaDestino(usuarioBeneficiario.getContaHash()).stream()
+                .filter(o -> o.getDataOperacao().getMonthValue() == LocalDate.now().getMonthValue())
+                .map(Operacao::getValor)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO).doubleValue() >= 1000 && usuarioBeneficiario.getPodeReceberDoacoes();
+    }
+
+    public List<Operacao> findAllByContaHash(String hashContaDoador) {
         return operacaoRepository.findAllByConta_Hash(hashContaDoador);
     }
 
@@ -134,5 +148,9 @@ public class OperacaoService {
                 LocalDate.now().with(TemporalAdjusters.lastDayOfMonth())).stream()
                 .filter(operacao -> operacao.getTipo() == Operacao.Tipo.DOACAO)
                 .collect(Collectors.toList());
+    }
+
+    public List<Operacao> findAllByContaDestinoHash(String hash) {
+        return operacaoRepository.findAllByHashContaDestino(hash);
     }
 }

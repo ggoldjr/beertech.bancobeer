@@ -5,6 +5,7 @@ import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
 import br.com.api.exception.ApplicationException;
 import br.com.api.exception.NotFoundException;
 import br.com.api.model.Conta;
+import br.com.api.model.Operacao;
 import br.com.api.model.Usuario;
 import br.com.api.repository.UsuarioRepository;
 import br.com.api.spec.AtualizarUsuarioSpec;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,32 +114,32 @@ public class UsuarioService {
             all = all.stream().filter(operacaoService::podeReceber).collect(Collectors.toList());
         }
         if (!minhasDoacoes.isEmpty() && minhasDoacoes.equals("sim")) {
-            List<String> hashDestino = operacaoService.findAllByAndHashUsuarioDoador(usuario.getContaHash()).stream()
-                    .map(operacao->operacao.getHashContaDestino())
+            List<String> hashsMinhasDoacoes = operacaoService.findAllByContaHash(usuario.getContaHash()).stream()
+                    .map(Operacao::getHashContaDestino)
                     .collect(Collectors.toList());
-
-            List<Long> ids = hashDestino.stream().distinct()
-                    .map(e ->e==null?null:contaService.findByHash(e).getUsuario().getId())
-                    .collect(Collectors.toList());
-
-            all = all.stream().filter(u -> ids.contains(u.getId())).collect(Collectors.toList());
+            Set<String> emails = resolveIdUsuario(hashsMinhasDoacoes);
+            all = all.stream().filter(u -> emails.contains(u.getEmail())).collect(Collectors.toList());
         }
         if (!semDoacoes.isEmpty() && semDoacoes.equals("sim")) {
-            List<String> hashDestino = operacaoService.doacoesDoMes().stream()
-                    .map(operacao->operacao.getHashContaDestino())
+            List<String> hashsMinhasDoacoes = operacaoService.doacoesDoMes().stream()
+                    .map(Operacao::getHashContaDestino)
                     .collect(Collectors.toList());
-
-
-            List<Long> ids = hashDestino.stream().distinct()
-                    .map(e ->e==null?null:contaService.findByHash(e).getUsuario().getId())
+            Set<String> emails = resolveIdUsuario(hashsMinhasDoacoes);
+            all = all.stream()
+                    .filter(usuario1 -> !emails.contains(usuario1.getEmail()))
+                    .filter(Usuario::getPodeReceberDoacoes)
                     .collect(Collectors.toList());
-
-            all = all.stream().filter(usuario1 -> !ids.contains(usuario1.getId())).collect(Collectors.toList());
         }
         return all.stream()
                 .filter(usuario1 -> usuario1.getPerfil() != Usuario.Perfil.ADMIN)
                 .map(this::resolveConta)
                 .collect(Collectors.toList());
+    }
+
+    private Set<String> resolveIdUsuario(List<String> contaHashes) {
+        return contaService.allContaIn(contaHashes).stream()
+                .map(conta -> conta.getUsuario().getEmail())
+                .collect(Collectors.toSet());
     }
 
     public void atualizarCampoPodeReceberDoacao(HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto, Usuario usuarioLogado) {

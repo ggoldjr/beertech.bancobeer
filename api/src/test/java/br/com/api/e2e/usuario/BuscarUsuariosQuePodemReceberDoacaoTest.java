@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +51,7 @@ public class BuscarUsuariosQuePodemReceberDoacaoTest {
         void run() throws JsonProcessingException {
             usuarioSetup.setup();
             usuarioSetup.criarUsuario(10);
+            setup();
             testUtil.login(port, getUserLogin());
             String url = String.format("http://localhost:%s/usuarios?%s", port, getQueryParams());
             HttpEntity<String> httpEntity = testUtil.getHttpEntity();
@@ -94,7 +96,7 @@ public class BuscarUsuariosQuePodemReceberDoacaoTest {
     @Nested
     class ListarUsuariosQueJaReceberamMinhaDoacao extends BuscarUsuariosQuePodemReceberDoacaoSetup {
 
-        List<String> emails;
+        List<String> emails = new ArrayList<>();
 
         @Override
         public void setup() {
@@ -131,6 +133,90 @@ public class BuscarUsuariosQuePodemReceberDoacaoTest {
         @Test
         void deveRetornarApenasUsuariosQueReceberamMinhasDoacoes() {
             usuarios.forEach(usuarioDto -> assertThat(emails.contains(usuarioDto.getEmail())).isTrue());
+        }
+    }
+
+
+    @Nested
+    class ListarUsuariosQueJaReceberamMinhaDoacaoEQuePodeAindaReceberDoacao extends BuscarUsuariosQuePodemReceberDoacaoSetup {
+
+        List<String> emails = new ArrayList<>();
+
+        @Override
+        public void setup() {
+            List<Usuario> usuariosQuePodeReceberDoacao = usuarioSetup.getUsuariosQuePodeReceberDoacao();
+            DoacaoDto doacaoDto1 = DoacaoDto.builder()
+                    .idUsuarioBeneficiario(usuariosQuePodeReceberDoacao.get(0).getId())
+                    .valorDoado(BigDecimal.valueOf(100))
+                    .build();
+            DoacaoDto doacaoDto2 = DoacaoDto.builder()
+                    .idUsuarioBeneficiario(usuariosQuePodeReceberDoacao.get(1).getId())
+                    .valorDoado(BigDecimal.valueOf(1000))
+                    .build();
+            operacaoService.criarDoacao(usuarioSetup.getUsuario1(), doacaoDto1);
+            operacaoService.criarDoacao(usuarioSetup.getUsuario1(), doacaoDto2);
+            emails.add(usuariosQuePodeReceberDoacao.get(0).getEmail());
+        }
+
+        @Override
+        protected String getQueryParams() {
+            return "minhasDoacoes=sim&podeReceberDoacao=sim";
+        }
+
+        @Test
+        void deveRetornar1Usuarios() {
+            assertThat(usuarios.size()).isEqualTo(1);
+        }
+
+        @Test
+        void deveRetornarUsuariosComCampoPodeReceberDoacoesIgualAtrue() {
+            assertThat(usuarios.stream().allMatch(UsuarioDto::getPodeReceberDoacoes)).isTrue();
+        }
+
+        @Test
+        void deveRetornarApenasUsuariosQueReceberamMinhasDoacoes() {
+            usuarios.forEach(usuarioDto -> assertThat(emails.contains(usuarioDto.getEmail())).isTrue());
+        }
+    }
+
+
+
+    @Nested
+    class ListarUsuariosSemDoacao extends BuscarUsuariosQuePodemReceberDoacaoSetup {
+
+        @Override
+        public void setup() {
+            List<Usuario> usuariosQuePodeReceberDoacao = usuarioSetup.getUsuariosQuePodeReceberDoacao();
+            DoacaoDto doacaoDto1 = DoacaoDto.builder()
+                    .idUsuarioBeneficiario(usuariosQuePodeReceberDoacao.get(0).getId())
+                    .valorDoado(BigDecimal.valueOf(100))
+                    .build();
+            DoacaoDto doacaoDto2 = DoacaoDto.builder()
+                    .idUsuarioBeneficiario(usuariosQuePodeReceberDoacao.get(1).getId())
+                    .valorDoado(BigDecimal.valueOf(1000))
+                    .build();
+            operacaoService.criarDoacao(usuarioSetup.getUsuario1(), doacaoDto1);
+            operacaoService.criarDoacao(usuarioSetup.getUsuario1(), doacaoDto2);
+        }
+
+        @Override
+        protected String getQueryParams() {
+            return "semDoacoes=sim";
+        }
+
+        @Test
+        void deveRetornar3Usuarios() {
+            assertThat(usuarios.size()).isEqualTo(3);
+        }
+
+        @Test
+        void deveRetornarUsuariosComCampoPodeReceberDoacoesIgualAtrue() {
+            assertThat(usuarios.stream().allMatch(UsuarioDto::getPodeReceberDoacoes)).isTrue();
+        }
+
+        @Test
+        void deveRetornarApenasUsuariosQueReceberamMinhasDoacoes() {
+            usuarios.forEach(usuarioDto -> assertThat(operacaoService.findAllByContaDestinoHash(usuarioDto.getContaDto().getHash()).size()).isEqualTo(0));
         }
     }
 

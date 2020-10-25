@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -44,8 +45,8 @@ public class UsuarioController {
     @GetMapping(path="/{email}",produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Buscar usuário por e-mail.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity buscaUsuarioPorEmail(@ApiParam(name="email", required=true, value="E-mail do usuário", example="teste@teste.com")
-                                       @PathVariable String email,
-                                       @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                               @PathVariable String email,
+                                               @ApiIgnore@AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioService.buscarPorEmail(email, usuarioLogado.toUsuario()).toUsuarioDto());
@@ -55,7 +56,7 @@ public class UsuarioController {
     @PutMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Atualiza usuário.", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity atualizaUsuario(@Valid @RequestBody AtualizarUsuarioSpec atualizarUsuarioSpec,
-                                          @AuthenticationPrincipal UsuarioLogado usuarioLogado){
+                                          @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioService.update(atualizarUsuarioSpec, usuarioLogado.toUsuario()).toUsuarioDto());
@@ -64,7 +65,7 @@ public class UsuarioController {
     @Secured({"ADMIN", "USUARIO"})
     @GetMapping(path = "/all", produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Lista todos usuários.", produces="application/json")
-    public ResponseEntity listaUsuarios(@AuthenticationPrincipal UsuarioLogado usuarioLogado){
+    public ResponseEntity listaUsuarios(@ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioService.listAll(usuarioLogado.toUsuario()).stream()
@@ -76,7 +77,7 @@ public class UsuarioController {
     @PatchMapping
     @ApiOperation(value="Trocar senha usuário.")
     public ResponseEntity alterarSenha(@Valid @RequestBody AlterarSenhaDto request,
-                                       @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                       @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         try {
             usuarioService.updatePassword(request, usuarioLogado.toUsuario());
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -87,9 +88,9 @@ public class UsuarioController {
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @Secured({"USUARIO"})
-    public ResponseEntity usuariosQuePodemReceberDoacao(@AuthenticationPrincipal UsuarioLogado usuarioLogado,
+    public ResponseEntity usuariosQuePodemReceberDoacao(@ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado,
                                                         @RequestParam(defaultValue = "") String podeReceberDoacao,
-                                                        @RequestParam(defaultValue = "") String minhasDoacoes,
+                                                        @ApiIgnore @RequestParam(defaultValue = "") String minhasDoacoes,
                                                         @RequestParam(defaultValue = "") String semDoacoes) {
         List<UsuarioDto> usuarioDtos = usuarioService.listaUsuarios(usuarioLogado.toUsuario(), podeReceberDoacao, minhasDoacoes, semDoacoes).stream()
                 .map(Usuario::toUsuarioDto)
@@ -100,7 +101,7 @@ public class UsuarioController {
     @PatchMapping(path = "/doacoes", produces = {MediaType.APPLICATION_JSON_VALUE})
     @Secured({"ADMIN"})
     public ResponseEntity atualizarCampoPodeReceberDoacao(@Valid @RequestBody HabilitarOrDesabilitarDoacaoDto habilitarOrDesabilitarDoacaoDto,
-                                                          @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+                                                          @ApiIgnore @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
         usuarioService.atualizarCampoPodeReceberDoacao(habilitarOrDesabilitarDoacaoDto, usuarioLogado.toUsuario());
         return ResponseEntity.status(204).build();
     }

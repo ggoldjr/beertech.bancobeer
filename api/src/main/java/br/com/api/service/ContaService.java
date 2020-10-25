@@ -59,8 +59,8 @@ public class ContaService {
         return contaRepository.save(conta);
     }
 
-    public List<Conta> listContasUsuario(Usuario usuario) {
-        return contaRepository.getByUsuarioId(usuario.getId());
+    public Conta listContaUsuario(Usuario usuario) {
+        return contaRepository.getByUsuarioId(usuario.getId()).orElseThrow(() -> new NotFoundException("Conta com hash " + usuario.getId()));
     }
 
     public Double listSaldo(String hash, Usuario usuario) {
@@ -71,5 +71,9 @@ public class ContaService {
             return findByHash(hash, usuario).getSaldo();
         }
         throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não é permitido ver saldo de outra conta");
+    }
+
+    public List<Conta> allContaIn(List<String> hashes) {
+        return contaRepository.findAllByHashIn(hashes);
     }
 }

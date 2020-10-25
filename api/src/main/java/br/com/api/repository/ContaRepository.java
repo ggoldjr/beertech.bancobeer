@@ -12,6 +12,7 @@ public interface  ContaRepository  extends JpaRepository<Conta, Long> {
 
     Optional<Conta> findByHash(String contaHash);
 
-    List<Conta> getByUsuarioId(Long id);
+    Optional<Conta> getByUsuarioId(Long id);
 
+    List<Conta> findAllByHashIn(List<String> hashes);
 }

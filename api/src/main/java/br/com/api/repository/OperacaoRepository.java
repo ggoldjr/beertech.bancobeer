@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface OperacaoRepository extends JpaRepository<Operacao, Long> {
 
-    Optional<Operacao> findByContaId(Long id);
+    List<Operacao> findAllByHashContaDestino(String hash);
 
     List<Operacao> findAllByConta_Hash(String contaHash);
 

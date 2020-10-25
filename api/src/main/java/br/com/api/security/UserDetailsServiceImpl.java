@@ -30,10 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
-        Optional<Conta> conta = contaRepository.getByUsuarioId(usuario.getId())
-                .stream()
-                .findFirst();
-        String hashConta = conta.map(Conta::getHash).orElse(null);
+        String hashConta = contaRepository.getByUsuarioId(usuario.getId()).map(Conta::getHash).orElse(null);
         return UsuarioLogado.builder()
                 .id(usuario.getId())
                 .email(usuario.getEmail())
