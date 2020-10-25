@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 @Builder
 @Data
 public class DoacaoDto {
-
     private Long idUsuarioBeneficiario;
     private BigDecimal valorDoado;
 }

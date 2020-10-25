@@ -9,5 +9,4 @@ public class StandardError {
 
     public final Integer status;
     public final String message;
-
 }

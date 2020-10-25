@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlterarSenhaDto {
-
     private Long idUsuario;
     private String senhaAntiga;
     private String senhaNova;

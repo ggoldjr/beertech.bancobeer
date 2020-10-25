@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContaDto {
-
     Long id;
     String hash;
     UsuarioSimplificado usuario;

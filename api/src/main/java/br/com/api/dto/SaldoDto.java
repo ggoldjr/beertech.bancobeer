@@ -13,5 +13,4 @@ public class SaldoDto {
 
     private String hash;
     private Double saldo;
-
 }

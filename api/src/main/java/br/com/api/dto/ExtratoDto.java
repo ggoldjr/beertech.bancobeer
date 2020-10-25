@@ -16,17 +16,10 @@ import java.time.LocalDateTime;
 @Builder
 public class ExtratoDto {
 
-    private String tipo;
-
     @Positive(message = "Valor deve ser maior que zero")
     private Double valor;
-
+    private String tipo;
     private LocalDateTime data;
-
     private String hashContaOrigem;
-
     private String hashContaDestino;
-
-
-
 }
