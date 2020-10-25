@@ -2,11 +2,7 @@ package br.com.api.e2e.conta;
 
 
 import br.com.api.dto.ExtratoDto;
-import br.com.api.dto.OperacaoDto;
-import br.com.api.dto.SaldoDto;
 import br.com.api.dto.TransferenciaDto;
-import br.com.api.model.Conta;
-import br.com.api.model.Operacao;
 import br.com.api.model.Usuario;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.service.ContaService;

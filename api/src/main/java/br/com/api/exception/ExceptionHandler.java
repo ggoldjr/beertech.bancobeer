@@ -3,6 +3,7 @@ package br.com.api.exception;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -21,6 +22,12 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<StandardError> saldoInsuficiente(SaldoInsuficienteException saldoInsuficienteException) {
         StandardError standardError = new StandardError(HttpStatus.BAD_REQUEST.value(), saldoInsuficienteException.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StandardError> accessDeniedException() {
+        StandardError standardError = new StandardError(HttpStatus.FORBIDDEN.value(), "Não tem permissão para acessar esse recurso.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN.value()).body(standardError);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(ApplicationException.class)

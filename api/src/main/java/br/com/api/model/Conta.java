@@ -2,14 +2,14 @@ package br.com.api.model;
 
 import br.com.api.dto.ContaDto;
 import br.com.api.dto.UsuarioSimplificado;
-import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.exception.ApplicationException;
+import br.com.api.exception.SaldoInsuficienteException;
 import br.com.api.spec.ContaSpec;
-
-import ch.qos.logback.core.util.COWArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.annotation.CreatedDate;

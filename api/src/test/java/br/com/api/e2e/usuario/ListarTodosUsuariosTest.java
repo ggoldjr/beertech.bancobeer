@@ -2,7 +2,6 @@ package br.com.api.e2e.usuario;
 
 import br.com.api.dto.UsuarioDto;
 import br.com.api.seed.UsuarioSetup;
-import br.com.api.spec.UsuarioSpec;
 import br.com.api.util.ResponseError;
 import br.com.api.util.TestUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -85,8 +84,8 @@ public class ListarTodosUsuariosTest {
 
         @Test
         void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getStatus()).isEqualTo(401);
-            assertThat(responseError.getMessage()).isEqualTo("Saldo Insuficiente");
+            assertThat(responseError.getStatus()).isEqualTo(403);
+            assertThat(responseError.getMessage()).isEqualTo("Não tem permissão para acessar esse recurso.");
         }
     }
 }

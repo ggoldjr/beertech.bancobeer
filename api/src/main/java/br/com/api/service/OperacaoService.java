@@ -69,6 +69,9 @@ public class OperacaoService {
         if (contaOrigem.getUsuario().getId().longValue() != usuario.getId().longValue()) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro da sua conta");
         }
+        if (transferenciaDto.getHashContaDestino().equals(contaOrigem.getHash())) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro para você mesmo");
+        }
         Double valor = transferenciaDto.getValor().doubleValue();
         if (!contaOrigem.saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
         Conta contaDestino = contaService.findByHash(transferenciaDto.getHashContaDestino());
@@ -117,7 +120,7 @@ public class OperacaoService {
     public boolean podeReceber(Usuario usuarioBeneficiario) {
         return operacaoRepository.findAllByhashContaDestino(usuarioBeneficiario.getContaHash()).stream()
                 .filter(o -> o.getDataOperacao().getMonthValue() == LocalDate.now().getMonthValue())
-                .map(operacao -> operacao.getValor())
+                .map(Operacao::getValor)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO).doubleValue() < 1000 && usuarioBeneficiario.getPodeReceberDoacoes();
     }

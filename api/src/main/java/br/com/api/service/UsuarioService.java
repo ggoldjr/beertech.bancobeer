@@ -11,12 +11,12 @@ import br.com.api.spec.AtualizarUsuarioSpec;
 import br.com.api.spec.ContaSpec;
 import br.com.api.spec.UsuarioSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +42,11 @@ public class UsuarioService {
     public Usuario criar(UsuarioSpec usuarioSpec){
         Usuario usuario = Usuario.criar(usuarioSpec);
         usuario.setSenha(bCryptPasswordEncoder.encode(usuario.getSenha()));
-        usuario = usuarioRepository.save(usuario);
+        try {
+            usuario = usuarioRepository.save(usuario);
+        } catch (DataIntegrityViolationException e) {
+            throw new ApplicationException(409, "Já existe este recurso");
+        }
         ContaSpec contaSpec = ContaSpec.builder().idUsuario(usuario.getId()).build();
         Conta conta = contaService.create(contaSpec, usuario);
         usuario.setContaHash(conta.getHash());
@@ -72,9 +76,7 @@ public class UsuarioService {
 
 
     public Usuario update(AtualizarUsuarioSpec usuarioSpec, Usuario usuarioLogado) {
-
         Usuario usuarioValidacao = usuarioRepository.findByEmail(usuarioSpec.getEmail()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
-
         if (usuarioValidacao.getId().compareTo(usuarioLogado.getId())==0) {
             Usuario usuarioParaAtualizar = buscarPorId(usuarioLogado.getId());
             usuarioParaAtualizar.setEmail(usuarioSpec.getEmail());
@@ -92,10 +94,10 @@ public class UsuarioService {
         }
         Usuario usuario = buscarPorId(alterarSenhaDto.getIdUsuario());
         if(alterarSenhaDto.getSenhaAntiga().matches(alterarSenhaDto.getSenhaNova())){
-            throw new RuntimeException("Senha nova não pode ser igual a antiga");
+            throw new ApplicationException(400, "Senha nova não pode ser igual a antiga");
         }
         if (!bCryptPasswordEncoder.matches(alterarSenhaDto.getSenhaAntiga(),usuario.getSenha())){
-            throw new RuntimeException("Senha antiga inválida");
+            throw new ApplicationException(400, "Senha antiga inválida");
         }
         usuario.setSenha(bCryptPasswordEncoder.encode(alterarSenhaDto.getSenhaNova()));
         usuarioRepository.save(usuario);
@@ -104,13 +106,10 @@ public class UsuarioService {
     //todo: refatorar
 
     public List<Usuario> listaUsuarios(Usuario usuario, String podeReceberDoacao, String minhasDoacoes, String semDoacoes) {
-
         List<Usuario> all = usuarioRepository.findAllByIdIsNot(usuario.getId());
-
         if (!podeReceberDoacao.isEmpty() && podeReceberDoacao.equals("sim")) {
             all = all.stream().filter(operacaoService::podeReceber).collect(Collectors.toList());
         }
-
         if (!minhasDoacoes.isEmpty() && minhasDoacoes.equals("sim")) {
             List<String> hashDestino = operacaoService.findAllByAndHashUsuarioDoador(usuario.getContaHash()).stream()
                     .map(operacao->operacao.getHashContaDestino())
@@ -122,7 +121,6 @@ public class UsuarioService {
 
             all = all.stream().filter(u -> ids.contains(u.getId())).collect(Collectors.toList());
         }
-
         if (!semDoacoes.isEmpty() && semDoacoes.equals("sim")) {
             List<String> hashDestino = operacaoService.doacoesDoMes().stream()
                     .map(operacao->operacao.getHashContaDestino())
@@ -135,7 +133,6 @@ public class UsuarioService {
 
             all = all.stream().filter(usuario1 -> !ids.contains(usuario1.getId())).collect(Collectors.toList());
         }
-
         return all.stream()
                 .filter(usuario1 -> usuario1.getPerfil() != Usuario.Perfil.ADMIN)
                 .map(this::resolveConta)

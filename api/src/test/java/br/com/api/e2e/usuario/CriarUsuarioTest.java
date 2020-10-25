@@ -2,7 +2,6 @@ package br.com.api.e2e.usuario;
 
 import br.com.api.dto.UsuarioDto;
 import br.com.api.model.Usuario;
-import br.com.api.repository.UsuarioRepository;
 import br.com.api.seed.UsuarioSetup;
 import br.com.api.spec.UsuarioSpec;
 import br.com.api.util.ResponseError;
@@ -102,8 +101,8 @@ public class CriarUsuarioTest {
 
         @Test
         void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getMessage()).isEqualTo("Saldo Insuficiente");
-            assertThat(responseError.getStatus()).isEqualTo(400);
+            assertThat(responseError.getMessage()).isEqualTo("Já existe este recurso");
+            assertThat(responseError.getStatus()).isEqualTo(409);
         }
     }
 }

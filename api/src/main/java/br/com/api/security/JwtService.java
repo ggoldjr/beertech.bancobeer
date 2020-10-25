@@ -30,8 +30,6 @@ public class JwtService {
         LocalDateTime expirationDateTime = LocalDateTime.now().plusMinutes(expTime);
         Instant instante = expirationDateTime.atZone(ZoneId.systemDefault()).toInstant();
         Date expirationDate = Date.from(instante);
-
-
         return Jwts.builder()
                 .setSubject(encode(user))
                 .setExpiration(expirationDate)
@@ -56,12 +54,12 @@ public class JwtService {
         } catch (Exception e) {
             return false;
         }
-
     }
 
     private String encodePermission(Collection<? extends GrantedAuthority> authorities) {
         return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
     }
+
     private String encode(UsuarioLogado user) {
         return String.format("%s:%s:%s:%s", user.getId(), user.getName(), user.getEmail(), encodePermission(user.getAuthorities()));
     }
@@ -71,6 +69,7 @@ public class JwtService {
                 .map(s -> new SimpleGrantedAuthority(s.toUpperCase()))
                 .collect(Collectors.toSet());
     }
+
     public UsuarioLogado decode(String encoded) {
         try {
             Claims claims = getClaims(encoded);
@@ -88,6 +87,4 @@ public class JwtService {
             return null;
         }
     }
-
-
 }

@@ -44,7 +44,6 @@ public class JwtAuthenticaionFilter extends BasicAuthenticationFilter {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

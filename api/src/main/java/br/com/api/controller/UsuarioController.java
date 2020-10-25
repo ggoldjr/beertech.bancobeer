@@ -5,7 +5,6 @@ import br.com.api.dto.HabilitarOrDesabilitarDoacaoDto;
 import br.com.api.dto.UsuarioDto;
 import br.com.api.model.Usuario;
 import br.com.api.security.UsuarioLogado;
-import br.com.api.service.ContaService;
 import br.com.api.service.UsuarioService;
 import br.com.api.spec.AtualizarUsuarioSpec;
 import br.com.api.spec.UsuarioSpec;
@@ -19,7 +18,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +38,7 @@ public class UsuarioController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(usuarioService.criar(usuarioSpec).toUsuarioDto());
-}
-
+    }
 
     @GetMapping(path="/{email}",produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Buscar usuário por e-mail.", produces= MediaType.APPLICATION_JSON_VALUE)

@@ -18,5 +18,4 @@ public class OperacaoDto {
 
     @Positive(message = "Valor deve ser maior que zero")
     private BigDecimal valor;
-
 }
