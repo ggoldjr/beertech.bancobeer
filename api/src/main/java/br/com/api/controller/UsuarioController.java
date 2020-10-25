@@ -60,7 +60,7 @@ public class UsuarioController {
                 .body(usuarioService.update(atualizarUsuarioSpec, usuarioLogado.toUsuario()).toUsuarioDto());
     }
 
-    @Secured("ADMIN")
+    @Secured({"ADMIN", "USUARIO"})
     @GetMapping(path = "/all", produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value="Lista todos usuários.", produces="application/json")
     public ResponseEntity listaUsuarios(@AuthenticationPrincipal UsuarioLogado usuarioLogado){

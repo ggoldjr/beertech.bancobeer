@@ -71,6 +71,7 @@ public class UsuarioService {
         List<Usuario> collect = usuarioRepository.findAllByIdIsNot(usuario.getId()).stream()
                 .map(this::resolveConta)
                 .collect(Collectors.toList());
+        if (!usuario.eAdmin()) return collect.stream().filter(usuario1 -> !usuario1.eAdmin()).collect(Collectors.toList());
         return collect;
     }
 
