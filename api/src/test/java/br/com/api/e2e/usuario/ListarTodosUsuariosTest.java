@@ -83,9 +83,13 @@ public class ListarTodosUsuariosTest {
         }
 
         @Test
-        void deveRetornarMensagemDeErro() {
-            assertThat(responseError.getStatus()).isEqualTo(403);
-            assertThat(responseError.getMessage()).isEqualTo("Não tem permissão para acessar esse recurso.");
+        void deveRetornar1Usuarios() {
+            assertThat(usuarios.size()).isEqualTo(1);
+        }
+
+        @Test
+        void naoDeveRetornarAdmin() {
+            assertThat(usuarios.stream().anyMatch(usuarioDto -> usuarioDto.getId().longValue() == usuarioSetup.getUsuario1().getId().longValue())).isFalse();
         }
     }
 }
