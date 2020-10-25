@@ -80,11 +80,11 @@ public class OperacaoService {
 
     public Operacao criarTransferencia(TransferenciaDto transferenciaDto, Usuario usuario) {
         Conta contaOrigem =  contaService.findByHash(transferenciaDto.getHashContaOrigem());
-        if (contaOrigem.getUsuario().getId().longValue() != usuario.getId().longValue()) {
+        if (!contaOrigem.getUsuario().getId().equals(usuario.getId())) {
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro da sua conta");
         }
         if (transferenciaDto.getHashContaDestino().equals(contaOrigem.getHash())) {
-            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Só pode transferir dinheiro para você mesmo");
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), "Não pode transferir dinheiro para você mesmo");
         }
         Double valor = transferenciaDto.getValor().doubleValue();
         if (!contaOrigem.saldoEmaiorOrIgualA(valor)) throw new SaldoInsuficienteException();
