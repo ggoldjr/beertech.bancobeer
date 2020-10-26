@@ -71,8 +71,11 @@ public class OperacaoService {
                     if (operacao.tipoEtransferenciaOUdoacao() &&
                             operacao.getHashContaDestino().equals(contaHash)) {
 
-                        extratoDtoBuilder.tipo(Operacao.Tipo.TRANSFERENCIA_RECEBIDA.name());
-
+                        if(operacao.getTipo().equals(Operacao.Tipo.DOACAO)) {
+                            extratoDtoBuilder.tipo(Operacao.Tipo.DOACAO_RECEBIDA.name());
+                        }else {
+                            extratoDtoBuilder.tipo(Operacao.Tipo.TRANSFERENCIA_RECEBIDA.name());
+                        }
 
                     } else {
                         extratoDtoBuilder.tipo(operacao.getTipo().name());
