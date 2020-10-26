@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +62,11 @@ public class OperacaoService {
                         extratoDtoBuilder.hashContaOrigem(operacao.getConta().getHash());
                         extratoDtoBuilder.nomeUsuarioOrigem(operacao.getConta().getUsuario().getNome());
                     }
+                    if (operacao.getTipo().equals(Operacao.Tipo.DEPOSITO)) {
+                        extratoDtoBuilder.hashContaDestino(operacao.getConta().getHash());
+                        extratoDtoBuilder.nomeUsuarioDestino(operacao.getConta().getUsuario().getNome());
+                    }
+
 
                     if (operacao.tipoEtransferenciaOUdoacao() &&
                             operacao.getHashContaDestino().equals(contaHash)) {
@@ -132,9 +138,9 @@ public class OperacaoService {
             }
             usuarioBeneficiario.setPodeReceberDoacoes(false);
             usuarioRepository.save(usuarioBeneficiario);
-            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode receber doação", usuarioBeneficiario.getNome()));
+            throw new ApplicationException(HttpStatus.BAD_REQUEST.value(), String.format("Usuário %s não pode receber doação", usuarioBeneficiario.getNome()));
         }
-        throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode fazer doação", usuarioDoador.getNome()));
+        throw new ApplicationException(HttpStatus.BAD_REQUEST.value(), String.format("Usuário %s não pode fazer doação", usuarioDoador.getNome()));
     }
 
     public boolean podeReceber(Usuario usuarioBeneficiario) {
@@ -168,15 +174,32 @@ public class OperacaoService {
         return operacaoRepository.findAllByHashContaDestino(hash);
     }
 
-    public Object getDepositos(String contaHash) {
-        if (contaHash.isEmpty()){
-            return operacaoRepository.findByTipo(Operacao.Tipo.DEPOSITO);
+    public List<ExtratoDto> getDepositos(String contaHash) {
+
+        List<Operacao> operacoes = new ArrayList<Operacao>();
+        if (contaHash.isEmpty()) {
+            operacoes = operacaoRepository.findByTipo(Operacao.Tipo.DEPOSITO);
+        } else {
+
+            Conta conta = contaService.findByHash(contaHash);
+            operacoes = operacaoRepository.findAllByConta_IdAndTipo(conta.getId(), Operacao.Tipo.DEPOSITO);
         }
 
-        Conta conta = contaService.findByHash(contaHash);
+        return operacoes.stream()
+                .map(operacao -> {
+                    ExtratoDto.ExtratoDtoBuilder extratoDtoBuilder = ExtratoDto.builder()
+                            .valor(operacao.getValor().doubleValue())
+                            .data(operacao.getCriado_em());
 
-        List<Operacao> operacoes = operacaoRepository.findAllByConta_IdAndTipo(conta.getId(), Operacao.Tipo.DEPOSITO);
 
-        return operacoes;
+                    extratoDtoBuilder.hashContaDestino(operacao.getConta().getHash());
+                    extratoDtoBuilder.nomeUsuarioDestino(operacao.getConta().getUsuario().getNome());
+                    extratoDtoBuilder.tipo(operacao.getTipo().name());
+                    return extratoDtoBuilder.build();
+                }).collect(Collectors.toList());
+
+
+
+
     }
 }
