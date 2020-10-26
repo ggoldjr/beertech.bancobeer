@@ -106,6 +106,9 @@ public class OperacaoService {
     public Operacao criarDoacao(Usuario usuarioLogado, DoacaoDto doacaoDto) {
         Usuario usuarioDoador = usuarioRepository.findById(usuarioLogado.getId()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
         Conta conta = contaService.getContaUsuario(usuarioDoador);
+        if (usuarioDoador.getPodeReceberDoacoes()) {
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode fazer doação", usuarioDoador.getNome()));
+        }
         boolean usuarioDoadorPodeDoar = usuarioDoador.podeDoar(conta.getSaldo(), doacaoDto.getValorDoado().doubleValue());
         if (usuarioDoadorPodeDoar) {
             Usuario usuarioBeneficiario = usuarioRepository.findById(doacaoDto.getIdUsuarioBeneficiario()).orElseThrow(() -> new NotFoundException("Usuário não encontrado "));
@@ -134,7 +137,7 @@ public class OperacaoService {
             usuarioRepository.save(usuarioBeneficiario);
             throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode receber doação", usuarioBeneficiario.getNome()));
         }
-        throw new ApplicationException(HttpStatus.UNAUTHORIZED.value(), String.format("Usuário %s não pode fazer doação", usuarioDoador.getNome()));
+        throw new SaldoInsuficienteException();
     }
 
     public boolean podeReceber(Usuario usuarioBeneficiario) {

@@ -96,4 +96,23 @@ public class CriarDoacaoTest {
             assertThat(contaDestino.getSaldo()).isEqualTo(100);
         }
     }
+
+
+    @Nested
+    class QuandoFazDoacaoDoValorMaiorQSaldo extends CriarDoacaoSetup {
+
+        @Override
+        DoacaoDto getDoacaoDto() {
+            return DoacaoDto.builder()
+                    .valorDoado(BigDecimal.valueOf(4000))
+                    .idUsuarioBeneficiario(usuarioSetup.getUsuarios().get(1).getId())
+                    .build();
+        }
+
+        @Test
+        void deveRetornarMensagemDeErro() {
+            assertThat(responseError.getStatus()).isEqualTo(400);
+            assertThat(responseError.getMessage()).isEqualTo("Saldo Insuficiente");
+        }
+    }
 }
