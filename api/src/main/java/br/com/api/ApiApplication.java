@@ -1,6 +1,8 @@
 package br.com.api;
 
 import br.com.api.model.Usuario;
+import br.com.api.repository.ContaRepository;
+import br.com.api.repository.OperacaoRepository;
 import br.com.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,11 +19,15 @@ public class ApiApplication implements CommandLineRunner {
 
 
 	public final UsuarioRepository usuarioRepository ;
+	public final ContaRepository contaRepository ;
+	public final OperacaoRepository operacaoRepository ;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
-	public ApiApplication(  UsuarioRepository usuarioRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public ApiApplication(UsuarioRepository usuarioRepository, ContaRepository contaRepository, OperacaoRepository operacaoRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.usuarioRepository = usuarioRepository;
+		this.contaRepository = contaRepository;
+		this.operacaoRepository = operacaoRepository;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
@@ -31,6 +37,9 @@ public class ApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
+		operacaoRepository.deleteAll();
+		contaRepository.deleteAll();
+		usuarioRepository.deleteAll();
 		Optional<Usuario> usuario = usuarioRepository.findByEmail("duplomalte@gmail.com");
 		if(usuario.isEmpty()){
 			usuarioRepository.save(Usuario.builder()

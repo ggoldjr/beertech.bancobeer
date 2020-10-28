@@ -1,0 +1,903 @@
+{
+	"info": {
+		"_postman_id": "aa35e389-b6e6-4c04-b297-38a6158e1a94",
+		"name": "Duplo Malte API",
+		"description": "Contact Support:\n Name: Duplo Malte",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "usuarios",
+			"item": [
+				{
+					"name": "find-users",
+					"item": [
+						{
+							"name": "success",
+							"item": [
+								{
+									"name": "Lista todos usuários.",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/usuarios/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios",
+												"all"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Not Found",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Unauthorized",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Forbidden",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n \"body\": {},\n \"statusCode\": \"411 LENGTH_REQUIRED\",\n \"statusCodeValue\": -81072395\n}"
+										}
+									]
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "unauthorized",
+							"item": [
+								{
+									"name": "Lista todos usuários. ",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/usuarios/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios",
+												"all"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Forbidden",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n \"body\": {},\n \"statusCode\": \"411 LENGTH_REQUIRED\",\n \"statusCodeValue\": -81072395\n}"
+										},
+										{
+											"name": "Not Found",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Unauthorized",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/usuarios/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"usuarios",
+														"all"
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							],
+							"auth": {
+								"type": "basic",
+								"basic": [
+									{
+										"key": "password",
+										"value": "senh",
+										"type": "string"
+									},
+									{
+										"key": "username",
+										"value": "teste2@gmail.com",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "552a7d5b-cabe-43e2-91ac-0b15dedc9299",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "0d6c3352-10ed-42a5-a25f-615618dcd30f",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "create-user",
+					"item": [
+						{
+							"name": "whenCreateValidUser",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/usuarios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"body\": {},\n \"statusCode\": \"411 LENGTH_REQUIRED\",\n \"statusCodeValue\": -81072395\n}"
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Created",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "whenCreateInvalidUser",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/usuarios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Created",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cnpj\": \"<string>\",\n    \"email\": \"<string>\",\n    \"nome\": \"<string>\",\n    \"senha\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/usuarios",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"usuarios"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"body\": {},\n \"statusCode\": \"411 LENGTH_REQUIRED\",\n \"statusCodeValue\": -81072395\n}"
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "46a8f824-a511-40fe-a776-4d75420dd36d",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "f95b9060-6dcf-41c6-b979-1ada34db258b",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Login de usuário.",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "Not Found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				},
+				{
+					"name": "OK",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"body\": {},\n \"statusCode\": \"411 LENGTH_REQUIRED\",\n \"statusCodeValue\": -81072395\n}"
+				},
+				{
+					"name": "Forbidden",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "senha",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "duplomalte@gmail.com",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "25ce7f6b-78ab-4766-a9e6-6c6331ba12cc",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3a288254-f785-4d0a-b537-3588e6e479ad",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "512d890a-0100-490c-82ca-da99e53f5828",
+			"key": "baseUrl",
+			"value": "localhost:8080/"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
